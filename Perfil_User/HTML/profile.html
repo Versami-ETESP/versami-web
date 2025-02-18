@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Livros, Rede Social, Avaliações" />
+    <meta
+      name="description"
+      content="Versami, sua rede social para conectar leitores de todos os gêneros literários. Aqui, você pode avaliar, descobrir e compartilhar livros, criando uma comunidade engajada de apaixonados por leitura."
+    />
+    <meta
+      name="author"
+      content="Julia Maria, Matheus Canesso, Thamiris Fernandes, Ygor Silva"
+    />
+    <link rel="shortcut icon" href="../../Assets/favicon.png" type="favicon" />
+    <link rel="icon" href="../Assets/iconVersami.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <script
+      src="https://kit.fontawesome.com/17dd42404d.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="../JS/script.js"></script>
+    <link rel="stylesheet" href="../CSS/style-profile.css">
+    <title>Perfil de usuario</title>
+</head>
+<body>
+    <div class="cab-mob" id="cab-mob">
+        <button class="menu" id="menu" onclick="menuShow()"><i class="material-symbols-rounded icon">menu</i></button>
+        <div class="logo2" id="logo2">
+            <img src="../../Assets/logoVersamiBlue.png" alt="Logo Versami">
+        </div>
+    </div>
+    <header class="cabecalho">
+        <div class="logo">
+            <img src="../../Assets/logoVersamiBlue.png" alt="Logo Versami">
+        </div>
+
+        <nav>
+            <ul class="opcoes">
+                <li class="opcao"><i class="material-symbols-rounded">home</i><a href="#" class="noSub">Página Inicial</a></li>
+                <li class="opcao"><i class="material-symbols-rounded">search</i><a href="#" class="noSub">Explorar</a></li>
+                <li class="opcao"><i class="material-symbols-rounded">description</i><a href="#" class="noSub">Blog</a></li>
+                <li class="opcao"><i class="material-symbols-rounded">notifications</i><a href="#" class="noSub">Notificações</a></li>
+                <li class="opcao"><i class="material-symbols-rounded">mail</i><a href="#" class="noSub">Mensagens</a></li>
+                <li class="opcao active"><i class="material-symbols-rounded">person</i><a href="#" class="noSub">Perfil</a></li>
+            </ul>
+        </nav>
+        
+
+        <button class="publicar" id="publicar" onclick="abrirModal()">Publicar <i class="material-symbols-rounded">edit</i></button>
+    </header>
+    <main class="principal">
+        <section class="user">
+            <div class="capa">
+                <img src="../../Uploads/Capa/padrao.png" alt="Foto de Capa" id="fotoCapa">
+                <div class="perfil">
+                    <img src="../../Uploads/Perfil/padrao.png" alt="Foto de Perfil" id="fotoPerfil">
+                </div>
+            </div>
+            <div class="infouser">
+                <h1 class="nome" id="userNome">[NOME]</h1>
+                <h4 class="arroba" id="userArroba">@usuario</h4>
+            </div>
+        </section>
+        <section class="posts" id="posts">
+            <div class="titulos"><span class="titulo">Publicações</span></div>
+        </section>
+    </main>
+
+    <div class="janela-modal" id="janela-modal">
+        <div class="modal">
+                <button class="fechar" id="fechar"><i class="material-symbols-rounded">close</i></button>
+                <textarea name="publicacao" id="publicacao" placeholder="Qual foi o seu último livro livro lido?"></textarea>
+                <div class="linha">
+                    <input type="submit" id="publicarPost" value="Publicar">
+                </div>
+            
+        </div>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  padding: 2.188rem;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.glass {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+  border-radius: 1.25rem;
+  border: 0.063rem solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0.5rem 2rem 0 rgba(0, 0, 0, 0.37);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo img {
+  width: 7.5rem;
+  margin-right: 0.625rem;
+}
+
+.logo span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  max-width: 50rem;
+  list-style: none;
+}
+
+.nav-links li {
+  margin-right: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #2c2c2c;
+  font-size: 1.125rem;
+  padding-bottom: 0.313rem;
+  position: relative;
+  transition: all 0.5s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  transition: all 0.5s;
+  border-bottom: 0.188rem solid #4ae1fc;
+  color: #FFFFFF;
+}
+
+.user-icon {
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.user-icon a {
+  text-decoration: none;
+  list-style: none;
+  color: #FFFFFF;
+}
+
+.user-icon span {
+  font-size: 2.188rem;
+}
+
+.user-icon a:hover {
+  transition: all 0.5s;
+  color: #4ae1fc;
+}
+
+main {
+  flex-grow: 1;
+}
+
+footer {
+  background-color: #333;
+  padding: 2.5rem 1.25rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 75rem;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.newsletter h2 {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.newsletter h1 {
+  font-size: 3.063rem;
+  border-bottom: 0.188rem solid #61C1D1;
+  margin-bottom: 0.938rem;
+}
+
+.newsletter span {
+  color: #34a7c1;
+}
+
+form {
+  display: flex;
+  margin-top: 0.625rem;
+}
+
+form input {
+  padding: 0.625rem;
+  border: none;
+  border-radius: 0.313rem;
+  margin-right: 0.625rem;
+  outline: none;
+}
+
+form button {
+  font-family: "Montserrat", sans-serif;
+  background-color: #61c1d1;
+  background-image: linear-gradient(180deg, #61c1d1 0%, #3a737d 100%);
+  color: white;
+  border: none;
+  border-radius: 0.313rem;
+  padding: 0.625rem 1.25rem;
+  cursor: pointer;
+}
+
+form button:hover {
+  transition: color 0.9s;
+  background-color: #298e9b;
+  background-image: linear-gradient(90deg, #61c1d1 0%, #3a737d 100%);
+}
+
+.middle {
+  display: inline;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.875rem;
+}
+
+.social-links a i {
+  font-size: 1.563rem;
+  margin-right: 1.875rem;
+  color: #cccccc;
+  transition: all 0.5s;
+}
+
+.social-links a i:hover {
+  color: #61C1D1;
+  transition: all 0.5s;
+}
+
+.social-links a i:last-child {
+  margin-right: 0;
+}
+
+.social-image {
+  margin-bottom: 3.125rem;
+}
+
+.social-image img {
+  width: 12.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.about h4 {
+  font-size: 1.5rem;
+  margin-bottom: 0.938rem;
+}
+
+.pRedes {
+  text-align: center;
+  margin-bottom: 1.875rem;
+}
+
+.about p {
+  color: #cccccc;
+  max-width: 18.75rem;
+}
+
+/* NÃO MUDE NADA DAQUI PRA CIMA */
+
+@media (max-width: 1100px) {
+  .user-icon{
+    display: none;
+  }
+
+  .logo{
+
+    margin-right: 3%;
+  }
+
+}
+
+@media (max-width: 750px) {
+
+
+  .footer-content{
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    flex-direction: column;
+  }
+
+  .logo{
+    width: 15%;
+    margin-right: 3%;
+  }
+
+  .logo img{
+    width: 100%;
+    content: url('../../Assets/versamiLogo.png');
+  }
+
+  .containerLeft{
+    padding: 5%;
+  }
+
+}
+

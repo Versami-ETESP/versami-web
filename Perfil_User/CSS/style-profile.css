@@ -1,0 +1,448 @@
+:root{
+    --versami-cor1: #61c1d1;
+    --versami-cor2: #6189d1;
+    --versami-cor3: #333333;
+    --versami-cor4: #607d8b;
+    --versami-cor5: #ffffff;
+    --versami-cor6: #f5f5f5;
+    --versami-cor7: #3a737d;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+    min-width: 100vw;
+    min-height: 100vh;
+    font-family: "Montserrat", sans-serif;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.cabecalho{
+    width: 20%;
+    min-height: 100vh;
+    position: fixed; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    border-right: 0.0625rem solid #a5a5a5b4; 
+    background-color: var(--versami-cor5);
+    z-index: 100;
+}
+
+.noSub:link, .noSub:visited{
+    text-decoration: none;
+    color:black;
+}
+
+.opcao{
+    list-style: none;
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem;
+    transition: all 0.2s ease;
+}
+
+.opcao:hover{
+    transform: scale(1.1);
+    color: var(--versami-cor1);
+    cursor:pointer;
+}
+
+.opcao:hover i,
+.opcao:hover a{
+    color: var(--versami-cor1);
+}
+
+.opcao.active{
+    color: var(--versami-cor1);
+}
+
+.opcao.active a,
+.opcao.active i {
+    color: inherit;    
+}
+
+.logo{
+    width: 9.5rem;
+    height: 5.75rem;
+    margin-top: 1.5625rem;
+    margin-bottom: 2rem;
+}
+
+.logo img{
+    width: 100%;
+}
+
+.publicar{
+    width: 70%;
+    height: 3rem;
+    border-style: none;
+    border-radius: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2 rem;
+    background-color: var(--versami-cor1);
+    color: var(--versami-cor5);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.publicar:hover, #publicarPost:hover{
+    transition: color 0.9s ease;
+    background-image: linear-gradient(90deg, var(--versami-cor1) 0%, var(--versami-cor7) 100%);
+}
+
+.principal{
+    margin-left: 20%;
+    width: 80%;
+    min-height: 100vh;
+    background-color: var(--versami-cor5);
+}
+
+.user{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    height: 50vh;
+}
+
+.capa{
+    width: 80vw;
+    height: 30vh;
+    background-color: var(--versami-cor7);
+    position: relative;
+}
+
+.capa img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.perfil{
+    position: absolute;
+    top: calc(100% - 15vh);
+    left: 15%;
+    transform: translateX(-50%);
+    width: 20%;
+    height: auto;
+    aspect-ratio: 1;
+    border: 0.71% solid white;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: var(--versami-cor5);
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.perfil img{
+    width: 100%;
+    object-fit: cover;
+}
+
+.infouser{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: -35%;
+}
+
+.nome{
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.arroba{
+    font-size: 1.1rem;
+    color: #555;
+}
+
+.posts{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 1rem;
+}
+
+.post{
+    width: 100%;
+    min-height: 20%;
+    display: flex;
+    padding: 2%;
+    flex-direction: column;
+    border-bottom: 0.1rem solid #a5a5a5b4;
+}
+
+.containerpost{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.conteudo{
+    margin: 1rem;
+}
+
+.datapost{
+    font-size: 0.8rem;
+    color:#555
+}
+
+.nomePost{
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.icon-perf{
+    width: 3.125rem;
+    height: 3.125rem;
+    border-radius: 50%;
+}
+
+.icon-perf img{
+    width: 100%;
+}
+
+.titulos {
+    width: 100%;
+    padding: 0.5rem;
+    border-top: 0.1rem solid #a5a5a5b4; 
+    border-bottom: 0.1rem solid #a5a5a5b4;
+    display: flex;
+    justify-content: center;
+}
+
+.titulo{
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-bottom: 0.2rem solid var(--versami-cor1);
+    cursor: pointer;
+}
+
+.janela-modal{
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top:0;
+    left: 0;
+    background-color: #33333396;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal{
+    width: 50%;
+    height: 45%;
+    background-color: var(--versami-cor5);
+    padding: 1rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.fechar{
+    margin: 0.5rem;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.janela-modal.abrir{
+    display: flex;
+}
+
+#publicacao{
+    width: 100%;
+    height: 80%;
+    border: 0.125rem solid transparent;;
+    resize: none;
+    outline: none;
+    transition: border-color 0.3s ease;
+    border-radius: 1.25rem;
+    padding: 0.5rem;
+    font-family: "Montserrat", sans-serif;;
+
+}
+
+#publicacao:focus{
+    border-color: var(--versami-cor1);
+}
+
+#publicarPost{
+    width: 30%;
+    height: 2rem;
+    border-style: none;
+    border-radius: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2 rem;
+    background-color: var(--versami-cor1);
+    color: var(--versami-cor5);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.linha{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    border-top: 0.1rem solid #a5a5a5b4;
+}
+
+@keyframes abrirModal {
+    0%{
+        opacity: 0;
+        transform: translate3d(-20px,0,0);
+    }
+
+    100%{
+        opacity: 1;
+        transform: translate3d(0,0,0);
+    }
+}
+
+.abrir .modal {
+    animation: abrirModal 0.5s;
+}
+
+.cab-mob{
+    display: none;
+}
+
+.logo2{
+    width: 20%;
+    height: auto;
+}
+
+.logo2 img{
+    width: 100%;
+}
+
+@media (min-width:801px) and (max-width:1200px){
+    .user{
+        height: 45vh
+    }
+
+    .capa{
+        height: 25vh;
+    }
+
+    .perfil{
+        top: calc(100% - 5vh);
+        width: 20%;
+    }
+}
+
+@media (max-width:800px){
+    .cabecalho{
+        display: none;
+        height: 20%;
+        width: 50%;
+        margin-top: 17%;
+    }
+
+    .cabecalho.open{
+        display: flex;
+    }
+
+    .logo{
+        display: none;
+    }
+
+    .cab-mob{
+        display: flex;
+        width: 100%;
+        height: 20%;
+        padding: 3%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .menu{
+        position: absolute;
+        left: 0;
+        margin-left: 1%;
+        background-color: transparent;
+        border: none;
+        width: 10%;
+    }
+
+    .principal{
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .user{
+        height: 35vh;
+    }
+
+    .capa{
+        width: 100vw;
+        height: 20vh;
+    }
+
+    .perfil{
+        top: calc(100% - 6vh);
+        width: 25%;
+    }
+
+    .infouser{
+        margin-left: -20%;
+    }
+
+    .nome{
+        font-size: 130%;
+    }
+
+    .arroba{
+        font-size: 90%;
+    }
+
+    .modal{
+        width: 100%;
+        height: 100%;
+    }
+
+    #publicacao{
+        height: 50%;
+    }
+
+}
+
+@media (max-width:500px) {
+    .perfil{
+        top: calc(100% - 5vh);
+        width: 30%;
+    }
+
+    .infouser{
+        margin-left: -10%;
+    }
+}
