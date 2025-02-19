@@ -1,5 +1,5 @@
 <?php
-include '../../BD/bd-conexao.php';
+include '../../PHP/util/Conexao.php';
 
 function validaNome($usrNome){
 

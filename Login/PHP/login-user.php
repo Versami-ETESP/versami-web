@@ -1,6 +1,8 @@
 <?php
 session_start();
-include '../../BD/bd-conexao.php';
+include '../../PHP/util/Conexao.php';
+
+
 
 if(!empty($_POST['login']) && !empty($_POST['senha'])){
     try{

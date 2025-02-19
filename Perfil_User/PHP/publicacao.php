@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../../BD/bd-conexao.php';
+include '../../PHP/util/Conexao.php';
 
 try{
     if($_POST['conteudo']){

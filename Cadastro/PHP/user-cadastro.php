@@ -1,7 +1,7 @@
 <?php
 
 include 'valida-dados.php';
-include '../../BD/bd-conexao.php';
+include '../../PHP/util/Conexao.php';
 
 
 

@@ -1,6 +1,6 @@
 <?php
 session_start(); //inicia a sessão para resgatar os dados do usuário que foram consultados na tela de login
-include '../../BD/bd-conexao.php';
+include '../../PHP/util/Conexao.php';
 
 if($_SESSION){
     try{
