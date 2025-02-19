@@ -15,7 +15,7 @@ class Conexao{
 
         }catch(PDOException $e){
 
-            error_log("Erro de conexão " . $e.getMessage());
+            error_log("Erro de conexão " . $e->getMessage());
 
         }
 
