@@ -9,14 +9,22 @@
         private $unread;
         private $read;
 
-        private $comments = array();
+        private $comments = array(); // Postagem tem relação com a classe Comentario
+
+        // Contrutor padrão da classe iniciando com valores padrão: like, read, unread, reading. Além disso torna obrigatorio para um post o titulo e o conteudo
+        //  instanciei DateTime para definir o horario e data do post
 
         public function __construct($title, $content){
-            $this->title = $title;
-            $this->content = $content;
+            $this->setTitle($title);
+            $this->setContent($content);
+            $this->postDate = new DateTime();
             $this->like = 0;
-            //$this->postDate 
+            $this->reading = false;
+            $this->unread = false;
+            $this->read = false;
         }
+
+        // metodos getters e setters
 
         public function getTitle(){
             return $this->title;
@@ -89,4 +97,18 @@
         public function setComment($comment){
             array_push($this->comments, $comment);
         }
+
+        // metodos da classe
+
+        public function addLike($isLike){
+            if($isLike)
+                $this->like++;
+        }
+
+        public function removeLike($isLike){
+            if(!$isLike && $this->like > 0)
+                $this->like--;
+        }
+
+        // removi o metodo setLike e dividi a funcionalidade em dois para facilitar o uso no código
     }
