@@ -1,6 +1,8 @@
 <?php
     class Usuario{
 
+        // Declaração de atributos
+
         private $userName;
         private $userID;
         private $userEmail;
@@ -9,6 +11,22 @@
         private $userImage;
         private $userBio;
 
+        private $userPosts = array(); // esse array armazena no todos os objetos posts relacionados ao usuario
+
+        // Construtor da classe - será necessário definir os intens: nome, user, email, id, nenha e nascimento para criar o objeto usuario
+
+        public function __construct($name, $id, $email, $pass, $birth){
+
+            $this->setUserName(name);
+            $this->setUserID(id);
+            $this->setUserEmail(email);
+            $this->setUserPass(pass);
+            $this->setUserBirth(birth);
+        }
+
+        // Declaração de métodos
+
+        // metodos getters e setters
 
         public function getUserName(){
             return $this->userName;
