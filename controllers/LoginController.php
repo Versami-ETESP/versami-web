@@ -42,8 +42,6 @@ class LoginController
 
             $consulta = $sql->fetch(PDO::FETCH_ASSOC);
 
-
-
             if ($consulta) {
 
                 $_SESSION['user'] = [

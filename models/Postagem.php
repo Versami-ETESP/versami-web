@@ -5,9 +5,7 @@
         private $content;
         private $like;
         private $postDate;
-        private $reading;
-        private $unread;
-        private $read;
+        private $book;
 
         private $comments = array(); // Postagem tem relação com a classe Comentario
 
@@ -19,9 +17,6 @@
             $this->setContent($content);
             $this->postDate = new DateTime();
             $this->like = 0;
-            $this->reading = false;
-            $this->unread = false;
-            $this->read = false;
         }
 
         // metodos getters e setters
@@ -60,34 +55,12 @@
             return $this->postDate;
         }
 
-        public function getReading(){
-            return $this->reading;
+        public function getBook(){
+            return $this->book;
         }
 
-        public function isReading($reading){
-            if($reading){
-                $this->reading = true;
-            }
-        }
-
-        public function getRead(){
-            return $this->read;
-        }
-
-        public function isRead($read){
-            if($read){
-                $this->read = true;
-            }
-        }
-
-        public function getUnread(){
-            return $this->unread;
-        }
-
-        public function isUnread($unread){
-            if($unread){
-                $this->unread = true;
-            }
+        public function setBook($book){
+            $this->book = $book;
         }
 
         public function getComments(){
