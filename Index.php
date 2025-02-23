@@ -11,6 +11,7 @@ if ($_POST) {
 
     $tipo = $_POST['tipo'];
     $controller = new RegistroController();
+    $controller2 = new LoginController();
 
     switch($tipo){
         
@@ -33,6 +34,10 @@ if ($_POST) {
             $confirma = $_POST['usrConfirma'];
             $nasc = $_POST['usrNasc'];
             die(json_encode($controller->register($nome,$login,$senha,$confirma,$email,$nasc)));
+        case '#login':
+            $login = $_POST['login'];
+            $senha = $_POST['senha'];
+            die(json_encode($controller2->login($login,$senha)));
 
     }
 

@@ -29,8 +29,7 @@ class LoginController
         $table = "tblUsuario";
 
         if (empty($user) || empty($pass)) {
-            $result = [false, "Necessário preencher todos os campos"];
-            die(json_encode($result));
+           return $result = [false, "Necessário preencher todos os campos"];
         }
 
         try {
@@ -45,7 +44,7 @@ class LoginController
             if ($consulta) {
 
                 $_SESSION['user'] = [
-                    'nome' => $consulta['nome'],
+                    'name' => $consulta['nome'],
                     'id' => $consulta['idUsuario'],
                     'login' => $consulta['arroba_usuario'],
                     'email' => $consulta['email'],
@@ -53,17 +52,15 @@ class LoginController
                     'birth' => $consulta['data_nasc']
                 ];
 
-                $result = [true, $consulta['nome'], $consulta['arroba_usuario'], $consulta['fotoUsuario'], $consulta['fotoCapa']];
-                die(json_encode($result));
+                return $result = [true, $consulta['nome'], $consulta['arroba_usuario'], $consulta['fotoUsuario'], $consulta['fotoCapa']];
+                
             } else {
-                $result = [false, "Credenciais inválidas"];
-                die(json_encode($result));
+                return $result = [false, "Credenciais inválidas"];
             }
 
         } catch (PDOException $e) {
             error_log("Erro de conexão " . $e->getMessage());
-            $result = [false, "Erro de conexão, tente novamente!"];
-            die(json_encode($result));
+            return $result = [false, "Erro de conexão, tente novamente!"];
         }
     }
 

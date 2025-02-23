@@ -1,17 +1,21 @@
 $(document).ready(function(){
-
+    /*
+    * O evento faz um requisção via ajax, para verificar se o user e senha existem no BD.
+    * Se ele retornar true, salva algumas informações do usuario no sessionStorage e depois redireciona para a pagina do perfil
+    */
     $("#form2").submit(function(event){
 
         event.preventDefault();
 
         let usrLogin =  $("#login2").val().trim();
         let usrSenha = $("#senha2").val().trim();
+        let tipo = "#login";
 
                 $.ajax({
                     method:"POST",
-                    url:"../PHP/login-user.php",
+                    url:"../../Index.php",
                     data:{
-                        login: usrLogin, senha: usrSenha
+                        login: usrLogin, senha: usrSenha, tipo: tipo
                     },
                     datatype:'json',
                     beforeSend: function (){
@@ -25,7 +29,7 @@ $(document).ready(function(){
                             sessionStorage.setItem("usuarioArroba",retorno[2]);
                             sessionStorage.setItem("usuarioPerfil",retorno[3]);
                             sessionStorage.setItem("usuarioCapa",retorno[4]);
-                            window.location.href = "/SiteVersami/Perfil_User/HTML/profile.html";
+                            window.location.href = "../HTML/profile.html";
                         } else {
                             erro("",retorno[1]);
                         }                       
@@ -38,11 +42,6 @@ $(document).ready(function(){
                     }
                 });
         });    
-
-    const usuarioNome = sessionStorage.getItem("usuarioNome");
-    if (usuarioNome) {
-        $("#msgTitulo").text(`${usuarioNome}, o nosso site está em construção!`);
-    }
 
 }); // fim da função ready
 
