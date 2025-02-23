@@ -81,6 +81,22 @@ create table tblSeguidor(
 idSeguidor int not null primary key identity(1,1),
 usuario int foreign key references tblUsuario(idUsuario)
 )
+go
+create table tblBlogPost(
+idBlogPost int primary key identity(1,1),
+titulo varchar(80),
+conteudo varchar (1000),
+dataPost datetime,
+administrador int foreign key references tblAdmin(idAdmin)
+)
+go
+create table tblOCBugs(
+idOCBugs int primary key identity(1,1),
+conteudo varchar(250)
+corrigido bit,
+usuario int foreign key references tblUsuario(idUsuario),
+administrador int foreign key references tblAdmin(idAdmin)
+)
 
 
 --use master
