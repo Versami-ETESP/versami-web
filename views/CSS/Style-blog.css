@@ -8,7 +8,7 @@
 
 body {
   font-family: "Montserrat", sans-serif;
-  background-image: url('../../../Assets/BackgroundBlogsVersami.png');
+  background-image: url('../Assets/BackgroundBlogsVersami.png');
   background-repeat: no-repeat;
   background-color: #3D5A80;
   color: white;
@@ -365,16 +365,6 @@ form button:hover {
   line-height: 1.56rem;
 }
 
-
-
-
-
-
-
-
-
-
-
 .overlayPopUp {
   position: fixed;
   top: 0;
@@ -462,38 +452,6 @@ form button:hover {
   color: #333;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .telaApp{
   background-color: #3D5A80;
   display: flex;
@@ -547,7 +505,6 @@ form button:hover {
     margin-right: 3%;
   }
 
-
 }
 
 @media (max-width: 750px) {
@@ -565,7 +522,7 @@ form button:hover {
 
   .logo img{
     width: 100%;
-    content: url('../../Assets/versamiLogo.png');
+    content: url('../Assets/versamiLogo.png');
   }
 
   .card{

@@ -16,5 +16,9 @@ function closePopup(event) {
 }
 
 function ContaPage() {
-  window.location.href = '../../../Login/HTML/login.html';
+  window.location.href = '../HTML/login.html';
+}
+
+function BlogPage() {
+  window.location.href = '../HTML/Blog.html';
 }

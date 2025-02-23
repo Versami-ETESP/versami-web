@@ -17,7 +17,7 @@ body {
   flex-direction: column;
   width: 100vw;
   min-height: 100vh;
-  background-image: url("../../Assets/BackgroundContatoVersami.png");
+  background-image: url("../Assets/BackgroundContatoVersami.png");
   background-size: cover;
 }
 
@@ -469,7 +469,7 @@ textarea {
 
   .logo img {
     width: 100%;
-    content: url('../../Assets/versamiLogo.png');
+    content: url('../Assets/versamiLogo.png');
   }
 
   .cardsContainer {

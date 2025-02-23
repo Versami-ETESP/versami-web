@@ -12,7 +12,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: url('../../Assets/backgroundIndex.png');
+  background: url('../Assets/backgroundIndex.png');
   overflow-x: hidden;
 }
 
@@ -372,7 +372,7 @@ form button:hover {
 }
 
 .containerCenter {
-  background-image: url('../../Assets/backgroundPesquisa.png');
+  background-image: url('../Assets/backgroundPesquisa.png');
   height: 52rem;
   width: 100%;
 }
@@ -699,7 +699,7 @@ form button:hover {
 
   .logo img{
     width: 100%;
-    content: url('../../Assets/versamiLogo.png');
+    content: url('../Assets/versamiLogo.png');
   }
 
   .containerLeft{
