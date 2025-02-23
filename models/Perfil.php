@@ -11,10 +11,10 @@
         // Construtor da classe - será necessário definir os intens: nome, user, email, id, nenha
 
         public function __construct($name, $id, $email, $pass){
-            $this->setUserName(name);
-            $this->setUserID(id);
-            $this->setUserEmail(email);
-            $this->setUserPass(pass);
+            $this->setUserName($name);
+            $this->setUserID($id);
+            $this->setUserEmail($email);
+            $this->setUserPass($pass);
         }
 
         // metodos getters e setters
