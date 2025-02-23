@@ -31,7 +31,7 @@ class RegistroController
                 die(json_encode($result));
         }
 
-    } // verifica se o input do usuario esta correto e devolve para o javascript mostrar para o usurario
+    } // verifica se o input do usuario esta correto e devolve para o javascript mostrar para o usuario
 
     public function register($name, $user, $pass, $confirm, $email, $birth){
 
@@ -72,4 +72,10 @@ class RegistroController
         }
 
     }
+
+    /*
+     * Esse método verifica se o campo input não esta vazio, depois faz a validação dos dados do usuario atraves dos metodos da classe Validacao.
+     * Caso Não haja nenhuma dessas inconsistencias nos dados, havera uma tentativa de incluir os dados do usuario no banco de dados.
+     * Caso haja algum erro com a conexão do banco de dados, ele retornará uma mensagem de erro ao cadastrar o usuario
+     */
 }
