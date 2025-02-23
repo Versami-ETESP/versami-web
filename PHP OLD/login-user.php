@@ -32,7 +32,7 @@ if(!empty($_POST['login']) && !empty($_POST['senha'])){
                 $result = [true,$consulta['nome'],$consulta['arroba_usuario'],$consulta['fotoUsuario'],$consulta['fotoCapa']];
                 die(json_encode($result));
             } else{
-                $result = [false,"Usuário ou senha inválido"];
+                $result = [false,"Credenciais inválidas"];
                 die(json_encode($result));
             }
 

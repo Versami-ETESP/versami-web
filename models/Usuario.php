@@ -12,9 +12,9 @@ class Usuario extends Perfil
 
     private $userPosts = array(); // esse array armazena no todos os objetos posts relacionados ao usuario
 
-    public function __construct($name, $id, $email, $pass, $birth)
+    public function __construct($name, $login, $email, $pass, $birth)
     {
-        parent::__construct($name, $id, $email, $pass);
+        parent::__construct($name, $login, $email, $pass);
         $this->setUserBirth($birth);
     }
 

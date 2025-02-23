@@ -5,14 +5,15 @@
 
         private $userName;
         private $userID;
+        private $userLogin;
         private $userEmail;
         private $userPass;
 
         // Construtor da classe - será necessário definir os intens: nome, user, email, id, nenha
 
-        public function __construct($name, $id, $email, $pass){
+        public function __construct($name, $login, $email, $pass){
             $this->setUserName($name);
-            $this->setUserID($id);
+            $this->setUserID($login);
             $this->setUserEmail($email);
             $this->setUserPass($pass);
         }
@@ -49,5 +50,13 @@
 
         public function setUserPass($pass){
             $this->userPass = $pass;
+        }
+
+        public function getUserLogin(){
+            return $this->userLogin;
+        }
+
+        public function setUserLogin($login){
+            $this->userLogin = $login;
         }
     }

@@ -8,6 +8,10 @@ class Conexao{
     private $serverPass = "Tc2088275";
     private $connect;
 
+    /**
+     * 'connectDB' realiza a conexão com o banco de dados e retorna um objeto do tipo PDO para o solicitante
+     */
+
     public function connectDB(){
 
         try{
@@ -21,6 +25,10 @@ class Conexao{
 
         return $this->connect;
     }
+
+    /**
+     * 'disconectDB' insere null no objeto $this->connect para encerrar a conexão com o DB caso necessario
+     */
 
     public function disconnectDB(){
         $this->connect = null;
