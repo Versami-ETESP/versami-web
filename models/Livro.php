@@ -1,6 +1,6 @@
 <?php
-require_once 'Autor.php';
-require_once 'Genero.php';
+require_once __DIR__ . '/Autor.php';
+require_once __DIR__ . '/Genero.php';
 
 class Livro{
     private $idBook;

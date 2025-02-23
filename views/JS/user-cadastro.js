@@ -1,22 +1,28 @@
 $(document).ready(function(){
 
+    /*
+     Evento durante o submit formulario de cadastro.
+     Ele ira enviar os dados do formulario para o servidor, que fará as validações e retorna se concluiu ou não.
+     Se não ocorrer cadastro será exibido um alert com a mensagem explicando o erro.
+    */
     $("#form").submit(function (event){
 
         event.preventDefault();
     
-        usrNome = $("#nome").val().trim();
-        usrLogin =  $("#login").val().trim();
-        usrEmail = $("#email").val().trim();
-        usrNasc = $("#nasc").val().trim();
-        usrSenha = $("#senha").val().trim();
-        usrConfirma = $("#confirma").val().trim();
+        let usrNome = $("#nome").val().trim();
+        let usrLogin =  $("#login").val().trim();
+        let usrEmail = $("#email").val().trim();
+        let usrNasc = $("#nasc").val().trim();
+        let usrSenha = $("#senha").val().trim();
+        let usrConfirma = $("#confirma").val().trim();
+        let tipo = "#submit";
 
     
             $.ajax({
                 method:"POST",
-                url:"../PHP/user-cadastro.php",
+                url:"../../Index.php",
                 data:{
-                    usrNome:usrNome, usrLogin: usrLogin, usrEmail: usrEmail, usrSenha: usrSenha, usrNasc: usrNasc, usrConfirma: usrConfirma
+                    usrNome:usrNome, usrLogin: usrLogin, usrEmail: usrEmail, usrSenha: usrSenha, usrNasc: usrNasc, usrConfirma: usrConfirma, tipo: tipo
                 },
                 datatype:'json',
                 beforeSend: function (){
@@ -40,8 +46,13 @@ $(document).ready(function(){
         
     }); //fim do evento submit
 
-    
+    /* 
+     os eventos a seguir fazem uma verificação no input dos usuarios nos campos
+     com os IDs informados e chamam a função 'validaCampos()'
+    */
+
     $("#nome").on("input", function(){
+        console.log("acionei o campo texto");
         validaCampos("#nome",$(this).val().trim(),"O nome deve ter no mínimo 3 caracteres");
     });
 
@@ -57,16 +68,23 @@ $(document).ready(function(){
         validaCampos("#nasc", $(this).val().trim(),"O usuário deve ser maior de 13 anos");
     });
 
+    /**
+     * O evento a seguir verifica o campo com id confirma e faz uma requisição ajax
+     * Essa requisição solicita a verificação se os campos senha e confirma senha são iguais
+     * se o retorno do PHP for false irá exibir mensagem para o usuario
+     */ 
+
     $("#confirma").on("input", function(){
 
-        usrSenha = $("#senha").val().trim();
-        usrConfirma = $("#confirma").val().trim();
+        let usrSenha = $("#senha").val().trim();
+        let usrConfirma = $("#confirma").val().trim();
+        let tipo = "#confirma";
 
 
         $.ajax({
             type:"POST",
-            url:"../PHP/valida-dados.php",
-            data:{senha: usrSenha, confirma: usrConfirma},
+            url:"../../Index.php",
+            data:{senha: usrSenha, confirma: usrConfirma, tipo: tipo},
             datatype:'json',
             success: function(resposta){
                 resposta = JSON.parse(resposta);
@@ -83,13 +101,19 @@ $(document).ready(function(){
         });
     });
 
+    /*
+    * O proximo evento faz uma solicitação ajax para o php verificar se o usuario está disponivel.
+    * Se houver o retorno false, ira aparecer a mensagem personalizada para o usuario escolher outro usuario
+    */
+
     $("#login").on("input", function(){
-        usrLogin = $(this).val().trim();
+        let usrLogin = $(this).val().trim();
+        let tipo = "#user";
 
         $.ajax({
             type:"POST",
-            url:"../PHP/valida-dados.php",
-            data:{login: usrLogin},
+            url:"../../Index.php",
+            data:{login: usrLogin, tipo: tipo},
             datatype:'json',
             success: function(resposta){
                 resposta = JSON.parse(resposta);
@@ -97,7 +121,8 @@ $(document).ready(function(){
                 if (!resposta){
                     erro("#login","Nome de usuário já cadastrado!");
                 } else {
-                    semErro("#login");
+                    $("#login").css({border: ""});
+                    $("#alerta").text("Usuario disponível").css({color:"green", fontSize:"12px", visibility:"visible"});
                 }
             },
             error: function(cod,textStatus,msg){
@@ -108,22 +133,16 @@ $(document).ready(function(){
 
 }); // fim da função ready
 
-
-function erro(campo, msg) {
-    $(campo).css({border: "2px solid red"});
-    $("#alerta").text(msg).css({color:"red", fontSize:"12px", visibility:"visible"});
-}
-
-function semErro(campo) {
-    $(campo).css({border: ""});
-    $("#alerta").text("").css({visibility: "hidden"});
-}
-
+/**
+ * função 'valida campos' que faz um requisição via ajax para o php, que verifica os dados do cliente. Apos o retorno, se a resposta for false, 
+ * a função mostra uma mensagem personalizada para verificar o campo em especifico
+ */
 function validaCampos(usrInput, conteudo, msg){
+    let tipo = "#valida";
     $.ajax({
         type:"POST",
-        url:"../PHP/valida-dados.php",
-        data:{usrInput: usrInput, conteudo: conteudo},
+        url:"../../Index.php",
+        data:{usrInput: usrInput, conteudo: conteudo, tipo: tipo}, 
         datatype:'json',
         success: function(resposta){
             resposta = JSON.parse(resposta);
@@ -138,6 +157,16 @@ function validaCampos(usrInput, conteudo, msg){
             erro("","Erro de comunicação com o servidor");
         }
     });
+}
+
+function erro(campo, msg) {
+    $(campo).css({border: "2px solid red"});
+    $("#alerta").text(msg).css({color:"red", fontSize:"12px", visibility:"visible"});
+}
+
+function semErro(campo) {
+    $(campo).css({border: ""});
+    $("#alerta").text("").css({visibility: "hidden"});
 }
 
 function limpaCampos (){

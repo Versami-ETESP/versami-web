@@ -1,5 +1,5 @@
 <?php
-include_once 'Conexao.php';
+include_once __DIR__ . '/Conexao.php';
 class Validacao
 {
     /**
@@ -80,9 +80,9 @@ class Validacao
     {
 
         if ($confirm != $pass) {
-            $result = false;
+            return false;
         } else {
-            $result = true;
+            return true;
         }
 
     } 

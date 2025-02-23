@@ -1,6 +1,6 @@
 <?php
 
-include_once 'Perfil.php';
+include_once __DIR__ .'/Perfil.php';
 class Usuario extends Perfil
 {
 

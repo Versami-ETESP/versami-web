@@ -1,5 +1,5 @@
 <?php
-require_once '../core/Conexao.php';
+require_once __DIR__ . '/../core/Conexao.php';
 class PublicacaoController
 {
     private $pdo = null;

@@ -1,7 +1,7 @@
 <?php
-require_once '../core/Conexao.php';
-require_once '../core/Validacao.php';
-require_once '../models/Usuario.php';
+require_once __DIR__ . '/../core/Conexao.php';
+require_once __DIR__ . '/../core/Validacao.php';
+require_once __DIR__ . '/../models/Usuario.php';
 
 class LoginController
 {

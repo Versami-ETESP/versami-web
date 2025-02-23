@@ -1,11 +1,12 @@
 <?php
 
-require_once '../core/Conexao.php';
-require_once '../core/Validacao.php';
+require_once __DIR__ . '/../core/Conexao.php';
+require_once __DIR__ . '/../core/Validacao.php';
 class RegistroController
 {
 
     private $pdo = null;
+    private $table = "tblUsuario";
 
     public function __construct()
     {
@@ -13,42 +14,59 @@ class RegistroController
         $this->pdo = $connect->connectDB();
     }
 
+    /*
+    'inputValidate' verifica se o input do usuario esta correto e devolve para o javascript mostrar para o usuario
+    */
+
     public function inputValidate($input, $value)
     {
 
         switch ($input) {
             case "#nome":
-                $result = Validacao::nameValidation($value);
-                die(json_encode($result));
+                return $result = Validacao::nameValidation($value);
+
             case "#email":
-                $result = Validacao::emailValidation($value);
-                die(json_encode($result));
+               return $result = Validacao::emailValidation($value);
+
             case "#senha":
-                $result = Validacao::passValidation($value);
-                die(json_encode($result));
+                return $result = Validacao::passValidation($value);
+
             case "#nasc":
-                $result = Validacao::birthValidation($value);
-                die(json_encode($result));
+               return  $result = Validacao::birthValidation($value);
         }
 
-    } // verifica se o input do usuario esta correto e devolve para o javascript mostrar para o usuario
+    } 
+
+    /*
+        'userLoginUnique' torna pratico o uso do metodo userIsUnique da classe validação
+        O retorno será um booleano para saber se o usuario está disponivel
+    */
+
+    public function userLoginUnique($login){
+        return Validacao::userIsUnique($login,$this->table,$this->pdo);
+    }
+
+    /*
+     * Esse método verifica se o campo input não esta vazio, depois faz a validação dos dados do usuario atraves dos metodos da classe Validacao.
+     * Caso Não haja nenhuma dessas inconsistencias nos dados, havera uma tentativa de incluir os dados do usuario no banco de dados.
+     * Caso haja algum erro com a conexão do banco de dados, ele retornará uma mensagem de erro ao cadastrar o usuario
+     */
 
     public function register($name, $user, $pass, $confirm, $email, $birth){
 
-        $table = "tblUsuario";
 
         if (empty($name) || empty($user) || empty($email) || empty($birth) || empty($pass) || empty($confirm)) {
             $msg = "Necessário preencher todos os campos para o cadastro";
-            die(json_encode($msg));
+            return $msg;
         }
 
-        if (!Validacao::nameValidation($name) || !Validacao::emailValidation($email) || !Validacao::passValidation($pass) || !Validacao::birthValidation($birth) || !Validacao::userIsUnique($user, $table, $this->pdo)) {
+        if (!Validacao::nameValidation($name) || !Validacao::emailValidation($email) || !Validacao::passValidation($pass) || !Validacao::birthValidation($birth) || !Validacao::userIsUnique($user, $this->table, $this->pdo) || !Validacao::passConfirm($pass, $confirm)) {
             $msg = "Preencha todos os campos corretamente";
-            die(json_encode($msg));
+            return $msg;
         }
 
         try {
-            $sql = $this->pdo->prepare("insert into " . $table . "(nome,data_nasc,email,senha,arroba_usuario) values (:nome, :data, :email, :senha, :arroba);");
+            $sql = $this->pdo->prepare("insert into " . $this->table . "(nome,data_nasc,email,senha,arroba_usuario) values (:nome, :data, :email, :senha, :arroba);");
 
             $sql->bindValue(":nome", $name);
             $sql->bindValue(":data", $birth);
@@ -61,21 +79,16 @@ class RegistroController
 
             $msg = "Usuario cadastrado com sucesso!";
 
-            die(json_encode($msg));
+            return $msg;
 
         } catch (PDOException $e) {
 
             error_log("Erro de conexão " . $e->getMessage());
             $msg = "Erro ao cadastrar usuário. Tente novamente mais tarde.";
-            die(json_encode($msg));
+            return $msg;
 
         }
 
     }
 
-    /*
-     * Esse método verifica se o campo input não esta vazio, depois faz a validação dos dados do usuario atraves dos metodos da classe Validacao.
-     * Caso Não haja nenhuma dessas inconsistencias nos dados, havera uma tentativa de incluir os dados do usuario no banco de dados.
-     * Caso haja algum erro com a conexão do banco de dados, ele retornará uma mensagem de erro ao cadastrar o usuario
-     */
 }

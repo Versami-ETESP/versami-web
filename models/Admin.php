@@ -1,5 +1,5 @@
 <?php
-require_once 'Perfil.php';
+require_once __DIR__ . '/Perfil.php';
 class Admin extends Perfil{
 
     private $admPermission;
