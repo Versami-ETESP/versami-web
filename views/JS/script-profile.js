@@ -13,15 +13,22 @@ $(document).ready(function(){
     $("#userArroba").text(arrobaUser);
 
     
-    buscarPosts(true);
+    buscarPosts(true); // aciona a função 'buscarPosts' assim que a pagina carrega.
+
+    /*
+        Realiza o envio de uma publicação para o servidor, para ser salvo no banco de dados.
+        Não permite o envio de posts vazios.
+    */
+
 
     $("#publicarPost").click( function(){
-        let publicacao = $("#publicacao").val();
+        let conteudo = $("#publicacao").val();
+        let tipo = "#public";
     
         $.ajax({
-            url: "../PHP/publicacao.php",
+            url: "../../Index.php",
             type:"POST",
-            data:{conteudo: publicacao},
+            data:{conteudo: conteudo, tipo: tipo},
             success: function(resultado){
                 resultado = JSON.parse(resultado);
                 console.log(resultado);
@@ -37,26 +44,34 @@ $(document).ready(function(){
         })
     });
     
-}); // aciona a função assim que a pagina carrega.
+}); 
 
+/*
+    Aciona a função 'buscarPosts' quando o usuario chega no limite do scroll da pagina
+*/
 $(window).on("scroll", function() {
     if ($(window).scrollTop() + $(window).height() + 5 > $(document).height()) {
         buscarPosts();
     }
-}); // aciona a função quando o usuario chega no limite do scroll da pagina
+}); 
 
-
+/*
+ * 'buscarPosts' passa para o php os limites qtd de postagens e recebe as 
+ * postagens em forma de vetor, cria uma div e insere o conteudo desse post na div
+ */
 
 function buscarPosts(inicial = false){ 
 
+    let tipo = "#busca";
+
     $.ajax({
-        url: "../PHP/profile.php",
+        url: "../../Index.php",
         type:"POST",
-        data: {limite: limite, qtd: qtd},
+        data: {limite: limite, inicio: qtd, tipo: tipo},
         success: function(resultado){
-
-
+            console.log(resultado);
             let posts = JSON.parse(resultado);
+            console.log(posts);
             
             if(inicial && (!posts || posts === "false")){
                 res = "<div class='post'>Nenhum post localizado</div>"; // cria uma div informando que o user nao tem postagens vinculadas ao perfil
@@ -88,7 +103,7 @@ function buscarPosts(inicial = false){
         }
     });
 
-} // essa função faz passa para o php os limites qtd de postagens e recebe as postagens em forma de vetor, cria uma div e insere o conteudo desse post na div
+} // 
 
 function abrirModal(){
     const modal = $("#janela-modal");

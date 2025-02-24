@@ -25,26 +25,27 @@ class PublicacaoController
 
 
         if (empty($content) || empty($id)) {
-            $result = false;
-            die(json_encode($result));
+            return $result = false;
+            
         }
 
         $datapub = new DateTime();
+        $datastring = $datapub->format('Y-m-d H:i:s');
 
         try {
             $sql = $this->pdo->prepare("INSERT INTO $this->table (conteudo, dataPublic, usuario) VALUES (:cont, :datapub, :user);");
 
             $sql->bindValue(":cont", $content);
-            $sql->bindValue(":datapub", $datapub);
+            $sql->bindValue(":datapub", $datastring);
             $sql->bindValue(":user", $id);
 
             $sql->execute();
 
-            $result = true;
-            die(json_encode($result));
+            return $result = true;
 
         } catch (PDOException $e) {
             error_log("Erro de conexão " . $e->getMessage());
+            return "Erro de conexão";
         }
 
     }
@@ -73,14 +74,15 @@ class PublicacaoController
 
             if(count($consulta) > 0){
                 $result = $consulta; 
-                die(json_encode($result));
+                return $result;
             } else {
-                $result = []; 
-                die(json_encode($result));
+                $result = Array();
+                return $result; 
             }
 
         } catch (PDOException $e) {
             error_log("Erro de conexão " . $e->getMessage());
+            return ["erro" => "Erro ao buscar posts"];
         }
 
     }

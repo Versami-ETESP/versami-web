@@ -9,7 +9,7 @@ try{
         $tabela = 'tblPublicacao';
         $user = $_SESSION['id'];
         $datapub = new DateTime();
-        $datastring = $datapub->format('Y-m-d H:i:s');
+        $datastring = $datapub->format('YYYY-MM-DD HH:MM:SS');
         $conteudo = $_POST['conteudo'];
     
         $sql = $pdo->prepare("INSERT INTO $tabela (conteudo, dataPublic, usuario) VALUES (:cont, :datapub, :user);");

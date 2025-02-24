@@ -51,7 +51,7 @@ create table tblPublicacao(
 idPublicacao int not null primary key identity(1,1),
 conteudo varchar(1000),
 titulo varchar(80),
-dataPublic datetime,
+dataPublic DATETIME2,
 nota int,
 usuario int foreign key references tblUsuario(idUsuario),
 livro int foreign key references tblLivro(idLivro)
