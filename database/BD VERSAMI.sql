@@ -9,8 +9,8 @@ data_nasc date,
 email varchar(80),
 senha varchar(250),
 arroba_usuario varchar(30) unique,
-fotoUsuario varchar(250),
-fotoCapa varchar(250))
+fotoUsuario varbinary(max),
+fotoCapa varbinary(max))
 go
 create table tblAdmin(
 idAdmin int not null primary key identity(1,1),
@@ -38,7 +38,7 @@ create table tblLivro(
 idLivro int not null primary key identity(1,1),
 nomeLivro char(80),
 descLivro varchar(250),
-imgCapa varchar(250),
+imgCapa varbinary(max),
 genero int foreign key references tblGenero(idGenero)
 )
 go
@@ -54,7 +54,7 @@ titulo varchar(80),
 dataPublic DATETIME2,
 nota int,
 usuario int foreign key references tblUsuario(idUsuario),
-livro int foreign key references tblLivro(idLivro)
+livro int null foreign key references tblLivro(idLivro)
 )
 go
 create table tblInteracao(
@@ -92,10 +92,16 @@ administrador int foreign key references tblAdmin(idAdmin)
 go
 create table tblOCBugs(
 idOCBugs int primary key identity(1,1),
-conteudo varchar(250)
+conteudo varchar(250),
 corrigido bit,
 usuario int foreign key references tblUsuario(idUsuario),
 administrador int foreign key references tblAdmin(idAdmin)
+)
+go
+create table tblUsuario_LivrosFavoritos(
+idUsuario int foreign key references tblUsuario(idUsuario),
+idLivro int foreign key references tblLivro(idLivro),
+primary key(idUsuario, idLivro)
 )
 
 
