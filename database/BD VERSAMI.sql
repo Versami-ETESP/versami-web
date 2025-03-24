@@ -14,37 +14,31 @@ fotoCapa varbinary(max))
 go
 create table tblAdmin(
 idAdmin int not null primary key identity(1,1),
-nome char(80),
+nome varchar(80),
 data_nasc date,
 email varchar(80),
 senha varchar(250),
-arroba_usuario varchar(30),
+arroba_usuario varchar(30) unique,
 permissao_admin bit 
 )
 go
 create table tblAutor(
 idAutor int not null primary key identity(1,1),
-nomeAutor char(80),
+nomeAutor varchar(80),
 descAutor varchar(250)
 )
 go
 create table tblGenero(
 idGenero int not null primary key identity(1,1),
-nomeGenero char(80),
+nomeGenero varchar(80),
 descGenero varchar(250)
 )
 go
 create table tblLivro(
 idLivro int not null primary key identity(1,1),
-nomeLivro char(80),
+nomeLivro varchar(80),
 descLivro varchar(250),
-imgCapa varbinary(max),
-genero int foreign key references tblGenero(idGenero)
-)
-go
-create table tblLivro_Autor(
-Livro int foreign key references tblLivro(idLivro),
-Autor int foreign key references tblAutor(idAutor)
+imgCapa varbinary(max)
 )
 go
 create table tblPublicacao(
@@ -53,57 +47,70 @@ conteudo varchar(1000),
 titulo varchar(80),
 dataPublic DATETIME2,
 nota int,
-usuario int foreign key references tblUsuario(idUsuario),
-livro int null foreign key references tblLivro(idLivro)
+idUsuario int foreign key references tblUsuario(idUsuario),
+idLivro int null foreign key references tblLivro(idLivro)
 )
 go
-create table tblInteracao(
-idInteracao int not null primary key identity(1,1),
+create table tblComentario(
+idComentario int not null primary key identity(1,1),
 comentario varchar(248),
-data_coment datetime,
-curtida bit,
-publicacao int foreign key references tblPublicacao(idPublicacao),
-usuario int foreign key references tblUsuario(idUsuario)
-)
-go
-create table tblUsuario_Seguindo(
-usuario int foreign key references tblUsuario (idUsuario),
-usuario_seguindo int foreign key references tblUsuario(idUsuario),
-primary key (usuario, usuario_seguindo)
-)
-go
-create table tblSeguindo(
-idSeguindo int not null primary key identity(1,1),
-usuario int foreign key references tblUsuario(idUsuario)
-)
-go
-create table tblSeguidor(
-idSeguidor int not null primary key identity(1,1),
-usuario int foreign key references tblUsuario(idUsuario)
+data_coment DATETIME2,
+idPublicacao int foreign key references tblPublicacao(idPublicacao),
+idUsuario int foreign key references tblUsuario(idUsuario)
 )
 go
 create table tblBlogPost(
 idBlogPost int primary key identity(1,1),
 titulo varchar(80),
 conteudo varchar (1000),
-dataPost datetime,
+dataPost DATETIME2,
 administrador int foreign key references tblAdmin(idAdmin)
 )
 go
-create table tblOCBugs(
-idOCBugs int primary key identity(1,1),
+create table tblOcorrenciaBugs(
+idOcorrenciaBugs int primary key identity(1,1),
 conteudo varchar(250),
 corrigido bit,
 usuario int foreign key references tblUsuario(idUsuario),
 administrador int foreign key references tblAdmin(idAdmin)
 )
 go
-create table tblUsuario_LivrosFavoritos(
+create table tblLivrosFavoritos(
 idUsuario int foreign key references tblUsuario(idUsuario),
 idLivro int foreign key references tblLivro(idLivro),
 primary key(idUsuario, idLivro)
 )
+go
+create table tblLikesPorPost(
+idUsuario int foreign key references tblUsuario(idUsuario),
+idPublicacao int foreign key references tblPublicacao(idPublicacao),
+primary key(idUsuario, idPublicacao)
+)
+go
+create table tblLikesPorComentario(
+idUsuario int foreign key references tblUsuario(idUsuario),
+idComentario int foreign key references tblComentario(idComentario),
+primary key(idUsuario, idComentario)
+)
+go
+create table tblGenero_Livro(
+idGenero int foreign key references tblGenero(idGenero),
+idLivro int foreign key references tblLivro(idLivro),
+primary key(idGenero, idLivro)
+)
+go
+create table tblSeguidores(
+idSeguidor int foreign key references tblUsuario(idUsuario),
+idSeguido int foreign key references tblUsuario(idUsuario),
+primary key(idSeguidor, idSeguido)
+)
+go
+create table tblLivro_Autor(
+idLivro int foreign key references tblLivro(idLivro),
+idAutor int foreign key references tblAutor(idAutor),
+primary key(idLivro, idAutor)
+)
 
 
---use master
---drop database versami
+use master
+drop database versami
