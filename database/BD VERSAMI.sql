@@ -110,7 +110,8 @@ idLivro int foreign key references tblLivro(idLivro),
 idAutor int foreign key references tblAutor(idAutor),
 primary key(idLivro, idAutor)
 )
+go
+ALTER TABLE tblUsuario ADD COLUMN bio_usuario VARCHAR(255) null
 
-
-use master
-drop database versami
+--use master
+--drop database versami
