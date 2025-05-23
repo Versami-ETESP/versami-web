@@ -1,0 +1,581 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background-image: url('../../../Assets/BackgroundBlogsVersami.png');
+  background-repeat: no-repeat;
+  background-color: #3D5A80;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  padding: 2.19rem;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.glass{
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  backdrop-filter: blur(0.62rem);
+  -webkit-backdrop-filter: blur(0.62rem);
+  border-radius: 1.25rem;
+  border:0.06rem solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0.50rem 2.00rem 0 rgba(0, 0, 0, 0.37);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo img {
+  width: 7.50rem;
+  margin-right: 0.62rem;
+}
+
+.logo span {
+  font-size: 1.50rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  max-width: 50.00rem;
+  list-style: none;
+}
+
+.nav-links li {
+  margin-right: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #2c2c2c;
+  font-size: 1.12rem;
+  padding-bottom: 0.31rem;
+  position: relative;
+  transition: all 0.5s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  transition: all 0.5s;
+  border-bottom: 0.19rem solid #4ae1fc;
+  color: #FFFFFF;
+}
+
+.user-icon{
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.user-icon a{
+  text-decoration: none;
+  list-style: none;
+  color: #FFFFFF;
+}
+
+.user-icon span {
+  font-size: 2.19rem;
+}
+
+.user-icon a:hover{
+  transition: all 0.5s;
+  color: #4ae1fc;
+}
+
+main {
+  flex-grow: 1;
+}
+
+footer {
+  background-color: #333;
+  padding: 2.50rem 1.25rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 75.00rem;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.newsletter h2 {
+  font-size: 1.50rem;
+  color: white;
+}
+
+.newsletter h1{
+  font-size: 3.06rem;
+  border-bottom: 0.19rem solid #61C1D1;
+  margin-bottom: 0.94rem;
+}
+
+.newsletter span {
+  color: #34a7c1;
+}
+
+form {
+  display: flex;
+  margin-top: 0.62rem;
+}
+
+form input {
+  padding: 0.62rem;
+  border: none;
+  border-radius: 0.31rem;
+  margin-right: 0.62rem;
+  outline: none;
+}
+
+form button {
+  font-family: "Montserrat", sans-serif;
+  background-color: #61c1d1;
+  background-image: linear-gradient(180deg, #61c1d1 0%, #3a737d 100%);
+  color: white;
+  border: none;
+  border-radius: 0.31rem;
+  padding: 0.62rem 1.25rem;
+  cursor: pointer;
+}
+
+form button:hover {
+  transition: color 0.9s;
+  background-color: #298e9b;
+  background-image: linear-gradient(90deg, #61c1d1 0%, #3a737d 100%);
+}
+
+.middle{
+  display: inline;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-links{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.88rem;
+}
+
+.social-links a i {
+  font-size: 1.56rem;
+  margin-right: 1.88rem;
+  color: #cccccc;
+  transition: all 0.5s;
+}
+
+.social-links a i:hover{
+  color: #61C1D1;
+  transition: all 0.5s;
+}
+
+.social-links a i:last-child{
+  margin-right: 0;
+}
+
+.social-image{
+  margin-bottom: 3.12rem;
+}
+
+.social-image img {
+  width: 12.50rem;
+  margin-bottom: 0.62rem;
+}
+
+.about h4{
+  font-size: 1.50rem;
+  margin-bottom: 0.94rem;
+}
+
+.pRedes{
+  text-align: center;
+  margin-bottom: 1.88rem;
+}
+
+.about p {
+  color: #cccccc;
+  max-width: 18.75rem;
+}
+
+/* NÃO MUDE NADA DAQUI PRA CIMA */
+
+.containerMessageLeft{
+  padding: 3.75rem;
+  margin: 5.00rem;
+  max-width: 39.38rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: left;
+  gap: 2.50rem;
+}
+
+.containerMessageLeft h2{
+  font-size: 2.38rem;
+  text-shadow: 0.06rem 0.06rem 0.12rem #252525;
+}
+
+.containerMessageLeft p{
+  line-height: 1.56rem;
+}
+
+.blogversami{
+  width: 100%;
+}
+
+.blogversami span{
+  border-bottom: 0.19rem solid #61C1D1;
+}
+
+.blogversami h1::after{
+  content: "";
+  display: flex;
+  width: 20.62rem;
+  height: 0.2rem; 
+  background: #61c1d1;
+  margin: 0 auto;
+  position: absolute;
+}
+
+.blogversami span {
+  color: #61c1d1;
+}
+
+.containerMessageLeft {
+  margin-left: 3.12rem;
+  text-align: left;
+  width: auto;
+}
+
+.containerBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonP{
+  width: 10.00rem;
+  height: 3.12rem;
+  color: #FFFFFF;
+  background-color: #61c1d1;
+  background-image: linear-gradient(180deg, #61c1d1 0%, #3a737d 100%);
+  box-shadow: rgba(0, 0, 0, 0.35) 0.00rem 0.31rem 10.31rem;
+  border-radius: 0.50rem;
+  font-size: 0.94rem;
+  letter-spacing: 0.19rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.buttonP:hover{
+  transition: all 0.5s;
+  background-color: #61c1d1;
+  background-image: linear-gradient(90deg, #61c1d1 0%, #3a737d 100%);
+}
+
+.buttonP:hover i{
+  transition: all 0.5s;
+  transform: translateX(0.25rem);
+}
+
+.containerCards{
+  display: flex;
+  flex-direction: column  ;
+  justify-content: center;
+  align-items: center;
+  gap: 6.25rem;
+  padding: 2.50rem;
+  padding-top: 3.75rem;
+}
+
+.card {
+  width: 100%;
+  display: flex;
+  height: auto;
+  background: #FFFFFF;
+  box-shadow: 0 0.25rem 0.50rem rgba(0, 0, 0, 0.3);
+  padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+  justify-content: center;
+  align-items: center;
+  gap: 1.88rem;
+  border-radius: 0.62rem;
+  cursor: pointer;
+}
+
+.card:hover{
+  transition: all 0.5s;
+  transform: translateY(-0.62rem);
+  box-shadow: 0 0.62rem 1.88rem 0.31rem rgba(255, 255, 255, 0.514);
+}
+
+.card img{
+  width: 18.75rem;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.62rem;
+}
+
+.cardContent{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btnSeta{
+  background-color: transparent;
+  border: none;
+  font-size: 2.00rem;
+  color: #6189D1;
+  cursor: pointer;
+}
+
+.btnSeta i:hover{
+  transition: all 0.5s;
+  color: #4ae1fc;
+  transform: translateX(0.38rem);
+}
+
+.cardText h2{
+  margin-bottom: 0.62rem;
+  color: #6189D1;
+}
+
+.cardText p{
+  color: #333333;
+  line-height: 1.56rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+.overlayPopUp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.containerPopUp{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background-color: #fff;
+  width: 80%;
+  max-width: 56.25rem;
+  padding: 1.25rem;
+  border-radius: 0.50rem;
+  position: relative;
+  max-height: 80%;
+  height: 45.62rem;
+  overflow-y: auto;
+  box-shadow: 0 0.25rem 0.50rem rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.62rem;
+}
+
+.popup img{
+  width: 100%;
+  height: auto;
+  margin-top:50%;
+  border-radius: 1.88rem;
+  padding: 1.25rem;
+  box-shadow: 0 0.25rem 0.50rem rgba(0, 0, 0, 0.2);
+}
+
+.popup h2{
+  color: #4ae1fc;
+}
+
+.popup p{
+  color: #333333;
+}
+
+
+.popup::-webkit-scrollbar {
+  width: 0.50rem;
+}
+
+.popup::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 0.50rem;
+}
+
+.popup::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 0.50rem;
+}
+
+.popup::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.btnClose {
+  position: absolute;
+  top: 0.62rem;
+  right: 0.62rem;
+  font-size: 1.12rem;
+  cursor: pointer;
+  color: #888;
+  border: none;
+  background: none;
+}
+
+.btnClose:hover {
+  color: #333;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.telaApp{
+  background-color: #3D5A80;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.containerEsquerdoApp{
+  max-width: 39.38rem;
+  text-align: center;
+}
+
+.containerEsquerdoApp h2{
+  font-size: 2.38rem;
+  margin-bottom: 1.88rem;
+  text-shadow: 0.06rem 0.06rem 0.12rem #252525;
+}
+
+.containerEsquerdoApp p{
+  margin-bottom: 1.88rem;
+  line-height: 1.56rem;
+}
+
+.containerEsquerdoApp span{
+  font-size: 2.38rem;
+  border-bottom: 0.19rem solid #61C1D1;
+  margin-bottom: 1.88rem;
+  text-shadow: 0.06rem 0.06rem 0.12rem #252525;
+}
+
+.containerEsquerdoApp img{
+  width: 10.62rem;
+}
+
+.containerDireitoApp{
+  max-width: 50%;
+  text-align: center;
+}
+
+.containerDireitoApp img{
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .user-icon{
+    display: none;
+  }
+
+  .logo{
+
+    margin-right: 3%;
+  }
+
+
+}
+
+@media (max-width: 750px) {
+
+  .footer-content{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .logo{
+    width: 15%;
+  }
+
+  .logo img{
+    width: 100%;
+    content: url('../../Assets/versamiLogo.png');
+  }
+
+  .card{
+    flex-direction: column;
+    z-index: 1;
+  }
+
+  .overlayPopUp{
+    z-index: 999;
+  }
+
+
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página Inicial</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="fontawesome/css/all.min.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Bem-vindo</h1>
+      <nav>
+        <a href="index.html">Início</a>
+        <a href="about.html">Sobre</a>
+        <a href="contact.html">Contato</a>
+      </nav>
+
+      <div class="theme-controls">
+        <button id="themeButton"><i class="fas fa-palette"></i></button>
+      </div>
+    </header>
+
+    <main>
+      <div class="card">
+        <h2>Explore nossos conteúdos</h2>
+        <p>Esta é a página inicial do nosso site.</p>
+      </div>
+    </main>
+
+    <div id="themeModal" class="modal">
+      <div class="modal-content">
+        <span id="closeModal">&times;</span>
+        <h2>Escolha um Tema</h2>
+        <div class="theme-options">
+          <button class="theme-option" data-theme="claro" style="background: #ffffff; border: 1px solid #ccc"></button>
+          <button class="theme-option" data-theme="escuro" style="background: #121212"></button>
+          <button class="theme-option" data-theme="azulado" style="background: #001f3f"></button>
+          <button class="theme-option" data-theme="azul-esverdeado" style="background: #004d40"></button>
+          <button class="theme-option" data-theme="preto-absoluto" style="background: #000000"></button>
+        </div>
+
+        <h3>Escolha uma Cor Complementar</h3>
+        <div class="color-options">
+          <button class="color-option" data-color="#ffeb3b" style="background: #ffeb3b"></button>
+          <button class="color-option" data-color="#ff4081" style="background: #ff4081"></button>
+          <button class="color-option" data-color="#673ab7" style="background: #673ab7"></button>
+          <button class="color-option" data-color="#ff9800" style="background: #ff9800"></button>
+          <button class="color-option" data-color="#f44336" style="background: #f44336"></button>
+          <button class="color-option" data-color="#4caf50" style="background: #4caf50"></button>
+        </div>
+        <button id="applyTheme">Aplicar</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

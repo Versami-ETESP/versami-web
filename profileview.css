@@ -1,0 +1,505 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+body {
+  display: flex;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+input[type="submit"] {
+  background: #1877f2;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+input[type="submit"]:hover {
+  background: #145dbf;
+}
+
+.header-menu {
+  width: 15%;
+}
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #ffffff;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  border-right: 0.5px solid #bebebe;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.sidebar img {
+  width: 100px;
+  display: block;
+  margin: 0 auto 20px;
+  cursor: pointer;
+}
+.sidebar ul {
+  list-style: none;
+  display: flex;
+  justify-content: column;
+  align-items: left;
+  flex-direction: column;
+  gap: 15px;
+  list-style: none;
+  outline: none;
+}
+.sidebar ul li {
+  padding: 15px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000000;
+  list-style-type: none;
+  list-style: none;
+  outline: none;
+  font-family: "Montserrat", sans-serif;
+}
+.sidebar ul li i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+.sidebar ul li:hover {
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+.sidebar ul li.active {
+  color: #64c1ff;
+  font-weight: bold;
+}
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #64c1ff;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  border-radius: 30px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+.button i {
+  margin-left: 8px;
+  font-size: 20px;
+}
+.button:hover {
+  background: #42a5f5;
+}
+.button-content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.buttonOff {
+  display: inline-block;
+  background: #dadadb;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.buttonOff:hover {
+  transition: 0.3s;
+  background: red;
+}
+
+.buttonOff i {
+  color: #ffffff;
+}
+/* Responsividade */
+.menu-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 1002;
+}
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  .menu-btn {
+    display: block;
+  }
+  .menu-btn.hidden {
+    display: none;
+  }
+  .overlay.active {
+    display: block;
+  }
+}
+
+.content {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.principal-content {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  gap: 15px;
+}
+
+.user {
+  gap: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.capa-perfil {
+  width: 100%;
+  height: 45vh;
+  position: relative;
+}
+
+.capa-perfil img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content-user-perfil {
+  width: 100%;
+  height: 170px;
+  display: flex;
+  justify-content: center;
+}
+
+.side-perfil {
+  width: 72%;
+  margin-left: 15%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.top-perfil {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  gap: 25px;
+}
+
+.botao-perfil {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15%;
+}
+
+.content-info-right i {
+  font-size: 20px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.content-info-right i:hover {
+  transition: 0.3s ease all;
+  color: #1877f2;
+}
+
+.seguir-btn {
+  background-color: #1877f2;
+  padding: 10px;
+  border: none;
+  color: white;
+  font-weight: 400;
+  border-radius: 3px;
+  transition: 0.3s ease all;
+  cursor: pointer;
+}
+
+.seguir-btn:hover {
+  background-color: #103c77;
+}
+
+#seguir-btn {
+  background-color: #1877f2;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  color: white;
+  font-weight: 400;
+  border-radius: 3px;
+  transition: 0.3s ease all;
+  cursor: pointer;
+}
+
+#seguir-btn:hover {
+  background-color: #103c77;
+}
+
+.seguindo {
+  font-weight: 600;
+  background-color: #b8b8b89d !important;
+}
+
+.seguindo:hover {
+  background-color: #808080 !important;
+}
+
+.posts {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.tabs-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tabs-container img {
+  width: 100px;
+  height: auto;
+  margin: 10px;
+}
+
+.tabs {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 16px;
+  color: #666;
+  transition: color 0.3s ease;
+}
+.tab.active {
+  font-weight: bold;
+  color: #61c1d1;
+  border-bottom: 3px solid #61c1d1;
+}
+
+.content-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.contentPosts {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.contentPosts.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.containerContent {
+  width: 70%;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.content-info-post .nome-usuario {
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0;
+}
+
+.content-info-post .arroba-usuario {
+  font-weight: 200;
+  font-size: 15px;
+  color: #707070;
+  margin: 0;
+}
+
+.content-info-nomes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+}
+
+.post {
+  background-color: #ffffff;
+  border: 1px solid #aaa;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  width: 100%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.post img {
+  max-width: 100%;
+  border-radius: 5px;
+}
+
+.content-info-post {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.content-info-left {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.content-info-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilo para o contador de likes e comentários */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.actions i {
+  font-size: 16px;
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.like-btn i {
+  transition: color 0.2s ease-in-out;
+  color: #b0b0b0; /* Cinza padrão */
+}
+
+.like-btn .like-count {
+  transition: color 0.2s ease-in-out;
+  color: #b0b0b0; /* Cinza padrão */
+  font-size: 15px;
+}
+
+.like-btn .like-count.liked {
+  color: #f91880; /* Rosa quando curtido */
+}
+
+.like-btn i.fa-solid {
+  color: #f91880 !important;
+}
+
+.like-btn:hover i,
+.like-btn:hover .like-count {
+  color: #f91880; /* Rosa no hover */
+}
+
+/* Comentários */
+.comment-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #145dbf;
+  font-size: 14px;
+}
+
+.comment-btn:hover {
+  color: #1877f2;
+}
+
+.comment-section {
+  margin-top: 10px;
+}
+
+.comment {
+  background: #f0f0f0;
+  padding: 8px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
