@@ -21,10 +21,23 @@ if (!empty($busca)) {
     }
 
     while ($usuario = sqlsrv_fetch_array($result_busca, SQLSRV_FETCH_ASSOC)) {
+        // Converter dados binários para base64
+        if (!empty($usuario['fotoUsuario'])) {
+            $usuario['fotoUsuario'] = 'data:image/jpeg;base64,' . base64_encode($usuario['fotoUsuario']);
+        } else {
+            $usuario['fotoUsuario'] = 'caminho/para/imagem/padrao.jpg'; // Definir uma imagem padrão
+        }
+        
+        if (!empty($usuario['fotoCapa'])) {
+            $usuario['fotoCapa'] = 'data:image/jpeg;base64,' . base64_encode($usuario['fotoCapa']);
+        } else {
+            $usuario['fotoCapa'] = 'caminho/para/capa/padrao.jpg'; // Definir uma capa padrão
+        }
+        
         $usuarios[] = $usuario;
     }
 
-    // Exibe os resultados (HTML mantido igual)
+    // Exibe os resultados
     if (!empty($usuarios)) {
         foreach ($usuarios as $usuario) {
             echo '<div class="usuario">';

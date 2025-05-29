@@ -2,11 +2,16 @@
 session_start();
 include '../config.php';
 
+// Limpa o erro da sessão se não for uma submissão POST
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    unset($_SESSION["login_error"]);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $senha = $_POST["senha"];
 
-    // Busca usuário com verificação de conta ativa
+    // Busca usuário no banco de dados
     $sql = "SELECT idUsuario, nome, senha FROM tblUsuario WHERE email = ?";
     $params = array($email);
     $stmt = sqlsrv_query($conn, $sql, $params);
@@ -18,12 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
     if ($user) {
-        // Usuário existe, verifica a senha
+        // Verifica se a senha está correta
         if (password_verify($senha, $user["senha"])) {
             $_SESSION["usuario_id"] = $user["idUsuario"];
             $_SESSION["nome"] = $user["nome"];
             
-            // Busca informações completas do usuário
+            // Busca informações adicionais do usuário
             $sql_info = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario 
                          FROM tblUsuario WHERE idUsuario = ?";
             $params_info = array($user["idUsuario"]);
@@ -39,9 +44,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["login_error"] = "Email ou senha incorretos.";
         }
     } else {
-        // Usuário não existe
+        // Usuário não encontrado
         $_SESSION["login_error"] = "Email ou senha incorretos.";
     }
+    
+    // REMOVEMOS O REDIRECIONAMENTO PARA A MENSAGEM APARECER
+    // header("Location: ".$_SERVER['PHP_SELF']);
+    // exit();
 }
 ?>
 
@@ -66,14 +75,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Versami | Acesse sua conta</title>
     <style>
         .error-message {
-            color: red;
+            color: #d32f2f;
             text-align: center;
-            margin-bottom: 15px;
+            margin: 0 auto 20px auto;
             font-size: 14px;
-            padding: 8px;
-            background-color: #ffeeee;
-            border-radius: 4px;
-            border: 1px solid #ffcccc;
+            padding: 12px;
+            background-color: #ffebee;
+            border-radius: 6px;
+            border: 1px solid #ef9a9a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -97,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </li>
             </ul>
             <div class="user-icon">
-                <span class="material-icons-outlined"><a href="login.html"> account_circle </a></span>
+                <span class="material-icons-outlined"><a href="login.php"> account_circle </a></span>
             </div>
         </nav>
     </header>
@@ -110,15 +130,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <span id="alerta"></span>
             <?php if (isset($_SESSION['login_error'])): ?>
                 <p class="error-message">
-                    <i class="material-icons-outlined" style="vertical-align: middle; font-size: 18px;">error_outline</i>
-                    <?php echo $_SESSION['login_error']; unset($_SESSION['login_error']); ?>
+                    <i class="material-icons-outlined">error_outline</i>
+                    <?php echo $_SESSION['login_error']; ?>
                 </p>
+                <?php unset($_SESSION['login_error']); ?>
             <?php endif; ?>
             <form autocomplete="off" class="form" method="POST">
                 <div class="envelope">
                     <i class="material-icons-outlined required">alternate_email</i>
                     <input type="email" name="email" id="login2" class="entrada" placeholder="Digite seu email"
-                        required />
+                        required value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" />
                 </div>
                 <div class="envelope">
                     <i class="material-icons-outlined required">lock</i>
@@ -172,7 +193,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </footer>
     <script src="../JS/Script.js"></script>
-    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../JS/user-login.js"></script>
 </body>
 

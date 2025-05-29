@@ -11,10 +11,11 @@ if (!isset($_SESSION["usuario_id"])) {
 // Postagem de conteúdo
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
     $conteudo = $_POST["conteudo"];
-    
-    $sql_insert = "INSERT INTO tblPublicacao (conteudo, idUsuario, dataPublic) 
-                  VALUES (?, ?, GETDATE())";
-    $params_insert = array($conteudo, $_SESSION["usuario_id"]);
+    $idLivro = isset($_POST["idLivro"]) && !empty($_POST["idLivro"]) ? $_POST["idLivro"] : null;
+
+    $sql_insert = "INSERT INTO tblPublicacao (conteudo, idUsuario, idLivro, dataPublic) 
+                  VALUES (?, ?, ?, GETDATE())";
+    $params_insert = array($conteudo, $_SESSION["usuario_id"], $idLivro);
     $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
 
     if ($stmt_insert) {
@@ -26,16 +27,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
 }
 
 // Busca posts principais
+// Busca posts principais
 $sql_posts = "SELECT 
     p.idPublicacao, p.conteudo, p.dataPublic,
     u.idUsuario, u.nome, u.arroba_usuario, u.fotoUsuario,
-    l.idLivro, l.nomeLivro,
+    l.idLivro, l.nomeLivro, l.imgCapa, l.descLivro,
+    a.nomeAutor as nomeAutor,
     (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao) as total_likes,
     (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao AND idUsuario = ?) as usuario_curtiu,
     (SELECT COUNT(*) FROM tblComentario WHERE idPublicacao = p.idPublicacao) as total_comentarios
 FROM tblPublicacao p
 JOIN tblUsuario u ON p.idUsuario = u.idUsuario
 LEFT JOIN tblLivro l ON p.idLivro = l.idLivro
+LEFT JOIN tblAutor a ON l.idAutor = a.idAutor
 ORDER BY p.dataPublic DESC";
 
 $params_posts = array($_SESSION["usuario_id"]);
@@ -47,10 +51,11 @@ if ($result_posts === false) {
 }
 
 // Busca posts de quem o usuário segue (para a aba "Seguindo")
+// Busca posts de quem o usuário segue (para a aba "Seguindo")
 $sql_posts_seguindo = "SELECT 
     p.idPublicacao, p.conteudo, p.dataPublic,
     u.idUsuario, u.nome, u.arroba_usuario, u.fotoUsuario,
-    l.idLivro, l.nomeLivro,
+    l.idLivro, l.nomeLivro, l.descLivro,
     (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao) as total_likes,
     (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao AND idUsuario = ?) as usuario_curtiu,
     (SELECT COUNT(*) FROM tblComentario WHERE idPublicacao = p.idPublicacao) as total_comentarios
@@ -71,17 +76,20 @@ if ($result_posts_seguindo === false) {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/style-feed.css">
+    <link rel="stylesheet" href="style-feed.css">
 </head>
+
 <body>
     <h2>Feed</h2>
     <div class="content">
         <div class="header-menu">
+            <!-- Barra de navegação -->
             <div class="light" id="sidebar">
                 <div class="top-content-sidebar">
                     <img src="Assets/logoVersamiBlue.png" alt="Versami" />
@@ -113,6 +121,9 @@ if ($result_posts_seguindo === false) {
                         <li onclick="location.href='profile.php'">
                             <i class="fa-solid fa-user"></i> Perfil
                         </li>
+                        <li onclick="location.href='cadastrar_livro.php'">
+                            <i class="fa-solid fa-newspaper"></i> Cadastrar Livro
+                        </li>
                     </ul>
                     <div class="button" onclick="abrirModalPopUp()">
                         <i class="fa-solid fa-pen"></i> Avaliação
@@ -140,7 +151,7 @@ if ($result_posts_seguindo === false) {
                         <div class="content-container">
                             <div class="contentPosts active">
                                 <div class="containerContent">
-                                    <?php 
+                                    <?php
                                     // Verifica se há posts
                                     $has_posts = false;
                                     if ($result_posts) {
@@ -182,6 +193,30 @@ if ($result_posts_seguindo === false) {
                                                             onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
                                                             <?= transformURLsIntoLinks($post['conteudo']) ?>
                                                         </div>
+                                                        <?php if (!empty($post['idLivro'])): ?>
+                                                            <div class="attached-book">
+                                                                <?php if (!empty($post['imgCapa'])): ?>
+                                                                    <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>"
+                                                                        alt="Capa do livro">
+                                                                <?php else: ?>
+                                                                    <div class="no-book-cover">
+                                                                        <i class="fa-solid fa-book"></i>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                                <div class="book-info">
+                                                                    <?= htmlspecialchars($post['nomeLivro']) ?>
+                                                                    <?php if (!empty($post['nomeAutor'])): ?>
+                                                                        <br><p class="nomeAutorPost">
+                                                                            <?= htmlspecialchars($post['nomeAutor']) ?></p>
+                                                                    <?php endif; ?>
+                                                                    <?php if (!empty($post['descLivro'])): ?>
+                                                                        <div class="book-description">
+                                                                            <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
+                                                                        </div>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
                                                         <div class="cont-section">
                                                             <div class="like-section">
                                                                 <button type="button"
@@ -220,7 +255,7 @@ if ($result_posts_seguindo === false) {
                                                         JOIN tblUsuario U ON C.idUsuario = U.idUsuario
                                                         WHERE C.idPublicacao = ? 
                                                         ORDER BY C.data_coment ASC";
-                                                
+
                                                         $params_comentarios = array($post['idPublicacao']);
                                                         $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
 
@@ -281,7 +316,7 @@ if ($result_posts_seguindo === false) {
                             </div>
                             <div class="contentPosts">
                                 <div class="containerContent">
-                                    <?php 
+                                    <?php
                                     // Verifica se há posts na aba "Seguindo"
                                     $has_posts_seguindo = false;
                                     if ($result_posts_seguindo) {
@@ -321,6 +356,30 @@ if ($result_posts_seguindo === false) {
                                                             onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
                                                             <?= transformURLsIntoLinks($post['conteudo']) ?>
                                                         </div>
+                                                        <?php if (!empty($post['idLivro'])): ?>
+                                                            <div class="attached-book">
+                                                                <?php if (!empty($post['imgCapa'])): ?>
+                                                                    <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>"
+                                                                        alt="Capa do livro">
+                                                                <?php else: ?>
+                                                                    <div class="no-book-cover">
+                                                                        <i class="fa-solid fa-book"></i>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                                <div class="book-info">
+                                                                    <?= htmlspecialchars($post['nomeLivro']) ?>
+                                                                    <?php if (!empty($post['nomeAutor'])): ?>
+                                                                        <br><p class="nomeAutorPost">
+                                                                            <?= htmlspecialchars($post['nomeAutor']) ?></p>
+                                                                    <?php endif; ?>
+                                                                    <?php if (!empty($post['descLivro'])): ?>
+                                                                        <div class="book-description">
+                                                                            <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
+                                                                        </div>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
                                                         <div class="cont-section">
                                                             <div class="like-section">
                                                                 <button type="button"
@@ -357,7 +416,7 @@ if ($result_posts_seguindo === false) {
                                                         JOIN tblUsuario U ON C.idUsuario = U.idUsuario
                                                         WHERE C.idPublicacao = ? 
                                                         ORDER BY C.data_coment ASC";
-                                                
+
                                                         $params_comentarios = array($post['idPublicacao']);
                                                         $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
 
@@ -423,7 +482,7 @@ if ($result_posts_seguindo === false) {
         </div>
     </div>
 
-    <!-- Popup para criar review -->
+    <!-- Popup para criar review para anexar o livro -->
     <div class="popup-overlay" id="reviewPopupOverlay">
         <div class="popup">
             <div class="btn-top-content">
@@ -434,16 +493,21 @@ if ($result_posts_seguindo === false) {
             </div>
             <form method="POST" id="postForm">
                 <textarea name="conteudo" maxlength="380" id="review-content" rows="7" cols="7"
-                    placeholder="Qual foi seu último livro lido?"></textarea>
-                <div class="icons-content">
-                    <div class="icons-left-content">
-                        <div class="icon-class">
-                            <i class="fa-solid fa-book"></i>
-                        </div>
-                        <div class="icon-class">
-                            <i class="fa-solid fa-star"></i>
-                        </div>
+                    placeholder="Compartilhe seus pensamentos..."></textarea>
+
+                <!-- Área para mostrar o livro selecionado -->
+                <div id="selectedBookContainer">
+                    <div id="selectedBookCover">
+                        <i class="fa-solid fa-book"></i>
                     </div>
+                    <div id="selectedBookInfo"></div>
+                    <button type="button" id="removeBookBtn">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <input type="hidden" name="idLivro" id="selectedBookId">
+                </div>
+
+                <div class="icons-content">
                     <div class="icons-right-content">
                         <input class="btn-submit" type="submit" id="publicarPost" value="Postar">
                     </div>
@@ -452,8 +516,26 @@ if ($result_posts_seguindo === false) {
         </div>
     </div>
 
+    <!-- Popup de seleção de livros -->
+    <div class="popup-overlay" id="bookSelectionPopup">
+        <div class="popup">
+            <div class="popup-header">
+                <h2>Selecione um Livro</h2>
+                <button class="btn-close" onclick="closeBookSelection()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="popup-body">
+                <input type="text" id="bookSearch" placeholder="Pesquisar por título, autor ou gênero...">
+                <div id="booksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
     <script src="js/script-tema.js"></script>
 </body>
+
 </html>

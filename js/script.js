@@ -319,15 +319,270 @@ function closeImage(event) {
 function previewImage(input, previewId) {
   const preview = document.getElementById(previewId);
   const file = input.files[0];
-  
+
   if (file) {
-      const reader = new FileReader();
-      
-      reader.onload = function(e) {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-      }
-      
-      reader.readAsDataURL(file);
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
   }
+}
+
+// Variável para armazenar todos os livros
+let allBooks = [];
+
+// Função para abrir o popup de seleção de livros
+async function openBookSelection() {
+  try {
+    document.getElementById("bookSelectionPopup").style.display = "flex";
+    document.getElementById("bookSearch").value = "";
+
+    // Mostra loading enquanto carrega
+    showBookLoading(true);
+
+    const response = await fetch("get_books.php");
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.error || "Erro ao carregar livros");
+    }
+
+    // Armazena todos os livros para filtragem
+    allBooks = result.data || [];
+    renderBooks(allBooks);
+  } catch (error) {
+    console.error("Erro:", error);
+    showBookError("Erro ao carregar livros: " + error.message);
+  } finally {
+    showBookLoading(false);
+  }
+}
+
+// Função para renderizar os livros
+function renderBooks(books) {
+  const booksList = document.getElementById("booksList");
+
+  if (books.length === 0) {
+    booksList.innerHTML = `
+            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 20px;">
+                <i class="fa-solid fa-book-open" style="font-size: 2em; color: #ccc;"></i>
+                <p>Nenhum livro encontrado</p>
+            </div>
+        `;
+    return;
+  }
+
+  booksList.innerHTML = "";
+
+  books.forEach((book) => {
+    const bookElement = document.createElement("div");
+    bookElement.className = "book-item";
+    bookElement.innerHTML = `
+          <div class="book">
+            <div class="attach-btn" data-book-id="${book.idLivro}" 
+                    data-book-title="${book.nomeLivro}" 
+                    data-book-author="${book.nomeAutor || ""}"
+                    data-book-cover="${book.imagem_base64 || ""}">
+                <div class="book-cover">
+                    ${
+                      book.imagem_base64
+                        ? `<img src="data:image/jpeg;base64,${book.imagem_base64}" alt="${book.nomeLivro}">`
+                        : `<div class="no-cover"><i class="fa-solid fa-book"></i></div>`
+                    }
+                </div>
+                <div class="book-details">
+                    <h3 class="book-name">${book.nomeLivro}</h3>
+                    <p class="author">${
+                      book.nomeAutor || "Autor desconhecido"
+                    }</p>
+                </div>
+            </div>
+          </div>
+        `;
+    booksList.appendChild(bookElement);
+  });
+
+  // Adiciona eventos aos botões de anexar
+  document.querySelectorAll(".attach-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const bookId = this.getAttribute("data-book-id");
+      const bookTitle = this.getAttribute("data-book-title");
+      const bookAuthor = this.getAttribute("data-book-author");
+      const bookCover = this.getAttribute("data-book-cover");
+
+      selectBook(bookId, bookTitle, bookAuthor, bookCover);
+    });
+  });
+}
+
+// Evento de pesquisa em tempo real
+document.getElementById("bookSearch").addEventListener("input", function () {
+  filterBooks(this.value);
+});
+
+function filterBooks(searchTerm) {
+  if (!searchTerm) {
+    renderBooks(allBooks);
+    return;
+  }
+
+  const term = searchTerm.toLowerCase();
+  const filtered = allBooks.filter((book) => {
+    return (
+      book.nomeLivro.toLowerCase().includes(term) ||
+      (book.nomeAutor && book.nomeAutor.toLowerCase().includes(term)) ||
+      (book.genero && book.genero.toLowerCase().includes(term))
+    );
+  });
+
+  renderBooks(filtered);
+}
+
+// Função para selecionar um livro
+function selectBook(bookId, title, author, coverImage) {
+  const container = document.getElementById("selectedBookContainer");
+
+  // Atualiza os dados do livro
+  document.getElementById("selectedBookId").value = bookId;
+
+  // Atualiza a capa do livro
+  const bookCover = document.getElementById("selectedBookCover");
+  if (coverImage) {
+    bookCover.innerHTML = `<img src="data:image/jpeg;base64,${coverImage}" style="width:100%;height:100%;object-fit:cover;">`;
+  } else {
+    bookCover.innerHTML =
+      '<i class="fa-solid fa-book" style="color:#ccc;"></i>';
+  }
+
+  // Atualiza as informações do livro
+  document.getElementById("selectedBookInfo").innerHTML = `
+        <strong>${title}</strong>
+        <p>${author || "Autor desconhecido"}</p>
+    `;
+
+  // Mostra o botão de remoção
+  document.getElementById("removeBookBtn").style.display = "block";
+
+  // Fecha o popup de seleção
+  closeBookSelection();
+}
+
+// Função para remover o livro selecionado
+function removeSelectedBook() {
+  const container = document.getElementById("selectedBookContainer");
+  const bookCover = document.getElementById("selectedBookCover");
+  const bookInfo = document.getElementById("selectedBookInfo");
+
+  // Limpa os dados
+  document.getElementById("selectedBookId").value = "";
+  bookInfo.innerHTML = "";
+  bookCover.innerHTML = '<i class="fa-solid fa-book"></i>';
+
+  // Esconde o botão de remoção
+  document.getElementById("removeBookBtn").style.display = "none";
+
+  // Mantém o container visível e clicável
+  container.style.display = "flex";
+  container.onclick = function () {
+    openBookSelection();
+  };
+}
+
+// Evento de clique no botão de remoção
+document
+  .getElementById("removeBookBtn")
+  .addEventListener("click", function (e) {
+    e.stopPropagation(); // Impede que o evento se propague para o container
+    removeSelectedBook();
+  });
+
+// Evento de clique no container do livro (para selecionar novo)
+document
+  .getElementById("selectedBookContainer")
+  .addEventListener("click", function () {
+    // Só abre a seleção se não tiver livro selecionado
+    if (!document.getElementById("selectedBookId").value) {
+      openBookSelection();
+    }
+  });
+
+// Função para atualizar o estado visual do container
+function updateBookContainerState() {
+  const container = document.getElementById("selectedBookContainer");
+  const hasBook = document.getElementById("selectedBookId").value !== "";
+
+  if (hasBook) {
+    container.classList.add("has-book");
+    document.getElementById("removeBookBtn").style.display = "block";
+  } else {
+    container.classList.remove("has-book");
+    document.getElementById("removeBookBtn").style.display = "none";
+    document.getElementById("selectedBookCover").innerHTML =
+      '<i class="fa-solid fa-book"></i>';
+    document.getElementById("selectedBookInfo").innerHTML = "";
+  }
+}
+
+// Chamar esta função sempre que o estado mudar
+updateBookContainerState();
+
+// Funções auxiliares
+function showBookLoading(show) {
+  const loadingElement = document.getElementById("booksLoading");
+  if (show) {
+    if (!loadingElement) {
+      const loader = document.createElement("div");
+      loader.id = "booksLoading";
+      loader.className = "loading-indicator";
+      loader.innerHTML =
+        '<div class="spinner"></div><p>Carregando livros...</p>';
+      document.getElementById("booksList").appendChild(loader);
+    }
+  } else if (loadingElement) {
+    loadingElement.remove();
+  }
+}
+
+function showBookError(message) {
+  const booksList = document.getElementById("booksList");
+  booksList.innerHTML = `
+        <div class="error-message">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <p>${message || "Erro ao carregar livros"}</p>
+            <button onclick="openBookSelection()">Tentar novamente</button>
+        </div>
+    `;
+}
+
+function closeBookSelection() {
+  document.getElementById("bookSelectionPopup").style.display = "none";
+}
+
+// Evento de clique no ícone do livro
+document
+  .getElementById("selectBookBtn")
+  .addEventListener("click", openBookSelection);
+
+// Evento para remover livro selecionado
+document.getElementById("removeBookBtn").addEventListener("click", function () {
+  document.getElementById("selectedBookContainer").style.display = "none";
+  document.getElementById("selectedBookId").value = "";
+});
+
+// Adicione este código junto com as outras funções de popup
+
+// Função para fechar o popup de seleção de livros ao clicar no overlay
+document.getElementById("bookSelectionPopup").addEventListener("click", function(event) {
+  if (event.target === this) {
+    closeBookSelection();
+  }
+});
+
+// Mantenha a função closeBookSelection existente
+function closeBookSelection() {
+  document.getElementById("bookSelectionPopup").style.display = "none";
 }

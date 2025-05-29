@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="fotoUsuario">Foto de Perfil</label>
                 <input type="file" id="fotoUsuario" name="fotoUsuario" accept="image/*" onchange="previewImage(this, 'previewFoto')">
                 <div class="preview">
-                    <img id="previewFoto" src="<?php echo FOTO_PADRAO; ?>" style="display: block;">
+                    <img id="previewFoto" src="<?php echo FOTO_PADRAO_PATH; ?>" style="display: block;">
                 </div>
             </div>
             
@@ -102,7 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="fotoCapa">Foto de Capa</label>
                 <input type="file" id="fotoCapa" name="fotoCapa" accept="image/*" onchange="previewImage(this, 'previewCapa')">
                 <div class="preview">
-                    <img id="previewCapa" src="<?php echo CAPA_PADRAO; ?>" style="display: block;">
+                    <img id="previewCapa" src="<?php echo CAPA_PADRAO_PATH; ?>" style="display: block;">
                 </div>
             </div>
             
