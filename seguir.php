@@ -17,19 +17,21 @@ if (sqlsrv_has_rows(sqlsrv_query($conn, $sql_check, $params_check))) {
 } else {
     $sql = "INSERT INTO tblSeguidores (idSeguidor, idSeguido) VALUES (?, ?)";
     $action = "follow";
-    
+
     // Cria notificação de seguidor
-    $sql_notificacao = "INSERT INTO tblNotificacao (mensagem, tipoNotificacao, idUsuario, idReferencia)
-                       VALUES (?, ?, ?, ?)";
+    $sql_notificacao = "INSERT INTO tblNotificacao (mensagem, tipoNotificacao, idUsuario, visualizada, idAdmin)
+                   VALUES (?, ?, ?, 0, ?)";
     $mensagem = $_SESSION["nome"] . " começou a te seguir";
     sqlsrv_query($conn, $sql_notificacao, array(
-        $mensagem, NOTIFICACAO_SEGUIDOR, $seguido_id, $seguidor_id
+        $mensagem,
+        NOTIFICACAO_SEGUIMENTO,
+        $seguido_id,
+        $seguidor_id // Armazenamos quem seguiu no idAdmin
     ));
 }
 
 $result = sqlsrv_query($conn, $sql, $params_check);
 
-// Retorna resposta JSON
 echo json_encode([
     "success" => $result !== false,
     "action" => $action

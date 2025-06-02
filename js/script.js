@@ -576,11 +576,13 @@ document.getElementById("removeBookBtn").addEventListener("click", function () {
 // Adicione este código junto com as outras funções de popup
 
 // Função para fechar o popup de seleção de livros ao clicar no overlay
-document.getElementById("bookSelectionPopup").addEventListener("click", function(event) {
-  if (event.target === this) {
-    closeBookSelection();
-  }
-});
+document
+  .getElementById("bookSelectionPopup")
+  .addEventListener("click", function (event) {
+    if (event.target === this) {
+      closeBookSelection();
+    }
+  });
 
 // Mantenha a função closeBookSelection existente
 function closeBookSelection() {

@@ -2,99 +2,69 @@
 session_start();
 include '../config.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    try {
-        // Sanitização e validação
-        $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-        $arroba = filter_input(INPUT_POST, 'arroba_usuario', FILTER_SANITIZE_SPECIAL_CHARS);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-        $senha = $_POST['senha'] ?? '';
-        $confirma = $_POST['confirma'] ?? '';
-        $data_raw = filter_input(INPUT_POST, 'data_nasc', FILTER_SANITIZE_STRING);
-        $data_nasc = date("Y-m-d", strtotime($data_raw));
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nome = $_POST["nome"];
+    $arroba = $_POST["arroba_usuario"];
+    $data_nasc = date("Y-m-d", strtotime($_POST["data_nasc"]));
+    $email = $_POST["email"];
+    //$senha = password_hash($_POST["senha"], PASSWORD_DEFAULT);
+    $senha = hash("sha256",$_POST["senha"]);
 
-        // Validação
-        if (!$nome || !$arroba || !$email || !$senha || !$confirma || !$data_nasc) {
-            throw new Exception("Todos os campos devem ser preenchidos corretamente.");
-        }
+    // Verifica se usuário ou email já existe
+    $checkUser = "SELECT COUNT(*) AS total FROM tblUsuario WHERE email = ? OR arroba_usuario = ?";
+    $paramsCheck = array($email, $arroba);
+    $stmtCheck = sqlsrv_query($conn, $checkUser, $paramsCheck);
+    
+    if ($stmtCheck === false) {
+        die("Erro ao verificar usuário: " . print_r(sqlsrv_errors(), true));
+    }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("E-mail inválido.");
-        }
+    $row = sqlsrv_fetch_array($stmtCheck, SQLSRV_FETCH_ASSOC);
+    if ($row['total'] > 0) {
+        die("Erro: E-mail ou @usuário já cadastrado.");
+    }
 
-        if ($senha !== $confirma) {
-            throw new Exception("As senhas não coincidem.");
-        }
+    // Carrega imagens padrão como binário
+    $fotoPadrao = file_exists(FOTO_PADRAO_PATH) ? file_get_contents(FOTO_PADRAO_PATH) : null;
+    $capaPadrao = file_exists(CAPA_PADRAO_PATH) ? file_get_contents(CAPA_PADRAO_PATH) : null;
 
-        // Verifica idade mínima (13 anos)
-        $dataAtual = new DateTime();
-        $dataNascimento = new DateTime($data_nasc);
-        $idade = $dataAtual->diff($dataNascimento)->y;
-
-        if ($idade < 13) {
-            throw new Exception("Você deve ter pelo menos 13 anos para se cadastrar.");
-        }
-
-        // Criptografa a senha (SHA-256)
-        $senhaHash = hash("sha256", $senha);
-
-        // Verifica se o e-mail ou arroba já está cadastrado
-        $checkUser = "SELECT COUNT(*) AS total FROM tblUsuario WHERE email = ? OR arroba_usuario = ?";
-        $paramsCheck = [$email, $arroba];
-        $stmtCheck = sqlsrv_query($conn, $checkUser, $paramsCheck);
-
-        if ($stmtCheck === false) {
-            throw new Exception("Erro ao verificar usuário. Por favor, tente novamente.");
-        }
-
-        $row = sqlsrv_fetch_array($stmtCheck, SQLSRV_FETCH_ASSOC);
-        if ($row['total'] > 0) {
-            throw new Exception("E-mail ou @usuário já cadastrado.");
-        }
-
-        // Carrega imagens padrão como binário
-        $fotoPadrao = file_exists(FOTO_PADRAO_PATH) ? file_get_contents(FOTO_PADRAO_PATH) : null;
-        $capaPadrao = file_exists(CAPA_PADRAO_PATH) ? file_get_contents(CAPA_PADRAO_PATH) : null;
-
-        // Inserção no banco
-        $sql = "INSERT INTO tblUsuario (nome, data_nasc, arroba_usuario, email, senha, fotoUsuario, fotoCapa, bio_usuario)
-                VALUES (?, ?, ?, ?, ?, CONVERT(varbinary(max), ?), CONVERT(varbinary(max), ?), '');
-                SELECT SCOPE_IDENTITY() AS idUsuario;";
-
-        $params = [
-            $nome,
-            $data_nasc,
-            $arroba,
-            $email,
-            $senhaHash,
-            $fotoPadrao,
-            $capaPadrao
-        ];
-
-        $stmt = sqlsrv_query($conn, $sql, $params);
-
-        if ($stmt) {
-            if (sqlsrv_next_result($stmt)) {
-                $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-                if ($row) {
-                    $_SESSION['idUsuario_setup'] = $row['idUsuario'];
-                    $_SESSION['email_usuario'] = $email;
-                    header("Location: ../setup_profile.php");
-                    exit();
-                }
+    // SQL modificado para usar CONVERT explicitamente
+    $sql = "INSERT INTO tblUsuario (nome, data_nasc, arroba_usuario, email, senha, fotoUsuario, fotoCapa, bio_usuario) 
+            VALUES (?, ?, ?, ?, ?, CONVERT(varbinary(max), ?), CONVERT(varbinary(max), ?), ?);
+            SELECT SCOPE_IDENTITY() AS idUsuario;";
+    
+    $params = array(
+        $nome, 
+        $data_nasc, 
+        $arroba, 
+        $email, 
+        $senha, 
+        $fotoPadrao, 
+        $capaPadrao, 
+        ''
+    );
+    
+    $stmt = sqlsrv_query($conn, $sql, $params);
+    
+    if ($stmt) {
+        // Move para o próximo resultado (que contém o SCOPE_IDENTITY)
+        if (sqlsrv_next_result($stmt)) {
+            $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+            if ($row) {
+                $_SESSION['idUsuario_setup'] = $row['idUsuario'];
+                $_SESSION['email_usuario'] = $email;
+                header("Location: ../setup_profile.php");
+                exit();
             }
-            throw new Exception("Erro ao obter ID do usuário. Por favor, tente novamente.");
-        } else {
-            $errors = sqlsrv_errors();
-            $errorMessage = "Erro ao criar conta: ";
-            foreach ($errors as $error) {
-                $errorMessage .= "SQLSTATE: " . $error['SQLSTATE'] . ", code: " . $error['code'] . " - " . $error['message'];
-            }
-            throw new Exception($errorMessage);
         }
-    } catch (Exception $e) {
-        header("Location: ../error.php?message=" . urlencode($e->getMessage()));
-        exit();
+        die("Erro ao obter ID do usuário: não foi possível recuperar o SCOPE_IDENTITY");
+    } else {
+        $errors = sqlsrv_errors();
+        $errorMessage = "Erro ao criar conta: ";
+        foreach ($errors as $error) {
+            $errorMessage .= "SQLSTATE: " . $error['SQLSTATE'] . ", code: " . $error['code'] . " - " . $error['message'];
+        }
+        die($errorMessage);
     }
 }
 ?>

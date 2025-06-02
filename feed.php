@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 include 'config.php';
 
 // Verificação de login
@@ -26,8 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
     }
 }
 
-// Busca posts principais
-// Busca posts principais
+// Busca posts principais do mais recente ao mais antigo
 $sql_posts = "SELECT 
     p.idPublicacao, p.conteudo, p.dataPublic,
     u.idUsuario, u.nome, u.arroba_usuario, u.fotoUsuario,
@@ -50,7 +50,6 @@ if ($result_posts === false) {
     die("Erro ao buscar posts: " . print_r(sqlsrv_errors(), true));
 }
 
-// Busca posts de quem o usuário segue (para a aba "Seguindo")
 // Busca posts de quem o usuário segue (para a aba "Seguindo")
 $sql_posts_seguindo = "SELECT 
     p.idPublicacao, p.conteudo, p.dataPublic,
@@ -82,7 +81,7 @@ if ($result_posts_seguindo === false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style-feed.css">
+    <link rel="stylesheet" href="css/style-feed.css">
 </head>
 
 <body>
@@ -90,7 +89,7 @@ if ($result_posts_seguindo === false) {
     <div class="content">
         <div class="header-menu">
             <!-- Barra de navegação -->
-            <div class="light" id="sidebar">
+            <div id="sidebar">
                 <div class="top-content-sidebar">
                     <img src="Assets/logoVersamiBlue.png" alt="Versami" />
                     <ul>
@@ -100,29 +99,22 @@ if ($result_posts_seguindo === false) {
                         <li onclick="location.href='explorar.php'">
                             <i class="fa-solid fa-magnifying-glass"></i> Explore
                         </li>
-                        <li onclick="location.href='blogusuarios.php'">
+                        <li onclick="location.href='blog_usuarios.php'">
                             <i class="fa-solid fa-newspaper"></i> Blog
                         </li>
                         <li onclick="location.href='notificacao.php'">
-                            <i class="fa-solid fa-bell"></i> Notificações
-                            <?php
-                            // Contar notificações não lidas
-                            $sql_count = "SELECT COUNT(*) as total FROM tblNotificacao 
-                                WHERE idUsuario = ? AND visualizada = 0";
-                            $stmt_count = sqlsrv_query($conn, $sql_count, array($_SESSION["usuario_id"]));
-                            if ($stmt_count) {
-                                $count = sqlsrv_fetch_array($stmt_count, SQLSRV_FETCH_ASSOC);
-                                if ($count && $count['total'] > 0): ?>
-                                    <span class="notification-badge"><?= $count['total'] ?></span>
-                                <?php endif;
-                            }
-                            ?>
+                            <div class="notification-icon-container">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                            Notificações
+                            <?php 
+                                $total_notificacoes = contarNotificacoesNaoLidas($conn, $_SESSION["usuario_id"]);
+                            if ($total_notificacoes > 0): ?>
+                                <span class="notification-badge"><?= $total_notificacoes ?></span>
+                            <?php endif; ?>
                         </li>
                         <li onclick="location.href='profile.php'">
                             <i class="fa-solid fa-user"></i> Perfil
-                        </li>
-                        <li onclick="location.href='cadastrar_livro.php'">
-                            <i class="fa-solid fa-newspaper"></i> Cadastrar Livro
                         </li>
                     </ul>
                     <div class="button" onclick="abrirModalPopUp()">
@@ -139,7 +131,7 @@ if ($result_posts_seguindo === false) {
                 </div>
             </div>
         </div>
-        <div class="light" id="principal-content">
+        <div id="principal-content">
             <div class="user">
                 <div class="posts" id="posts">
                     <div class="tabs-container">
@@ -189,24 +181,23 @@ if ($result_posts_seguindo === false) {
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
-                                                        <div class="post-content"
-                                                            onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
+                                                        <div class="post-content" onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
                                                             <?= transformURLsIntoLinks($post['conteudo']) ?>
                                                         </div>
                                                         <?php if (!empty($post['idLivro'])): ?>
                                                             <div class="attached-book">
                                                                 <?php if (!empty($post['imgCapa'])): ?>
                                                                     <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>"
-                                                                        alt="Capa do livro">
+                                                                        alt="Capa do livro" class="bookCoverAttached">
                                                                 <?php else: ?>
                                                                     <div class="no-book-cover">
                                                                         <i class="fa-solid fa-book"></i>
                                                                     </div>
                                                                 <?php endif; ?>
                                                                 <div class="book-info">
-                                                                    <?= htmlspecialchars($post['nomeLivro']) ?>
+                                                                    <p class="nomeLivroPost"><?= htmlspecialchars($post['nomeLivro']) ?></p>
                                                                     <?php if (!empty($post['nomeAutor'])): ?>
-                                                                        <br><p class="nomeAutorPost">
+                                                                        <p class="nomeAutorPost">
                                                                             <?= htmlspecialchars($post['nomeAutor']) ?></p>
                                                                     <?php endif; ?>
                                                                     <?php if (!empty($post['descLivro'])): ?>
@@ -352,8 +343,7 @@ if ($result_posts_seguindo === false) {
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
-                                                        <div class="post-content"
-                                                            onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
+                                                        <div class="post-content" onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
                                                             <?= transformURLsIntoLinks($post['conteudo']) ?>
                                                         </div>
                                                         <?php if (!empty($post['idLivro'])): ?>
@@ -367,14 +357,16 @@ if ($result_posts_seguindo === false) {
                                                                     </div>
                                                                 <?php endif; ?>
                                                                 <div class="book-info">
-                                                                    <?= htmlspecialchars($post['nomeLivro']) ?>
+                                                                    <p class="nomeLivroPost">
+                                                                        <?= htmlspecialchars($post['nomeLivro']) ?>
+                                                                    </p>
                                                                     <?php if (!empty($post['nomeAutor'])): ?>
-                                                                        <br><p class="nomeAutorPost">
+                                                                        <p class="nomeAutorPost">
                                                                             <?= htmlspecialchars($post['nomeAutor']) ?></p>
                                                                     <?php endif; ?>
                                                                     <?php if (!empty($post['descLivro'])): ?>
                                                                         <div class="book-description">
-                                                                            <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
+                                                                            <p><?= nl2br(htmlentities($post['descLivro'], ENT_QUOTES, 'UTF-8')) ?></p>
                                                                         </div>
                                                                     <?php endif; ?>
                                                                 </div>

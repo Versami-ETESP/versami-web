@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 include 'config.php';
 
 if (!isset($_SESSION["usuario_id"])) {
@@ -13,22 +14,29 @@ if (!$post_id) {
     exit;
 }
 
-// Busca o post completo com todas as informações necessárias
+// Na consulta SQL do post, adicione:
 $sql_post = "SELECT 
     p.*, 
-    u.nome, u.arroba_usuario, u.fotoUsuario,
-    l.nomeLivro, l.imgCapa as livroCapa,
+    u.idUsuario as autor_id, u.nome, u.arroba_usuario, u.fotoUsuario,
+    l.idLivro, l.nomeLivro, l.imgCapa as livroCapa, l.descLivro,
     a.nomeAutor as autor,
     (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao) as total_likes,
-    (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao AND idUsuario = ?) as usuario_curtiu
+    (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao AND idUsuario = ?) as usuario_curtiu,
+    (SELECT COUNT(*) FROM tblSeguidores WHERE idSeguidor = ? AND idSeguido = u.idUsuario) as seguindo,
+    (SELECT COUNT(*) FROM tblLivrosFavoritos WHERE idLivro = l.idLivro AND idUsuario = ?) as livro_favoritado
 FROM tblPublicacao p
-JOIN tblUsuario u ON p.idUsuario = u.idUsuario
+LEFT JOIN tblUsuario u ON p.idUsuario = u.idUsuario
 LEFT JOIN tblLivro l ON p.idLivro = l.idLivro
 LEFT JOIN tblAutor a ON l.idAutor = a.idAutor
 WHERE p.idPublicacao = ?";
 
-$params_post = array($_SESSION["usuario_id"], $_SESSION["usuario_id"], $post_id);
+// Atualize os parâmetros para incluir o ID do usuário novamente
+$params_post = array($_SESSION["usuario_id"], $_SESSION["usuario_id"], $_SESSION["usuario_id"], $post_id);
 $stmt_post = sqlsrv_query($conn, $sql_post, $params_post);
+if ($stmt_post === false) {
+    die(print_r(sqlsrv_errors(), true));
+}
+
 $post = sqlsrv_fetch_array($stmt_post, SQLSRV_FETCH_ASSOC);
 
 if (!$post) {
@@ -60,17 +68,13 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicação - Versami</title>
-    <link rel="stylesheet" href="style_post_details.css">
+    <link rel="stylesheet" href="Post/Css/stylePostDetails.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <div class="content">
         <div class="header-menu">
-            <button class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
             <div class="sidebar" id="sidebar">
                 <div class="top-content-sidebar">
                     <img src="Assets/logoVersamiBlue.png" alt="Versami" />
@@ -114,15 +118,14 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
         <div class="principal-content">
             <div class="user">
                 <div class="review-header">
-                    <a href="feed.php" class="back-arrow" onclick="location.reload()">
+                    <a href="feed.php" class="back-arrow">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <h2>Review</h2>
                 </div>
                 <div class="post-details-container">
                     <div class="post-header">
-                        <img src="<?= htmlspecialchars($post['fotoUsuario']) ?>" alt="Foto do usuário"
-                            class="user-avatar">
+                        <img src="<?= displayImage($post['fotoUsuario']) ?>" alt="Foto do usuário" class="user-avatar">
                         <div class="user-info">
                             <h2><?= htmlspecialchars($post['nome']) ?></h2>
                             <p>@<?= htmlspecialchars($post['arroba_usuario']) ?></p>
@@ -138,10 +141,45 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                     </div>
                     <div class="post-content">
                         <?= transformURLsIntoLinks($post['conteudo']) ?>
-                        <?php if (!empty($post['imagem'])): ?>
-                            <img src="<?= htmlspecialchars($post['imagem']) ?>" class="post-image">
-                        <?php endif; ?>
                     </div>
+
+                    <!-- Seção do livro anexado -->
+                    <?php if (!empty($post['idLivro'])): ?>
+                        <div class="attached-bookF">
+                            <?php if (!empty($post['livroCapa'])): ?>
+                                <img src="<?= displayImage($post['livroCapa']) ?>" alt="Capa do livro" class="book-cover">
+                            <?php else: ?>
+                                <div class="no-book-cover">
+                                    <i class="fa-solid fa-book"></i>
+                                </div>
+                            <?php endif; ?>
+                            <div class="book-info">
+                                <h3><?= htmlspecialchars($post['nomeLivro']) ?></h3>
+                                <?php if (!empty($post['autor'])): ?>
+                                    <p class="book-author"><?= htmlspecialchars($post['autor']) ?></p>
+                                <?php endif; ?>
+                                <?php if (!empty($post['descLivro'])): ?>
+                                    <p class="book-description">
+                                        <?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <!-- Botão de favorito -->
+                                <div class="book-actions">
+                                    <button class="favorite-btn <?= $post['livro_favoritado'] ? 'favorited' : '' ?>"
+                                        data-book-id="<?= $post['idLivro'] ?>"
+                                        onclick="toggleBookFavorite(this, <?= $post['idLivro'] ?>)">
+                                        <i class="<?= $post['livro_favoritado'] ? 'fas' : 'far' ?> fa-heart"></i>
+                                        <?= $post['livro_favoritado'] ? 'Favoritado' : 'Favoritar' ?>
+                                    </button>
+                                    <a href="livro.php?id=<?= $post['idLivro'] ?>" class="view-book-btn">
+                                        Ver livro
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="post-actions">
                         <button type="button" class="like-btn <?= ($post['usuario_curtiu'] > 0) ? 'liked' : '' ?>"
                             onclick="curtir(<?= $post['idPublicacao'] ?>, this)">
@@ -152,6 +190,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                             <?= $post['dataPublic']->format('d/m/Y H:i') ?>
                         </span>
                     </div>
+
                     <div class="comments-section">
                         <h3>Comentários</h3>
                         <form method="POST" action="comentar.php" class="comment-form">
@@ -164,7 +203,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                         <div class="comments-list">
                             <?php while ($comentario = sqlsrv_fetch_array($comentarios, SQLSRV_FETCH_ASSOC)): ?>
                                 <div class="comment">
-                                    <img src="<?= htmlspecialchars($comentario['fotoUsuario']) ?>" alt="Foto do usuário"
+                                    <img src="<?= displayImage($comentario['fotoUsuario']) ?>" alt="Foto do usuário"
                                         class="comment-avatar">
                                     <div class="comment-content">
                                         <div class="comment-header">
@@ -174,13 +213,13 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                                                 <?= $comentario['data_coment']->format('d/m/Y H:i') ?>
                                             </span>
                                         </div>
-                                        <?= transformURLsIntoLinks($comentario['comentario']) ?>
+                                        <p><?= htmlspecialchars($comentario['comentario']) ?></p>
                                         <div class="comment-actions">
                                             <button type="button"
                                                 class="like-comment-btn <?= ($comentario['usuario_curtiu'] > 0) ? 'likedComment' : '' ?>"
                                                 onclick="curtirComentario(<?= $comentario['idComentario'] ?>, this)">
                                                 <i
-                                                    class="<?= ($comentario['usuario_curtiu'] > 0) ? 'fa-solid' : 'fa-regular' ?> fa-heart"></i>
+                                                    class="<?= ($comentario['usuario_curtiu'] > 0) ? 'fas' : 'far' ?> fa-heart"></i>
                                                 <span class="like-comment-count"><?= $comentario['total_likes'] ?></span>
                                             </button>
                                         </div>
@@ -193,7 +232,8 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
             </div>
         </div>
     </div>
-    <div class="popup-overlay">
+    <!-- Popup para criar review para anexar o livro -->
+    <div class="popup-overlay" id="reviewPopupOverlay">
         <div class="popup">
             <div class="btn-top-content">
                 <div class="btn-close-content">
@@ -201,37 +241,96 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                 </div>
                 <h2>Criar Review</h2>
             </div>
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" id="postForm">
                 <textarea name="conteudo" maxlength="380" id="review-content" rows="7" cols="7"
-                    placeholder="Qual foi seu ultimo livro lído?"></textarea>
-                <div id="previewDiv">
-                    <div class="contentPreview">
-                        <img id="previewImg" src="" alt="Prévia da imagem">
+                    placeholder="Compartilhe seus pensamentos..."></textarea>
+
+                <!-- Área para mostrar o livro selecionado -->
+                <div id="selectedBookContainer">
+                    <div id="selectedBookCover">
+                        <i class="fa-solid fa-book"></i>
                     </div>
+                    <div id="selectedBookInfo"></div>
+                    <button type="button" id="removeBookBtn">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <input type="hidden" name="idLivro" id="selectedBookId">
                 </div>
+
                 <div class="icons-content">
-                    <div class="icons-left-content">
-                        <div class="icon-class">
-                            <label for="inputImagem" id="idIconeImagem"><i id="iconeImagem"
-                                    class="fa-regular fa-image"></i></label>
-                            <input type="file" id="inputImagem" name="imagem" onchange="mostrarImagemSelecionada()"><br>
-                        </div>
-                        <div class="icon-class">
-                            <i class="fa-solid fa-book"></i>
-                        </div>
-                        <div class="icon-class">
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                    </div>
                     <div class="icons-right-content">
                         <input class="btn-submit" type="submit" id="publicarPost" value="Postar">
                     </div>
+                </div>
             </form>
         </div>
-        <div id="postMessage"></div>
     </div>
-    <script src="js/theme-switcher.js"></script>
+
+    <!-- Popup de seleção de livros -->
+    <div class="popup-overlay" id="bookSelectionPopup">
+        <div class="popup">
+            <div class="popup-header">
+                <h2>Selecione um Livro</h2>
+                <button class="btn-close" onclick="closeBookSelection()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="popup-body">
+                <input type="text" id="bookSearch" placeholder="Pesquisar por título, autor ou gênero...">
+                <div id="booksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="js/script-tema.js"></script>
+    <script>
+        // Adicione esta função no final do arquivo, antes do fechamento </body>
+        function toggleBookFavorite(button, bookId) {
+            const isFavorited = button.classList.contains('favorited');
+            const icon = button.querySelector('i');
+
+            // Animação
+            button.classList.toggle('favorited');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+
+            // Atualiza texto do botão
+            button.innerHTML = isFavorited ?
+                '<i class="far fa-heart"></i> Favoritar' :
+                '<i class="fas fa-heart"></i> Favoritado';
+
+            // Efeito de animação ao favoritar
+            if (!isFavorited) {
+                button.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                }, 300);
+            }
+
+            // Chamada AJAX
+            $.ajax({
+                url: 'toggle_favorite.php',
+                method: 'POST',
+                data: {
+                    book_id: bookId,
+                    action: isFavorited ? 'remove' : 'add'
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    // Reverte visualmente em caso de erro
+                    button.classList.toggle('favorited');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('fas');
+                    button.innerHTML = isFavorited ?
+                        '<i class="fas fa-heart"></i> Favoritado' :
+                        '<i class="far fa-heart"></i> Favoritar';
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

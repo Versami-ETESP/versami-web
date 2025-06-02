@@ -10,7 +10,8 @@ if (!isset($_SESSION["usuario_id"])) {
 $usuario_id = $_SESSION["usuario_id"];
 
 // Função para converter varbinary em base64
-function binaryToBase64($binaryData) {
+function binaryToBase64($binaryData)
+{
     if ($binaryData === null || empty($binaryData)) {
         return '';
     }
@@ -52,6 +53,18 @@ ORDER BY p.dataPublic DESC";
 
 $params_posts = array($usuario_id);
 $result_posts = sqlsrv_query($conn, $sql_posts, $params_posts);
+
+// Buscar livros favoritos do usuário
+$sql_favoritos = "SELECT 
+    l.idLivro, l.nomeLivro, l.imgCapa, l.descLivro,
+    a.nomeAutor as autor
+FROM tblLivrosFavoritos f
+JOIN tblLivro l ON f.idLivro = l.idLivro
+JOIN tblAutor a ON l.idAutor = a.idAutor
+WHERE f.idUsuario = ?";
+
+$params_favoritos = array($usuario_id);
+$result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +73,7 @@ $result_posts = sqlsrv_query($conn, $sql_posts, $params_posts);
 <head>
     <meta charset="UTF-8">
     <title>Perfil</title>
-    <link rel="stylesheet" href="css/styleGeral.css">
+    <link rel="stylesheet" href="css/style-profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
@@ -77,7 +90,8 @@ $result_posts = sqlsrv_query($conn, $sql_posts, $params_posts);
         <!-- Cabeçalho do perfil -->
         <div class="profile-header">
             <img src="<?= $fotoCapaBase64 ?: 'imagens/capa-padrao.jpg' ?>" class="cover-photo" alt="Capa do perfil">
-            <img src="<?= $fotoUsuarioBase64 ?: 'imagens/perfil-padrao.jpg' ?>" class="profile-photo" alt="Foto do perfil">
+            <img src="<?= $fotoUsuarioBase64 ?: 'imagens/perfil-padrao.jpg' ?>" class="profile-photo"
+                alt="Foto do perfil">
             <h1><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
             <p>@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
             <p class="bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? '') ?></p>
@@ -114,6 +128,27 @@ $result_posts = sqlsrv_query($conn, $sql_posts, $params_posts);
                     </div>
                 </div>
             <?php endwhile; ?>
+        </div>
+        <!-- Seção de Livros Favoritos -->
+        <div class="favorite-books">
+            <h2>Livros Favoritos</h2>
+            <div class="books-grid">
+                <?php while ($livro = sqlsrv_fetch_array($result_favoritos, SQLSRV_FETCH_ASSOC)): ?>
+                    <div class="book-item">
+                        <?php if (!empty($livro['imgCapa'])): ?>
+                            <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>" alt="Capa do livro"
+                                class="book-cover">
+                        <?php else: ?>
+                            <div class="no-cover">
+                                <i class="fa-solid fa-book"></i>
+                            </div>
+                        <?php endif; ?>
+                        <h3><?= htmlspecialchars($livro['nomeLivro']) ?></h3>
+                        <p><?= htmlspecialchars($livro['autor']) ?></p>
+                        <a href="livro.php?id=<?= $livro['idLivro'] ?>" class="view-book">Ver livro</a>
+                    </div>
+                <?php endwhile; ?>
+            </div>
         </div>
     </div>
     <script src="js/theme-switcher.js"></script>

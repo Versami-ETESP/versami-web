@@ -24,6 +24,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($user) {
         // Verifica se a senha está correta
+        if(hash("sha256", $senha) == $user["senha"]){
+              $_SESSION["usuario_id"] = $user["idUsuario"];
+            $_SESSION["nome"] = $user["nome"];
+            
+            // Busca informações adicionais do usuário
+            $sql_info = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario 
+                         FROM tblUsuario WHERE idUsuario = ?";
+            $params_info = array($user["idUsuario"]);
+            $stmt_info = sqlsrv_query($conn, $sql_info, $params_info);
+            $user_info = sqlsrv_fetch_array($stmt_info, SQLSRV_FETCH_ASSOC);
+            
+            $_SESSION["user_info"] = $user_info;
+            
+            header("Location: ../feed.php");
+            exit();
+        }else{
+        
+           $_SESSION["login_error"] = "Email ou senha incorretos.";
+        }
+        /*
         if (password_verify($senha, $user["senha"])) {
             $_SESSION["usuario_id"] = $user["idUsuario"];
             $_SESSION["nome"] = $user["nome"];
@@ -42,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             // Senha incorreta
             $_SESSION["login_error"] = "Email ou senha incorretos.";
-        }
+        }*/
     } else {
         // Usuário não encontrado
         $_SESSION["login_error"] = "Email ou senha incorretos.";
