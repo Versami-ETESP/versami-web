@@ -1,0 +1,119 @@
+:root {
+    --bg-color: white;
+    --text-color: black;
+    --card-bg: #f0f0f0;
+    --complementary-color: #ff5722;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--card-bg);
+}
+
+nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: var(--complementary-color);
+    font-weight: bold;
+}
+
+.card {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background: var(--card-bg);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    border-left: 5px solid var(--complementary-color);
+    padding-left: 10px;
+}
+
+#themeButton {
+    background: var(--complementary-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+#themeButton:hover {
+    opacity: 0.8;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    width: 300px;
+    margin: 15% auto;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#applyTheme {
+    background: var(--complementary-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.theme-options, .color-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.theme-option, .color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.theme-option:hover, .color-option:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+}
+
+.theme-option.selected, .color-option.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px var(--complementary-color);
+}
