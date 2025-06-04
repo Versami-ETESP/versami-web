@@ -32,15 +32,15 @@ function transformURLsIntoLinks($text)
     return preg_replace($pattern, '<a href="$1" target="_blank">$1</a>', htmlspecialchars($text));
 }
 
-// Função para converter varbinary em base64 para exibição
-// Tipos de Notificação
-// Tipos de Notificação (mantendo apenas os 3 tipos)
-define('NOTIFICACAO_CURTIDA_POST', 1);    // ID do tipo de notificação para curtidas em posts
-define('NOTIFICACAO_COMENTARIO', 2);      // ID do tipo de notificação para comentários
-define('NOTIFICACAO_SEGUIMENTO', 3);      // ID do tipo de notificação para novos seguidores
+// Tipos de Notificação (baseado na inserção em tblTipoNotificacao)
+define('NOTIFICACAO_CURTIDA_POST', 1);
+define('NOTIFICACAO_CURTIDA_COMENTARIO', 2);
+define('NOTIFICACAO_COMENTARIO', 3);
+define('NOTIFICACAO_SEGUIMENTO', 4);
+
 function contarNotificacoesNaoLidas($conn, $usuario_id)
 {
-    $sql = "SELECT COUNT(*) as total FROM tblNotificacao 
+    $sql = "SELECT COUNT(*) as total FROM tblNotificacao
             WHERE idUsuario = ? AND visualizada = 0";
     $stmt = sqlsrv_query($conn, $sql, array($usuario_id));
     if ($stmt && $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {

@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
     $conteudo = $_POST["conteudo"];
     $idLivro = isset($_POST["idLivro"]) && !empty($_POST["idLivro"]) ? $_POST["idLivro"] : null;
 
-    $sql_insert = "INSERT INTO tblPublicacao (conteudo, idUsuario, idLivro, dataPublic) 
+    $sql_insert = "INSERT INTO tblPublicacao (conteudo, idUsuario, idLivro, dataPublic)
                   VALUES (?, ?, ?, GETDATE())";
     $params_insert = array($conteudo, $_SESSION["usuario_id"], $idLivro);
     $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
 }
 
 // Busca posts principais do mais recente ao mais antigo
-$sql_posts = "SELECT 
+$sql_posts = "SELECT
     p.idPublicacao, p.conteudo, p.dataPublic,
     u.idUsuario, u.nome, u.arroba_usuario, u.fotoUsuario,
     l.idLivro, l.nomeLivro, l.imgCapa, l.descLivro,
@@ -51,7 +51,7 @@ if ($result_posts === false) {
 }
 
 // Busca posts de quem o usuário segue (para a aba "Seguindo")
-$sql_posts_seguindo = "SELECT 
+$sql_posts_seguindo = "SELECT
     p.idPublicacao, p.conteudo, p.dataPublic,
     u.idUsuario, u.nome, u.arroba_usuario, u.fotoUsuario,
     l.idLivro, l.nomeLivro, l.descLivro,
@@ -88,7 +88,6 @@ if ($result_posts_seguindo === false) {
     <h2>Feed</h2>
     <div class="content">
         <div class="header-menu">
-            <!-- Barra de navegação -->
             <div id="sidebar">
                 <div class="top-content-sidebar">
                     <img src="Assets/logoVersamiBlue.png" alt="Versami" />
@@ -107,8 +106,8 @@ if ($result_posts_seguindo === false) {
                                 <i class="fa-solid fa-bell"></i>
                             </div>
                             Notificações
-                            <?php 
-                                $total_notificacoes = contarNotificacoesNaoLidas($conn, $_SESSION["usuario_id"]);
+                            <?php
+                            $total_notificacoes = contarNotificacoesNaoLidas($conn, $_SESSION["usuario_id"]);
                             if ($total_notificacoes > 0): ?>
                                 <span class="notification-badge"><?= $total_notificacoes ?></span>
                             <?php endif; ?>
@@ -166,7 +165,7 @@ if ($result_posts_seguindo === false) {
                                                                 <?php if ($post['idUsuario'] != $_SESSION["usuario_id"]): ?>
                                                                     <?php
                                                                     // Consulta para verificar se segue
-                                                                    $sql_seguindo = "SELECT 1 FROM tblSeguidores 
+                                                                    $sql_seguindo = "SELECT 1 FROM tblSeguidores
                                                                             WHERE idSeguidor = ? AND idSeguido = ?";
                                                                     $params_seguindo = [$_SESSION["usuario_id"], $post['idUsuario']];
                                                                     $stmt_seguindo = sqlsrv_query($conn, $sql_seguindo, $params_seguindo);
@@ -242,9 +241,9 @@ if ($result_posts_seguindo === false) {
                                                         <?php
                                                         $sql_comentarios = "SELECT C.idComentario, C.comentario, C.data_coment, U.idUsuario, U.arroba_usuario, U.fotoUsuario,
                                                         (SELECT COUNT(*) FROM tblLikesPorComentario WHERE idComentario = C.idComentario) AS totalLikes
-                                                        FROM tblComentario C 
+                                                        FROM tblComentario C
                                                         JOIN tblUsuario U ON C.idUsuario = U.idUsuario
-                                                        WHERE C.idPublicacao = ? 
+                                                        WHERE C.idPublicacao = ?
                                                         ORDER BY C.data_coment ASC";
 
                                                         $params_comentarios = array($post['idPublicacao']);
@@ -329,7 +328,7 @@ if ($result_posts_seguindo === false) {
                                                             <div class="user-info-follow">
                                                                 <?php if ($post['idUsuario'] != $_SESSION["usuario_id"]): ?>
                                                                     <?php
-                                                                    $sql_seguindo = "SELECT 1 FROM tblSeguidores 
+                                                                    $sql_seguindo = "SELECT 1 FROM tblSeguidores
                                                                             WHERE idSeguidor = ? AND idSeguido = ?";
                                                                     $params_seguindo = [$_SESSION["usuario_id"], $post['idUsuario']];
                                                                     $stmt_seguindo = sqlsrv_query($conn, $sql_seguindo, $params_seguindo);
@@ -404,9 +403,9 @@ if ($result_posts_seguindo === false) {
                                                         <?php
                                                         $sql_comentarios = "SELECT C.idComentario, C.comentario, C.data_coment, U.idUsuario, U.arroba_usuario, U.fotoUsuario,
                                                         (SELECT COUNT(*) FROM tblLikesPorComentario WHERE idComentario = C.idComentario) AS totalLikes
-                                                        FROM tblComentario C 
+                                                        FROM tblComentario C
                                                         JOIN tblUsuario U ON C.idUsuario = U.idUsuario
-                                                        WHERE C.idPublicacao = ? 
+                                                        WHERE C.idPublicacao = ?
                                                         ORDER BY C.data_coment ASC";
 
                                                         $params_comentarios = array($post['idPublicacao']);
@@ -474,7 +473,6 @@ if ($result_posts_seguindo === false) {
         </div>
     </div>
 
-    <!-- Popup para criar review para anexar o livro -->
     <div class="popup-overlay" id="reviewPopupOverlay">
         <div class="popup">
             <div class="btn-top-content">
@@ -487,7 +485,6 @@ if ($result_posts_seguindo === false) {
                 <textarea name="conteudo" maxlength="380" id="review-content" rows="7" cols="7"
                     placeholder="Compartilhe seus pensamentos..."></textarea>
 
-                <!-- Área para mostrar o livro selecionado -->
                 <div id="selectedBookContainer">
                     <div id="selectedBookCover">
                         <i class="fa-solid fa-book"></i>
@@ -508,7 +505,6 @@ if ($result_posts_seguindo === false) {
         </div>
     </div>
 
-    <!-- Popup de seleção de livros -->
     <div class="popup-overlay" id="bookSelectionPopup">
         <div class="popup">
             <div class="popup-header">
@@ -524,7 +520,6 @@ if ($result_posts_seguindo === false) {
         </div>
     </div>
 
-    <!-- Scripts de JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
     <script src="js/script-tema.js"></script>

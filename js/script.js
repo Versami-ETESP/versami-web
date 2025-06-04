@@ -588,3 +588,90 @@ document
 function closeBookSelection() {
   document.getElementById("bookSelectionPopup").style.display = "none";
 }
+
+
+
+
+
+
+
+// Função para atualizar contador de notificações
+function updateNotificationCount() {
+    $.ajax({
+        url: 'get_notification_count.php',
+        method: 'GET',
+        success: function(response) {
+            const count = parseInt(response);
+            const badge = $('#notification-count');
+            
+            badge.text(count);
+            if (count > 0) {
+                badge.show();
+            } else {
+                badge.hide();
+            }
+        }
+    });
+}
+
+// Atualizar contador quando a página carrega
+$(document).ready(function() {
+    updateNotificationCount();
+    
+    // Verificar novas notificações a cada 30 segundos
+    setInterval(updateNotificationCount, 30000);
+});
+
+
+
+
+
+
+
+
+
+// Função para alternar o menu de três pontos
+function togglePostMenu(button, postId) {
+    // Fecha todos os outros menus abertos
+    document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
+        if (menu !== button.nextElementSibling) {
+            menu.classList.remove('show');
+        }
+    });
+    
+    // Alterna o menu atual
+    const dropdown = button.nextElementSibling;
+    dropdown.classList.toggle('show');
+    
+    // Fecha o menu ao clicar fora
+    const clickHandler = function(e) {
+        if (!dropdown.contains(e.target) && e.target !== button) {
+            dropdown.classList.remove('show');
+            document.removeEventListener('click', clickHandler);
+        }
+    };
+    
+    document.addEventListener('click', clickHandler);
+}
+
+// Função para denunciar post (sem funcionalidade ainda)
+function denunciarPost(postId) {
+    console.log('Denunciar post:', postId);
+    alert('Funcionalidade de denúncia será implementada em breve!');
+    // Fecha o menu após seleção
+    document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
+        menu.classList.remove('show');
+    });
+}
+
+// Função para excluir post (sem funcionalidade ainda)
+function excluirPost(postId) {
+    console.log('Excluir post:', postId);
+    if (confirm('Tem certeza que deseja excluir esta review?')) {
+        alert('Funcionalidade de exclusão será implementada em breve!');
+    }
+    // Fecha o menu após seleção
+    document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
+        menu.classList.remove('show');
+    });
+}

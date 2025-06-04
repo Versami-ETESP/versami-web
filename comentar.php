@@ -12,14 +12,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comentario = trim($_POST["comentario"]);
     $usuario_id = $_SESSION["usuario_id"];
 
-    // Verifica se o comentário não está vazio
     if (empty($comentario)) {
         header("Location: " . $_SERVER['HTTP_REFERER'] . "?error=empty_comment");
         exit;
     }
 
-    // Insere o comentário
-    $sql_insert = "INSERT INTO tblComentario (comentario, data_coment, idPublicacao, idUsuario) 
+    $sql_insert = "INSERT INTO tblComentario (comentario, data_coment, idPublicacao, idUsuario)
                    VALUES (?, GETDATE(), ?, ?)";
 
     $params_insert = array($comentario, $post_id, $usuario_id);
@@ -29,26 +27,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Erro ao inserir comentário: " . print_r(sqlsrv_errors(), true));
     }
 
-    // Cria notificação para o dono do post (se não for o próprio usuário)
-    $sql_notificacao = "INSERT INTO tblNotificacao (mensagem, tipoNotificacao, idUsuario, visualizada, idAdmin, idReferencia)
-                   SELECT ?, ?, p.idUsuario, 0, ?, ?
-                   FROM tblPublicacao p
-                   WHERE p.idPublicacao = ? AND p.idUsuario != ?";
+    $sql_post_owner = "SELECT idUsuario FROM tblPublicacao WHERE idPublicacao = ?";
+    $stmt_post_owner = sqlsrv_query($conn, $sql_post_owner, array($post_id));
+    $post_owner_row = sqlsrv_fetch_array($stmt_post_owner, SQLSRV_FETCH_ASSOC);
+    $post_owner_id = $post_owner_row['idUsuario'];
 
-    $mensagem = $_SESSION["nome"] . " comentou: " . substr($comentario, 0, 50);
-    $params_notificacao = array(
-        $mensagem,
-        NOTIFICACAO_COMENTARIO,
-        $usuario_id, // Quem comentou (idAdmin)
-        $post_id,    // ID do post (idReferencia)
-        $post_id,
-        $usuario_id
-    );
+    if ($post_owner_id != $usuario_id) {
+        $sql_notificacao = "INSERT INTO tblNotificacao (mensagem, tipoNotificacao, idUsuario, visualizada, idAdmin, dataNotificacao)
+                           VALUES (?, ?, ?, 0, NULL, GETDATE())"; // idAdmin is NULL for user actions
 
-    $stmt_notificacao = sqlsrv_query($conn, $sql_notificacao, $params_notificacao);
+        $mensagem = $_SESSION["nome"] . " comentou: " . substr($comentario, 0, 50);
+        $params_notificacao = array(
+            $mensagem,
+            NOTIFICACAO_COMENTARIO,
+            $post_owner_id, // Recipient: Post owner
+        );
 
-    if (!$stmt_notificacao) {
-        error_log("Erro ao criar notificação: " . print_r(sqlsrv_errors(), true));
+        $stmt_notificacao = sqlsrv_query($conn, $sql_notificacao, $params_notificacao);
+
+        if (!$stmt_notificacao) {
+            error_log("Erro ao criar notificação: " . print_r(sqlsrv_errors(), true));
+        }
     }
 
     header("Location: " . $_SERVER['HTTP_REFERER']);
