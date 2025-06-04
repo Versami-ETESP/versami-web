@@ -1,0 +1,145 @@
+<?php
+session_start();
+include '../../BD/bd-conexao.php';
+include 'login-user.php';
+
+?>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="Livros, Rede Social, Avaliações" />
+    <meta
+      name="description"
+      content="Versami, sua rede social para conectar leitores de todos os gêneros literários. Aqui, você pode avaliar, descobrir e compartilhar livros, criando uma comunidade engajada de apaixonados por leitura."
+    />
+    <meta
+      name="author"
+      content="Julia Maria, Matheus Canesso, Thamiris Fernandes, Ygor Silva"
+    />
+    <link rel="shortcut icon" href="../../Assets/favicon.png" type="favicon" />
+    <link rel="icon" href="../Assets/iconVersami.png" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+
+    <script
+      src="https://kit.fontawesome.com/17dd42404d.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../CSS/style.css" />
+    <link rel="stylesheet" href="../CSS/Style-headerfooter.css" />
+    <title>Versami | Acesse sua conta</title>
+  </head>
+  <body>
+    <header class="glass">
+      <nav>
+        <div class="logo">
+          <img src="../../Assets/logoVersamiBlue.png" alt="Logo Versami" />
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a
+              href="../../Index/HTML/Index.html"
+              id="inicio-link"
+              class="active"
+              >Início</a
+            >
+          </li>
+          <li>
+            <a href="../../Sobre/HTML/Sobre.html" id="sobre-link">Sobre nós</a>
+          </li>
+          <li><a href="../../Blog/HTML/Blog.html" id="blog-link">Blog</a></li>
+          <li>
+            <a href="../../Contato/HTML/Contato.html" id="contato-link"
+              >Contato</a
+            >
+          </li>
+        </ul>
+        <div class="user-icon">
+          <span class="material-icons-outlined"
+            ><a href="login.html"> account_circle </a></span
+          >
+        </div>
+      </nav>
+    </header>
+    <h1 class="tituloPrinc">
+      Acesse agora a <span class="versami">Versami!</span>
+    </h1>
+    <main>
+      <div class="principal">
+        <h2 class="titulo1">Acessar Conta</h2>
+        <span id="alerta"></span>
+        <form autocomplete="off" id="form2" class="form" method="post">
+          <div class="envelope">
+            <i class="material-icons-outlined required">alternate_email</i>
+            <input type="email" class="entrada" name="email" placeholder="Email" required>
+          </div>
+          <div class="envelope">
+            <i class="material-icons-outlined required">lock</i>
+            <input type="password" class="entrada" name="password" placeholder="Senha" required>
+          </div>
+          <button type="submit" class="btnPersonalizar" name="login">Entrar</button>
+        </form>
+      </div>
+
+      <div class="msg msgindex">
+        <h1 class="msgTitulo">Sua primeira vez <br />aqui?</h1>
+        <p class="msgTexto">
+          Crie agora sua conta e <br />encontre diversos livros!
+        </p>
+        <a class="btnCadastro" href="../../Cadastro/cadastro.php"
+          >Criar Conta <i class="fa-solid fa-chevron-right"></i
+        ></a>
+      </div>
+
+      <div class="carregando" id="carregando"></div>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="newsletter">
+          <h4>Acompanhe nossa</h4>
+          <h1>Newsletter</h1>
+          <form>
+            <input type="email" placeholder="Seu email" required />
+            <button type="submit">Inscrever-se</button>
+          </form>
+        </div>
+
+        <div class="middle">
+          <div class="social-image">
+            <img src="../../Assets/logoVersami.png" alt="Logo Versami" />
+          </div>
+
+          <p class="pRedes">Siga nossas redes sociais</p>
+
+          <div class="social-links">
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+          <p>2024 | Versami Corporation &copy;</p>
+        </div>
+
+        <div class="about">
+          <h4>Sobre nós</h4>
+          <p>
+            Somos uma rede social voltada para conectar leitores de todos os
+            gêneros literários. Aqui, você pode avaliar, descobrir e
+            compartilhar livros, criando uma comunidade engajada de apaixonados
+            por leitura. Acesse pelo site ou aplicativo Android!
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="../JS/Script.js"></script>
+    <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="../validacao.js"></script>
+  </body>
+</html>
