@@ -155,7 +155,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                         <strong><?= $contadores['seguidores'] ?? 0 ?></strong> Seguidores
                     </div>
                     <div class="profile-stat">
-                        <strong><?= $contadores['total_posts'] ?? 0 ?></strong> Leituras
+                        <strong><?= $contadores['total_posts'] ?? 0 ?></strong> Reviews
                     </div>
                 </div>
 

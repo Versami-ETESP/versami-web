@@ -7,7 +7,7 @@ if (!isset($_SESSION['idUsuario_setup'])) {
     exit();
 }
 
-// Função para validar imagens
+// Função para validar imagens (mantida para validação server-side)
 function validateImage($file, $maxSizeMB = 40, $minWidth = 100, $minHeight = 100, $maxWidth = 5000, $maxHeight = 5000)
 {
     // Verifica se é um upload válido
@@ -58,7 +58,7 @@ function rollbackRegistration($conn, $userId)
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
-        $biografia = $_POST["biografia"] ?? '';
+        $biografia = $_POST["biografia"] ?? ''; // Captura a biografia do POST
         $userId = $_SESSION['idUsuario_setup'];
         $fotoUsuario = null;
         $fotoCapa = null;
@@ -79,21 +79,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $fotoCapa = file_get_contents($_FILES["fotoCapa"]["tmp_name"]);
         }
 
-        // Atualiza o perfil
-        $sql = "UPDATE tblUsuario 
+        // Atualiza o perfil com a biografia
+        $sql = "UPDATE tblUsuario
                 SET bio_usuario = ?,
-                    fotoUsuario = CASE 
+                    fotoUsuario = CASE
                         WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?)
-                        ELSE fotoUsuario 
+                        ELSE fotoUsuario
                     END,
-                    fotoCapa = CASE 
+                    fotoCapa = CASE
                         WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?)
-                        ELSE fotoCapa 
+                        ELSE fotoCapa
                     END
                 WHERE idUsuario = ?";
 
         $params = array(
-            $biografia,
+            $biografia, // Parâmetro para a biografia
             $fotoUsuario,
             $fotoUsuario,
             $fotoCapa,
@@ -152,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
                     pixels.</small>
                 <div class="preview">
-                    <img id="previewFoto" src="<?php echo FOTO_PADRAO_PATH; ?>">
+                    <img id="previewFoto" src="Assets/padrao.png" alt="Pré-visualização da foto de perfil">
                 </div>
             </div>
 
@@ -166,8 +166,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
                     pixels.</small>
                 <div class="preview">
-                    <img id="previewCapa" src="<?php echo CAPA_PADRAO_PATH; ?>">
+                    <img id="previewCapa" src="Assets/padraoCapa.png" alt="Pré-visualização da foto de capa">
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label for="biografia"><i class="fa-solid fa-pencil"></i> Biografia</label>
+                <textarea id="biografia" name="biografia" maxlength="255" placeholder="Fale um pouco sobre você..." rows="4"></textarea>
+                <small>Máximo de 255 caracteres.</small>
             </div>
 
             <input type="submit" value="Finalizar Cadastro">
@@ -177,33 +183,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         function previewImage(input, previewId) {
             const preview = document.getElementById(previewId);
             const file = input.files[0];
+            const defaultFotoPerfil = 'Assets/padrao.png'; // URL da imagem padrão de perfil
+            const defaultFotoCapa = 'Assets/padraoCapa.png'; // URL da imagem padrão de capa
 
             if (file) {
-                // Validação client-side básica
+                // Validação client-side básica de tamanho e tipo
                 const maxSizeMB = 40;
                 const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
                 if (file.size > maxSizeBytes) {
                     alert(`O arquivo é muito grande. Tamanho máximo permitido: ${maxSizeMB}MB`);
-                    input.value = '';
-                    preview.src = '<?php echo FOTO_PADRAO_PATH; ?>';
+                    input.value = ''; // Limpa o input
+                    preview.src = (previewId === 'previewFoto') ? defaultFotoPerfil : defaultFotoCapa;
                     return;
                 }
 
-                if (!file.type.match('image.*')) {
+                if (!file.type.match('image/jpeg') && !file.type.match('image/png') && !file.type.match('image/gif') && !file.type.match('image/webp')) {
                     alert('Por favor, selecione um arquivo de imagem (JPEG, PNG, GIF ou WebP)');
                     input.value = '';
-                    preview.src = '<?php echo FOTO_PADRAO_PATH; ?>';
+                    preview.src = (previewId === 'previewFoto') ? defaultFotoPerfil : defaultFotoCapa;
                     return;
                 }
 
                 const reader = new FileReader();
 
                 reader.onload = function (e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-
-                    // Verifica dimensões após carregar
                     const img = new Image();
                     img.onload = function () {
                         const minWidth = 100, minHeight = 100;
@@ -211,9 +215,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         if (this.width < minWidth || this.height < minHeight ||
                             this.width > maxWidth || this.height > maxHeight) {
-                            alert(`A imagem deve ter entre ${minWidth}x${minHeight} e ${maxWidth}x${maxHeight} pixels`);
+                            alert(`A imagem deve ter entre ${minWidth}x${minHeight} e ${maxWidth}x${maxHeight} pixels.`);
                             input.value = '';
-                            preview.src = '<?php echo FOTO_PADRAO_PATH; ?>';
+                            preview.src = (previewId === 'previewFoto') ? defaultFotoPerfil : defaultFotoCapa;
+                        } else {
+                            preview.src = e.target.result;
+                            preview.style.display = 'block';
                         }
                     };
                     img.src = e.target.result;
@@ -221,24 +228,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 reader.readAsDataURL(file);
             } else {
-                preview.src = previewId === 'previewFoto' ?
-                    '<?php echo FOTO_PADRAO_PATH; ?>' :
-                    '<?php echo CAPA_PADRAO_PATH; ?>';
+                // Se nenhum arquivo for selecionado, volta para a imagem padrão
+                preview.src = (previewId === 'previewFoto') ? defaultFotoPerfil : defaultFotoCapa;
             }
         }
 
-        // Adiciona eventos para mostrar o nome do arquivo selecionado
+        // Adiciona eventos para mostrar o nome do arquivo selecionado no label
         document.addEventListener('DOMContentLoaded', function () {
             const fileInputs = document.querySelectorAll('input[type="file"]');
 
             fileInputs.forEach(input => {
-                const label = input.previousElementSibling;
+                const label = input.previousElementSibling; // O label "Selecionar Imagem"
 
                 input.addEventListener('change', function () {
                     if (this.files && this.files[0]) {
                         label.innerHTML = `<i class="fa-solid fa-check"></i> ${this.files[0].name}`;
+                        label.classList.add('changed'); // Adiciona uma classe para estilização de "selecionado"
                     } else {
                         label.innerHTML = '<i class="fa-solid fa-upload"></i> Selecionar Imagem';
+                        label.classList.remove('changed');
                     }
                 });
             });

@@ -747,6 +747,11 @@ body {
 
 .profile-bio {
   padding: 10px 20px 20px;
+  margin-left: 13.5%;
+  z-index: 10000;
+  position: absolute;
+  top: 30.5%;
+  left: 8.5%;
   color: var(--dark);
   line-height: 1.5;
 }
