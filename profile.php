@@ -121,14 +121,17 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             </div>
         </div>
 
-        <div class="content"> <div class="profile-container">
+        <div class="content">
+            <div class="profile-container">
                 <div class="profile-header">
-                    <img src="<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>" class="cover-photo" alt="Capa do perfil">
+                    <img src="<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>" class="cover-photo"
+                        alt="Capa do perfil">
                 </div>
 
                 <div class="profile-main-info">
                     <div class="profile-photo-container">
-                        <img src="<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>" class="profile-photo" alt="Foto do perfil">
+                        <img src="<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>" class="profile-photo"
+                            alt="Foto do perfil">
                     </div>
                     <div class="profile-text-info">
                         <h1 class="profile-name"><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
@@ -137,7 +140,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                     <button class="edit-profile-btn">Editar Perfil</button>
                 </div>
 
-                <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
+                <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?>
+                </p>
 
                 <div class="profile-stats-container">
                     <div class="profile-stat">
@@ -165,7 +169,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                 <div id="profile-posts-section" class="profile-posts-section active">
                     <?php if (sqlsrv_has_rows($result_posts)): ?>
                         <?php while ($post = sqlsrv_fetch_array($result_posts, SQLSRV_FETCH_ASSOC)): ?>
-                            <div class="post-card" onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
+                            <div class="post-card"
+                                onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
                                 <div class="post-header">
                                     <img src="<?= $fotoUsuarioBase64 ?>" alt="Foto do usuário" class="post-user-avatar">
                                     <div class="post-user-info">
@@ -177,19 +182,20 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                                     <?= htmlspecialchars($post['conteudo'] ?? 'Post sem texto') ?>
                                 </div>
                                 <?php if (!empty($post['idLivro'])): ?>
-                                <div class="attached-book-profile">
-                                    <?php if (!empty($post['imgCapa'])): ?>
-                                        <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>" alt="Capa do livro">
-                                    <?php else: ?>
-                                        <div class="no-cover">
-                                            <i class="fa-solid fa-book"></i>
+                                    <div class="attached-book-profile">
+                                        <?php if (!empty($post['imgCapa'])): ?>
+                                            <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>"
+                                                alt="Capa do livro">
+                                        <?php else: ?>
+                                            <div class="no-cover">
+                                                <i class="fa-solid fa-book"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div class="book-info">
+                                            <div class="book-title"><?= htmlspecialchars($post['nomeLivro']) ?></div>
+                                            <div class="book-author"><?= htmlspecialchars($post['nomeAutor']) ?></div>
                                         </div>
-                                    <?php endif; ?>
-                                    <div class="book-info">
-                                        <div class="book-title"><?= htmlspecialchars($post['nomeLivro']) ?></div>
-                                        <div class="book-author"><?= htmlspecialchars($post['nomeAutor']) ?></div>
                                     </div>
-                                </div>
                                 <?php endif; ?>
                                 <div class="post-actions">
                                     <button class="post-action-btn <?= ($post['usuario_curtiu'] > 0) ? 'liked' : '' ?>"
@@ -208,15 +214,17 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                                 $params_comentarios = array($post['idPublicacao']);
                                 $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                                 if (sqlsrv_has_rows($comentarios)):
-                                ?>
-                                <div class="comments-list">
-                                    <?php while($comentario = sqlsrv_fetch_array($comentarios, SQLSRV_FETCH_ASSOC)): ?>
-                                        <div class="comment-item">
-                                            <img src="<?= displayImage($usuario['fotoUsuario']) ?>" alt="Foto de perfil" class="comment-user-avatar">
-                                            <span class="comment-text"><strong><?= htmlspecialchars($comentario['nome']) ?></strong> <?= htmlspecialchars($comentario['comentario']) ?></span>
-                                        </div>
-                                    <?php endwhile; ?>
-                                </div>
+                                    ?>
+                                    <div class="comments-list">
+                                        <?php while ($comentario = sqlsrv_fetch_array($comentarios, SQLSRV_FETCH_ASSOC)): ?>
+                                            <div class="comment-item">
+                                                <img src="<?= displayImage($usuario['fotoUsuario']) ?>" alt="Foto de perfil"
+                                                    class="comment-user-avatar">
+                                                <span class="comment-text"><strong><?= htmlspecialchars($comentario['nome']) ?></strong>
+                                                    <?= htmlspecialchars($comentario['comentario']) ?></span>
+                                            </div>
+                                        <?php endwhile; ?>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         <?php endwhile; ?>
@@ -230,18 +238,42 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                 <div id="profile-favorites-section" class="favorite-books-section">
                     <?php if (sqlsrv_has_rows($result_favoritos)): ?>
                         <div class="favorite-books-grid">
-                            <?php while ($livro = sqlsrv_fetch_array($result_favoritos, SQLSRV_FETCH_ASSOC)): ?>
+                            <?php while ($livro = sqlsrv_fetch_array($result_favoritos, SQLSRV_FETCH_ASSOC)):
+                                // Supondo que 'favoritado' na consulta de favoritos indica se o usuário logado favoritou este livro
+                                $isFavoritedByCurrentUser = $livro['favoritado'] ?? 0;
+                                ?>
                                 <div class="book-item">
-                                    <?php if (!empty($livro['imgCapa'])): ?>
-                                        <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>" alt="Capa do livro">
-                                    <?php else: ?>
-                                        <div class="no-cover">
-                                            <i class="fa-solid fa-book"></i>
+                                    <div class="book-cover-container">
+                                        <?php if (!empty($livro['imgCapa'])): ?>
+                                            <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>"
+                                                alt="Capa do livro" class="book-cover">
+                                        <?php else: ?>
+                                            <div class="no-cover">
+                                                <i class="fa-solid fa-book"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3 class="book-title"><?= htmlspecialchars($livro['nomeLivro']) ?></h3>
+                                        <p class="book-author"><?= htmlspecialchars($livro['autor']) ?></p>
+                                        <div class="book-stats">
+                                            <span class="book-favorites">
+                                                <i class="fa-solid fa-heart"></i>
+                                                0 </span>
+                                            <span
+                                                class="book-genre"><?= htmlspecialchars($livro['genero'] ?? 'Gênero') ?></span>
                                         </div>
-                                    <?php endif; ?>
-                                    <h3><?= htmlspecialchars($livro['nomeLivro']) ?></h3>
-                                    <p><?= htmlspecialchars($livro['autor']) ?></p>
-                                    <a href="livro.php?id=<?= $livro['idLivro'] ?>" class="view-book-btn-small">Ver livro</a>
+                                        <div class="book-actions">
+                                            <a href="livro.php?id=<?= $livro['idLivro'] ?>" class="view-btn">
+                                                Ver detalhes
+                                            </a>
+                                            <button class="favorite-btn <?= $isFavoritedByCurrentUser ? 'favorited' : '' ?>"
+                                                data-book-id="<?= $livro['idLivro'] ?>"
+                                                onclick="toggleFavorite(this, <?= $livro['idLivro'] ?>)">
+                                                <i class="<?= $isFavoritedByCurrentUser ? 'fas' : 'far' ?> fa-heart"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             <?php endwhile; ?>
                         </div>
@@ -283,11 +315,11 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             document.getElementById('reviewPopupOverlay').style.display = 'flex';
         }
 
-        document.querySelector('.popup-overlay .btn-close').addEventListener('click', function() {
+        document.querySelector('.popup-overlay .btn-close').addEventListener('click', function () {
             document.getElementById('reviewPopupOverlay').style.display = 'none';
         });
 
-        document.getElementById('reviewPopupOverlay').addEventListener('click', function(event) {
+        document.getElementById('reviewPopupOverlay').addEventListener('click', function (event) {
             if (event.target === this) {
                 this.style.display = 'none';
             }

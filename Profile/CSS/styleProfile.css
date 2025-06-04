@@ -940,7 +940,7 @@ body {
 .comments-list {
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px dashed var(--medium-gray);  
+  border-top: 1px dashed var(--medium-gray);
 }
 
 .comment-item {
@@ -965,4 +965,172 @@ body {
 
 .comment-item .comment-text strong {
   margin-right: 5px;
+}
+
+/* Estilos para Livros Favoritos (replicando styleExplorar.css) */
+.favorite-books-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(180px, 1fr)
+  ); /* Min-width 180px for smaller screens */
+  gap: 20px;
+  width: 100%; /* Ocupa a largura total da seção */
+  justify-content: center; /* Centraliza os itens na grid */
+}
+
+.book-item {
+  /* Este é o card individual de livro dentro da grid */
+  background-color: var(--white-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: var(--transition);
+  width: 100%;
+  max-width: 280px; /* Limite de largura para cada card */
+  margin: 0 auto; /* Centraliza o card individual dentro de sua célula na grid */
+  height: auto; /* Altura flexível para o conteúdo */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.book-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.book-cover-container {
+  position: relative;
+  width: 100%;
+  height: 180px; /* Altura da capa no card */
+  background-color: var(--light-gray);
+  overflow: hidden;
+}
+
+.book-cover {
+  /* Imagem dentro do container */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.book-item:hover .book-cover {
+  transform: scale(1.05);
+}
+
+.no-cover {
+  /* Placeholder para capa inexistente */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark-gray);
+  font-size: 3em;
+}
+
+.book-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.book-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-author {
+  font-size: 0.9em;
+  color: var(--dark-gray);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-stats {
+  /* Adicionado para consistência, pode estar vazio se não houver dados */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 0.85em;
+  color: var(--dark-gray);
+}
+
+.book-favorites {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.book-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.view-btn {
+  /* Estilo para o botão "Ver detalhes/Ver livro" */
+  flex-grow: 1;
+  background-color: var(--blue-primary);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  font-size: 0.9em;
+  text-decoration: none; /* Para ser usado com <a> */
+}
+
+.view-btn:hover {
+  background-color: #4fa8c7;
+}
+
+.favorite-btn {
+  /* Estilo para o botão de coração */
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-gray);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.favorite-btn i {
+  font-size: 1.2em;
+  color: var(--dark-gray);
+  transition: var(--transition);
+}
+
+.favorite-btn:hover {
+  background-color: #ffebee;
+}
+
+.favorite-btn:hover i {
+  color: var(--error);
+}
+
+.favorite-btn.favorited {
+  background-color: #ffebee;
+}
+
+.favorite-btn.favorited i {
+  color: var(--error);
 }
