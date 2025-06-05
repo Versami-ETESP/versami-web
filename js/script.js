@@ -22,7 +22,7 @@ function seguirUsuario(usuarioId, botao) {
       if (data.success) {
         // Atualiza o botão
         botao.classList.toggle("following");
-        botao.innerHTML = `<i class="fas fa-${data.action === "follow" ? 'user-minus' : 'user-plus'}"></i> <span class="button-text">${data.action === "follow" ? 'Deixar de seguir' : 'Seguir'}</span>`;
+        botao.innerHTML = `<i class="fas fa-<span class="math-inline">\{data\.action \=\=\= "follow" ? 'user\-minus' \: 'user\-plus'\}"\></i\> <span class\="button\-text"\></span>{data.action === "follow" ? 'Deixar de seguir' : 'Seguir'}</span>`;
 
         // Atualiza a contagem de seguidores/seguindo (se houver uma função)
         if (typeof atualizarContadores === "function") {
@@ -30,13 +30,13 @@ function seguirUsuario(usuarioId, botao) {
         }
       } else {
         alert(data.message || "Erro ao processar");
-        botao.innerHTML = `<i class="fas fa-${estaSeguindo ? 'user-plus' : 'user-minus'}"></i> <span class="button-text">${textoOriginal}</span>`; // Reverte o texto e ícone
+        botao.innerHTML = `<i class="fas fa-<span class="math-inline">\{estaSeguindo ? 'user\-plus' \: 'user\-minus'\}"\></i\> <span class\="button\-text"\></span>{textoOriginal}</span>`; // Reverte o texto e ícone
       }
     })
     .catch((error) => {
       console.error("Erro:", error);
       alert("Falha na conexão");
-      botao.innerHTML = `<i class="fas fa-${estaSeguindo ? 'user-plus' : 'user-minus'}"></i> <span class="button-text">${textoOriginal}</span>`; // Reverte o texto e ícone
+      botao.innerHTML = `<i class="fas fa-<span class="math-inline">\{estaSeguindo ? 'user\-plus' \: 'user\-minus'\}"\></i\> <span class\="button\-text"\></span>{textoOriginal}</span>`; // Reverte o texto e ícone
     })
     .finally(() => {
       botao.disabled = false;
@@ -382,10 +382,10 @@ function renderBooks(books) {
     bookElement.className = "book-item";
     bookElement.innerHTML = `
           <div class="book">
-            <div class="attach-btn" data-book-id="${book.idLivro}"
-                    data-book-title="${book.nomeLivro}"
-                    data-book-author="${book.nomeAutor || ""}"
-                    data-book-cover="${book.imagem_base64 || ""}">
+            <div class="attach-btn" data-book-id="<span class="math-inline">\{book\.idLivro\}"
+data\-book\-title\="</span>{book.nomeLivro}"
+                    data-book-author="<span class="math-inline">\{book\.nomeAutor \|\| ""\}"
+data\-book\-cover\="</span>{book.imagem_base64 || ""}">
                 <div class="book-cover">
                     ${
                       book.imagem_base64
@@ -394,8 +394,8 @@ function renderBooks(books) {
                     }
                 </div>
                 <div class="book-details">
-                    <h3 class="book-name">${book.nomeLivro}</h3>
-                    <p class="author">${
+                    <h3 class="book-name"><span class="math-inline">\{book\.nomeLivro\}</h3\>
+<p class\="author"\></span>{
                       book.nomeAutor || "Autor desconhecido"
                     }</p>
                 </div>
@@ -459,8 +459,8 @@ function selectBook(bookId, title, author, coverImage) {
 
   // Atualiza as informações do livro
   document.getElementById("selectedBookInfo").innerHTML = `
-        <strong>${title}</strong>
-        <p>${author || "Autor desconhecido"}</p>
+        <strong><span class="math-inline">\{title\}</strong\>
+<p\></span>{author || "Autor desconhecido"}</p>
     `;
 
   // Mostra o botão de remoção
@@ -598,10 +598,9 @@ function togglePostMenu(event, buttonElement) {
     event.stopPropagation();
 
     const dropdown = buttonElement.nextElementSibling; // Pega o dropdown que é o próximo irmão do botão
-    const postId = buttonElement.closest('.post').dataset.postId; // Obtém o ID do post pai
-
-    currentPostId = postId; // Armazena o ID do post globalmente
-
+    // Removemos a linha const postId = buttonElement.closest('.post').dataset.postId;
+    // pois o postId já é passado como segundo argumento em feed.php
+    
     // Fecha qualquer outro dropdown aberto
     document.querySelectorAll('.post-menu-dropdown.active').forEach(openDropdown => {
         if (openDropdown !== dropdown) { // Se não for o dropdown que estamos clicando agora
