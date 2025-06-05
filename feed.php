@@ -183,7 +183,7 @@ if ($result_posts_seguindo === false) {
                                                                 <?php endif; ?>
                                                                 <div class="post-menu">
                                                                     <button class="post-menu-btn" onclick="togglePostMenu(this, <?= $post['idPublicacao'] ?>)">
-                                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                        <i class="fa-solid fa-ellipsis-vertical" ></i>
                                                                     </button>
                                                                     <div class="post-menu-dropdown">
                                                                         <div class="post-menu-item" onclick="denunciarPost(<?= $post['idPublicacao'] ?>)">

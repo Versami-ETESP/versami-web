@@ -31,7 +31,7 @@ try {
     }
 
     // 2. Inserir a denúncia na tabela tblDenuncia
-    // O status padrão é 'PENDENTE', que assumimos ter idStatusDenuncia = 1 (do INSERT INTO tblStatusDenuncia VALUES ('PENDENTE'))
+    // O status padrão é 'PENDENTE', que assumimos ter idStatusDenuncia = 1
     // idAdmin é NULL porque a denúncia é feita por um usuário comum
     $sql_insert_denuncia = "INSERT INTO tblDenuncia (data_denuncia, observacao_admin, idUsuario, idPublicacao, idAdmin, statusDenun)
                             VALUES (GETDATE(), NULL, ?, ?, NULL, 1)"; // 1 = PENDENTE
