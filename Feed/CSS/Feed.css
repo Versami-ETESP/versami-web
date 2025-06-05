@@ -756,6 +756,7 @@ form textarea {
   width: 20%;
   display: flex;
   justify-content: right;
+  gap: 22%;
   align-items: center;
 }
 
@@ -766,7 +767,7 @@ form textarea {
   border: none;
   cursor: pointer;
   border-radius: 5px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 16px;
   transition: 0.3s ease all;
 }
@@ -837,7 +838,7 @@ form textarea {
   background-color: red;
 }
 
-#comment-form{
+#comment-form {
   display: flex;
   flex-direction: row;
 }
@@ -1200,6 +1201,89 @@ a.user-link:hover {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+/* Estilos para o modal de confirmação */
+.confirmation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.confirmation-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.confirmation-modal-content {
+  background-color: var(--white-background);
+  padding: 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.confirmation-modal-overlay.active .confirmation-modal-content {
+  transform: translateY(0);
+}
+
+.confirmation-modal-content h3 {
+  color: var(--dark);
+  margin-bottom: 20px;
+  font-size: 1.4em;
+}
+
+.confirmation-modal-content p {
+  color: var(--dark-gray);
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.confirmation-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.confirmation-modal-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.confirmation-modal-buttons .confirm-btn {
+  background-color: var(--error);
+  color: var(--white-background);
+}
+
+.confirmation-modal-buttons .confirm-btn:hover {
+  background-color: #c0392b;
+}
+
+.confirmation-modal-buttons .cancel-btn {
+  background-color: var(--light-gray);
+  color: var(--dark);
+}
+
+.confirmation-modal-buttons .cancel-btn:hover {
+  background-color: var(--medium-gray);
 }
 
 /* ===== FIM DO CONTEUDO DO FEED ===== */

@@ -5,7 +5,7 @@ function seguirUsuario(usuarioId, botao) {
 
   // Feedback visual imediato
   botao.disabled = true;
-  botao.textContent = "Processando...";
+  botao.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span class="button-text">Processando...</span>`;
 
   fetch("seguir.php", {
     method: "POST",
@@ -22,22 +22,21 @@ function seguirUsuario(usuarioId, botao) {
       if (data.success) {
         // Atualiza o botão
         botao.classList.toggle("following");
-        botao.textContent =
-          data.action === "follow" ? "Deixar de seguir" : "Seguir";
+        botao.innerHTML = `<i class="fas fa-${data.action === "follow" ? 'user-minus' : 'user-plus'}"></i> <span class="button-text">${data.action === "follow" ? 'Deixar de seguir' : 'Seguir'}</span>`;
 
-        // Atualiza a contagem de seguidores/seguindo
+        // Atualiza a contagem de seguidores/seguindo (se houver uma função)
         if (typeof atualizarContadores === "function") {
           atualizarContadores();
         }
       } else {
         alert(data.message || "Erro ao processar");
-        botao.textContent = textoOriginal;
+        botao.innerHTML = `<i class="fas fa-${estaSeguindo ? 'user-plus' : 'user-minus'}"></i> <span class="button-text">${textoOriginal}</span>`; // Reverte o texto e ícone
       }
     })
     .catch((error) => {
       console.error("Erro:", error);
       alert("Falha na conexão");
-      botao.textContent = textoOriginal;
+      botao.innerHTML = `<i class="fas fa-${estaSeguindo ? 'user-plus' : 'user-minus'}"></i> <span class="button-text">${textoOriginal}</span>`; // Reverte o texto e ícone
     })
     .finally(() => {
       botao.disabled = false;
@@ -383,8 +382,8 @@ function renderBooks(books) {
     bookElement.className = "book-item";
     bookElement.innerHTML = `
           <div class="book">
-            <div class="attach-btn" data-book-id="${book.idLivro}" 
-                    data-book-title="${book.nomeLivro}" 
+            <div class="attach-btn" data-book-id="${book.idLivro}"
+                    data-book-title="${book.nomeLivro}"
                     data-book-author="${book.nomeAutor || ""}"
                     data-book-cover="${book.imagem_base64 || ""}">
                 <div class="book-cover">
@@ -589,89 +588,99 @@ function closeBookSelection() {
   document.getElementById("bookSelectionPopup").style.display = "none";
 }
 
+// Variável global para armazenar o ID do post a ser denunciado/excluído
+let currentPostId = null;
 
+// Função para controlar o menu de 3 pontinhos (tooltip)
+function togglePostMenu(event, buttonElement) {
+    // Para parar a propagação do evento de clique, evitando que o clique no botão
+    // também acione o clique na div do post (que geralmente redireciona)
+    event.stopPropagation();
 
+    const dropdown = buttonElement.nextElementSibling; // Pega o dropdown que é o próximo irmão do botão
+    const postId = buttonElement.closest('.post').dataset.postId; // Obtém o ID do post pai
 
+    currentPostId = postId; // Armazena o ID do post globalmente
 
-
-
-// Função para atualizar contador de notificações
-function updateNotificationCount() {
-    $.ajax({
-        url: 'get_notification_count.php',
-        method: 'GET',
-        success: function(response) {
-            const count = parseInt(response);
-            const badge = $('#notification-count');
-            
-            badge.text(count);
-            if (count > 0) {
-                badge.show();
-            } else {
-                badge.hide();
-            }
+    // Fecha qualquer outro dropdown aberto
+    document.querySelectorAll('.post-menu-dropdown.active').forEach(openDropdown => {
+        if (openDropdown !== dropdown) { // Se não for o dropdown que estamos clicando agora
+            openDropdown.classList.remove('active');
         }
     });
+
+    // Alterna a classe 'active' para mostrar/esconder o dropdown clicado
+    dropdown.classList.toggle('active');
 }
 
-// Atualizar contador quando a página carrega
-$(document).ready(function() {
-    updateNotificationCount();
-    
-    // Verificar novas notificações a cada 30 segundos
-    setInterval(updateNotificationCount, 30000);
+// Fecha o dropdown quando se clica em qualquer lugar do documento, fora do menu
+document.addEventListener('click', function(event) {
+    // Verifica se o clique não foi dentro de um '.post-menu'
+    if (!event.target.closest('.post-menu')) {
+        document.querySelectorAll('.post-menu-dropdown.active').forEach(dropdown => {
+            dropdown.classList.remove('active');
+        });
+    }
 });
 
 
-
-
-
-
-
-
-
-// Função para alternar o menu de três pontos
-function togglePostMenu(button, postId) {
-    // Fecha todos os outros menus abertos
-    document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
-        if (menu !== button.nextElementSibling) {
-            menu.classList.remove('show');
-        }
-    });
-    
-    // Alterna o menu atual
-    const dropdown = button.nextElementSibling;
-    dropdown.classList.toggle('show');
-    
-    // Fecha o menu ao clicar fora
-    const clickHandler = function(e) {
-        if (!dropdown.contains(e.target) && e.target !== button) {
-            dropdown.classList.remove('show');
-            document.removeEventListener('click', clickHandler);
-        }
-    };
-    
-    document.addEventListener('click', clickHandler);
-}
-
-// Função para denunciar post (sem funcionalidade ainda)
+// Funções para os botões do tooltip
 function denunciarPost(postId) {
-    console.log('Denunciar post:', postId);
-    alert('Funcionalidade de denúncia será implementada em breve!');
-    // Fecha o menu após seleção
-    document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
-        menu.classList.remove('show');
+    currentPostId = postId; // Garante que o postId correto está setado
+    document.getElementById('confirmationModalOverlay').classList.add('active'); // Abre o modal de confirmação
+    // Fecha o dropdown após a ação
+    document.querySelectorAll('.post-menu-dropdown.active').forEach(dropdown => {
+        dropdown.classList.remove('active');
     });
 }
 
-// Função para excluir post (sem funcionalidade ainda)
 function excluirPost(postId) {
-    console.log('Excluir post:', postId);
-    if (confirm('Tem certeza que deseja excluir esta review?')) {
-        alert('Funcionalidade de exclusão será implementada em breve!');
-    }
-    // Fecha o menu após seleção
-    document.querySelectorAll('.post-menu-dropdown').forEach(menu => {
-        menu.classList.remove('show');
+    alert('Excluir post ' + postId + ' clicado!');
+    // Fecha o dropdown após a ação
+    document.querySelectorAll('.post-menu-dropdown.active').forEach(dropdown => {
+        dropdown.classList.remove('active');
     });
 }
+
+// Lógica de confirmação de denúncia no modal
+document.getElementById('confirmDenounceBtn').addEventListener('click', function() {
+    if (currentPostId) {
+        // Envia a denúncia via AJAX
+        fetch('denunciar_post.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `post_id=${currentPostId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message); // Ou uma mensagem mais amigável/modal de sucesso
+            } else {
+                alert(data.error || data.message); // Exibe erro do servidor
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao denunciar post:', error);
+            alert('Erro ao conectar com o servidor para denunciar.');
+        })
+        .finally(() => {
+            document.getElementById('confirmationModalOverlay').classList.remove('active'); // Fecha o modal
+            currentPostId = null; // Limpa o ID do post
+        });
+    }
+});
+
+document.getElementById('cancelDenounceBtn').addEventListener('click', function() {
+    document.getElementById('confirmationModalOverlay').classList.remove('active'); // Fecha o modal
+    currentPostId = null; // Limpa o ID do post
+});
+
+// Fechar o modal de confirmação clicando no overlay
+document.getElementById('confirmationModalOverlay').addEventListener('click', function(event) {
+    if (event.target === this) {
+        this.classList.remove('active');
+        currentPostId = null;
+    }
+});

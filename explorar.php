@@ -83,7 +83,7 @@ if (!empty($termo_busca)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explorar - Versami</title>
-    <link rel="stylesheet" href="Explorar/CSS/Explore.css">
+    <link rel="stylesheet" href="Explorar/CSS/Explorar.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

@@ -713,9 +713,8 @@ form textarea {
   width: 55%;
   border-radius: 5px;
   padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto auto auto;
   flex-direction: column;
   gap: 30px;
 }
