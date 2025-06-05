@@ -14,8 +14,8 @@ if (!$perfil_id) {
 }
 
 // Busca dados do perfil com tratamento de erro
-$sql_usuario = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario 
-                FROM tblUsuario 
+$sql_usuario = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario
+                FROM tblUsuario
                 WHERE idUsuario = ?";
 $params_usuario = array($perfil_id);
 $result_usuario = sqlsrv_query($conn, $sql_usuario, $params_usuario);
@@ -36,7 +36,7 @@ $contadores = [
 ];
 
 // Busca contagem de seguidores/seguindo
-$sql_contadores = "SELECT 
+$sql_contadores = "SELECT
     (SELECT COUNT(*) FROM tblSeguidores WHERE idSeguido = ?) AS total_seguidores,
     (SELECT COUNT(*) FROM tblSeguidores WHERE idSeguidor = ?) AS total_seguindo";
 $params_contadores = array($perfil_id, $perfil_id);
@@ -48,7 +48,7 @@ if ($result_contadores) {
 
 // Verifica se o usuário logado segue o perfil
 $seguindo = 0;
-$sql_seguindo = "SELECT COUNT(*) AS seguindo FROM tblSeguidores 
+$sql_seguindo = "SELECT COUNT(*) AS seguindo FROM tblSeguidores
                  WHERE idSeguidor = ? AND idSeguido = ?";
 $params_seguindo = array($_SESSION["usuario_id"], $perfil_id);
 $result_seguindo = sqlsrv_query($conn, $sql_seguindo, $params_seguindo);
@@ -81,194 +81,258 @@ $has_posts = $result_posts && sqlsrv_has_rows($result_posts);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de <?= htmlspecialchars($usuario['nome']) ?></title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style-profile-view.css">
+    <link rel="stylesheet" href="profileview.css">
 </head>
 
 <body>
-    <div class="content">
-        <div class="header-menu">
-            <button class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="sidebar" id="sidebar">
-                <div class="top-content-sidebar">
-                    <img src="Assets/logoVersamiBlue.png" alt="Versami" />
-                    <ul>
-                        <li onclick="location.href='feed.php'">
-                            <i class="fa-solid fa-house"></i> Home
-                        </li>
-                        <li onclick="location.href='explorar.php'" class="active">
-                            <i class="fa-solid fa-magnifying-glass"></i> Explore
-                        </li>
-                        <li onclick="location.href='BlogUsuarios.php'">
-                            <i class="fa-solid fa-newspaper"></i> Blog
-                        </li>
-                        <li onclick="location.href='notificacao.php'">
-                            <i class="fa-solid fa-bell"></i> Notificação
-                        </li>
-                        <li onclick="location.href='profile.php'">
-                            <i class="fa-solid fa-user"></i> Perfil
-                        </li>
-                    </ul>
-                    <div class="button" onclick="abrirModalPopUp()">
-                        <i class="fa-solid fa-pen"></i> Avaliação
-                    </div>
+    <div class="header-menu">
+        <div id="sidebar">
+            <div class="top-content-sidebar">
+                <img src="Assets/logoVersamiBlue.png" alt="Versami" />
+                <ul>
+                    <li onclick="location.href='feed.php'">
+                        <i class="fa-solid fa-house"></i> Home
+                    </li>
+                    <li onclick="location.href='explorar.php'">
+                        <i class="fa-solid fa-magnifying-glass"></i> Explore
+                    </li>
+                    <li onclick="location.href='blog_usuarios.php'">
+                        <i class="fa-solid fa-newspaper"></i> Blog
+                    </li>
+                    <li onclick="location.href='notificacao.php'">
+                        <i class="fa-solid fa-bell"></i> Notificações
+                        <?php
+                        $total_notificacoes = contarNotificacoesNaoLidas($conn, $_SESSION["usuario_id"]);
+                        if ($total_notificacoes > 0): ?>
+                            <span class="notification-badge"><?= $total_notificacoes ?></span>
+                        <?php endif; ?>
+                    </li>
+                    <li onclick="location.href='profile.php'">
+                        <i class="fa-solid fa-user"></i> Perfil
+                    </li>
+                </ul>
+                <div class="button" onclick="abrirModalPopUp()">
+                    <i class="fa-solid fa-pen"></i> Avaliação
                 </div>
-                <div class="button-content">
-                    <div class="buttonOff">
-                        <a href="../../BD/logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
-                    </div>
+            </div>
+            <div class="button-content">
+                <div class="buttonOff">
+                    <a href="logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
                 </div>
             </div>
         </div>
-        <div class="principal-content">
-            <div class="user">
-                <div class="capa-perfil">
-                    <img id="fotoCapa" src="<?= htmlspecialchars($usuario['fotoCapa']) ?>" class="capa-perfil">
+
+        <div class="content"> <div class="profile-container">
+                <div class="profile-header">
+                    <img src="<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>" class="cover-photo" alt="Capa do perfil">
                 </div>
-                <div class="content-user-perfil">
-                    <div class="foto-perfil">
-                        <img id="fotoPerfil" src="<?= htmlspecialchars($usuario['fotoUsuario']) ?>" class="profile-pic"
-                            onclick="expandImage()">
+
+                <div class="profile-main-info">
+                    <div class="profile-photo-container">
+                        <img src="<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>" class="profile-photo" alt="Foto do perfil">
                     </div>
-                    <div class="side-perfil">
-                        <div class="top-perfil">
-                            <div class="info-perfil">
-                                <div class="nomes-perfil">
-                                    <h1 class="nome-perfil" id="userNome"><?= htmlspecialchars($usuario['nome']) ?></h1>
-                                    <p class="arroba-perfil" id="userArroba">
-                                        @<?= htmlspecialchars($usuario['arroba_usuario']) ?></p>
-                                </div>
-                            </div>
-                            <div class="bio-perfil">
-                                <div class="bio-content-perfil">
-                                    <p><?= htmlspecialchars($usuario['bio_usuario']) ?></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="botao-perfil">
-                            <?php if ($perfil_id != $_SESSION["usuario_id"]): ?>
-                                <button id="seguir-btn" class="seguir-btn <?= $seguindo ? 'seguindo' : '' ?>"
-                                    data-id="<?= $perfil_id ?>">
-                                    <?= $seguindo ? 'Deixar de Seguir' : 'Seguir' ?>
-                                </button>
-                            <?php endif; ?>
-                        </div>
+                    <div class="profile-text-info">
+                        <h1 class="profile-name"><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
+                        <p class="profile-username">@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
                     </div>
+                    <button class="edit-profile-btn">Editar Perfil</button>
                 </div>
-            </div>
-            <div class="info-contagem">
-                <div class="contagem">
-                    <div class="contagem-entrada">
+
+                <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
+
+                <div class="profile-stats-container">
+                    <div class="profile-stat">
                         <i class="fa-solid fa-calendar"></i>
-                        <h4>Entrou em <span>2025</span></h4>
+                        <span>Entrou em <strong><?= date('Y', strtotime($usuario['data_nasc'] ?? '2024-01-01')) ?></strong></span>
                     </div>
-                    <div class="contagem-item">
-                        <p><?= $contadores['total_seguindo'] ?? 0 ?></p>
-                        <h4>Seguindo</h4>
+                    <div class="profile-stat">
+                        <strong><?= $contadores['seguindo'] ?? 0 ?></strong> Seguindo
                     </div>
-                    <div class="contagem-item">
-                        <p><?= $contadores['total_seguidores'] ?? 0 ?></p>
-                        <h4>Seguidores</h4>
+                    <div class="profile-stat">
+                        <strong><?= $contadores['seguidores'] ?? 0 ?></strong> Seguidores
                     </div>
-                    <div class="contagem-item">
-                        <p>[0]</p>
-                        <h4>Leituras</h4>
+                    <div class="profile-stat">
+                        <strong>[0]</strong> Leituras
                     </div>
+                </div>
+
+                <div class="profile-tabs-container">
+                    <div class="profile-tabs">
+                        <div class="profile-tab active" onclick="showProfileTab('posts')">Reviews</div>
+                        <div class="profile-tab" onclick="showProfileTab('favorites')">Livros Favoritos</div>
+                    </div>
+                </div>
+
+                <div id="profile-posts-section" class="profile-posts-section active">
+                    <?php if (sqlsrv_has_rows($result_posts)): ?>
+                        <?php while ($post = sqlsrv_fetch_array($result_posts, SQLSRV_FETCH_ASSOC)): ?>
+                            <div class="post-card">
+                                <div class="post-content">
+                                    <?= htmlspecialchars($post['conteudo'] ?? 'Post sem texto') ?>
+                                </div>
+                                <div class="post-meta">
+                                    <span>
+                                        <?php
+                                        if ($post['dataPublic'] !== null) {
+                                            echo "Postado em: " . $post['dataPublic']->format('d/m/Y H:i');
+                                        }
+                                        ?>
+                                    </span>
+                                    <div class="likes">
+                                        <i class="fas fa-heart"></i> <?= $post['likes'] ?? 0 ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <div class="empty-posts">
+                            <p>Nenhuma review publicada ainda.</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div id="profile-favorites-section" class="favorite-books-section">
+                    <?php if (sqlsrv_has_rows($result_favoritos)): ?>
+                        <div class="favorite-books-grid">
+                            <?php while ($livro = sqlsrv_fetch_array($result_favoritos, SQLSRV_FETCH_ASSOC)):
+                                // Supondo que 'favoritado' na consulta de favoritos indica se o usuário logado favoritou este livro
+                                $isFavoritedByCurrentUser = $livro['favoritado'] ?? 0;
+                            ?>
+                                <div class="book-item">
+                                    <div class="book-cover-container">
+                                        <?php if (!empty($livro['imgCapa'])): ?>
+                                            <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>"
+                                                alt="Capa do livro" class="book-cover">
+                                        <?php else: ?>
+                                            <div class="no-cover">
+                                                <i class="fa-solid fa-book"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="book-info">
+                                        <h3 class="book-title"><?= htmlspecialchars($livro['nomeLivro']) ?></h3>
+                                        <p class="book-author"><?= htmlspecialchars($livro['autor']) ?></p>
+                                        <div class="book-stats">
+                                            <span class="book-favorites">
+                                                <i class="fa-solid fa-heart"></i>
+                                                0 </span>
+                                            <span class="book-genre"><?= htmlspecialchars($livro['genero'] ?? 'Gênero') ?></span>
+                                        </div>
+                                        <div class="book-actions">
+                                            <a href="livro.php?id=<?= $livro['idLivro'] ?>" class="view-btn">
+                                                Ver detalhes
+                                            </a>
+                                            <button
+                                                class="favorite-btn <?= $isFavoritedByCurrentUser ? 'favorited' : '' ?>"
+                                                data-book-id="<?= $livro['idLivro'] ?>"
+                                                onclick="toggleFavorite(this, <?= $livro['idLivro'] ?>)">
+                                                <i
+                                                    class="<?= $isFavoritedByCurrentUser ? 'fas' : 'far' ?> fa-heart"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="empty-posts">
+                            <p>Nenhum livro favoritado ainda.</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
-            <section class="posts" id="posts">
-                <div class="tabs-container">
-                    <div class="tabs">
-                        <div class="tab active" onclick="changeTab(0)">Reviews</div>
-                        <div class="tab" onclick="changeTab(1)">Livros Favoritos</div>
-                    </div>
-                    <div class="content-container">
-                        <div class="contentPosts active">
-                            <div class="containerContent">
-                                <?php if (!$has_posts): ?>
-                                    <div class="no-posts-message">
-                                        <p><?= htmlspecialchars($usuario['nome']) ?> ainda não publicou nenhuma Review.</p>
-                                    </div>
-                                <?php else: ?>
-                                    <?php while ($post = sqlsrv_fetch_array($result_posts, SQLSRV_FETCH_ASSOC)): ?>
-                                        <div class="post">
-                                            <div class="content-info-post">
-                                                <div class="content-info-left">
-                                                    <img src="<?= htmlspecialchars($post['fotoUsuario']) ?>"
-                                                        alt="Foto de perfil" class="profile-pic-post" width="65" height="65">
-                                                    <div class="content-info-nomes">
-                                                        <p class="nome-usuario"><?= htmlspecialchars($post['nome']) ?></p>
-                                                        <p class="arroba-usuario">
-                                                            @<?= htmlspecialchars($post['arroba_usuario']) ?></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <p><?= htmlspecialchars($post['texto']) ?></p>
-                                            <?php if (!empty($post['imagem'])): ?>
-                                                <img src="<?= htmlspecialchars($post['imagem']) ?>" width="200">
-                                            <?php endif; ?>
-                                            <div class="actions">
-                                                <button type="button" class="like-btn"
-                                                    onclick="curtir(<?= $post['id'] ?>, this)">
-                                                    <i
-                                                        class="<?= isset($post['curtiu']) && $post['curtiu'] > 0 ? 'fa-solid' : 'fa-regular' ?> fa-heart"></i>
-                                                    <span
-                                                        class="like-count"><?= isset($post['curtidas']) ? $post['curtidas'] : 0 ?></span>
-                                                </button>
-                                            </div>
-
-                                            <!-- Seção de comentários -->
-                                            <div class="comment-section">
-                                                <form method="POST" action="comentar.php">
-                                                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                                                    <input type="text" name="comentario" placeholder="Escreva um comentário..."
-                                                        required>
-                                                    <button type="submit" class="comment-btn">Comentar</button>
-                                                </form>
-
-                                                <?php
-                                                $sql_comentarios = "SELECT C.idComentario, C.comentario, C.data_coment, U.idUsuario, U.nome, U.arroba_usuario, U.fotoUsuario,
-                                                (SELECT COUNT(*) FROM tblLikesPorComentario WHERE idComentario = C.idComentario) AS totalLikes,
-                                                (SELECT COUNT(*) FROM tblLikesPorComentario WHERE idUsuario = ? AND idComentario = C.idComentario) AS curtiu
-                                                FROM tblComentario C 
-                                                JOIN tblUsuario U ON C.idUsuario = U.idUsuario 
-                                                WHERE C.idPublicacao = ? 
-                                                ORDER BY C.data_coment DESC";
-                                                $params_comentarios = array($_SESSION["usuario_id"], $post['id']);
-                                                $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
-
-                                                if (!$comentarios) {
-                                                    die("Erro ao buscar comentários: " . print_r(sqlsrv_errors(), true));
-                                                }
-
-                                                while ($comentario = sqlsrv_fetch_array($comentarios, SQLSRV_FETCH_ASSOC)): ?>
-                                                    <div class="comment">
-                                                        <img src="<?= htmlspecialchars($comentario['fotoUsuario']) ?>"
-                                                            alt="Foto de perfil" class="profile-pic-comment">
-                                                        <strong><?= htmlspecialchars($comentario['nome']) ?>
-                                                            (@<?= htmlspecialchars($comentario['arroba_usuario']) ?>):</strong>
-                                                        <?= htmlspecialchars($comentario['comentario']) ?>
-                                                    </div>
-                                                <?php endwhile; ?>
-                                            </div>
-                                        </div>
-                                    <?php endwhile; ?>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                        <div class="contentPosts">
-                            <div class="containerContent">
-                                <p>Conteúdo de Livros Favoritos</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="js/theme-switcher.js"></script>
-        <script src="js/script.js"></script>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/script-tema.js"></script>
+    <script>
+        function showProfileTab(tabName) {
+            // Remove 'active' de todas as abas e seções de conteúdo
+            document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.profile-posts-section, .favorite-books-section').forEach(section => section.classList.remove('active'));
+
+            // Adiciona 'active' à aba clicada e à seção de conteúdo correspondente
+            if (tabName === 'posts') {
+                document.querySelector('.profile-tabs .profile-tab:nth-child(1)').classList.add('active');
+                document.getElementById('profile-posts-section').classList.add('active');
+            } else if (tabName === 'favorites') {
+                document.querySelector('.profile-tabs .profile-tab:nth-child(2)').classList.add('active');
+                document.getElementById('profile-favorites-section').classList.add('active');
+            }
+        }
+
+        // Exibe a seção de reviews por padrão ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            showProfileTab('posts');
+        });
+
+        // Função para favoritar/desfavoritar livro (replicada de explorar.php)
+        function toggleFavorite(button, bookId) {
+            const isFavorited = button.classList.contains('favorited');
+            const icon = button.querySelector('i');
+            // A contagem de favoritos não é diretamente exibida aqui no card, então a atualização visual é apenas do botão
+            // const favoriteCount = button.closest('.book-item').querySelector('.book-favorites'); // Se quiser atualizar a contagem real
+
+            // Animação e atualização visual do botão
+            button.classList.toggle('favorited');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+
+            if (!isFavorited) { // Se favoritou
+                button.style.backgroundColor = '#ffebee';
+                icon.style.color = '#e0245e';
+                button.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                }, 300);
+            } else { // Se desfavoritou
+                button.style.backgroundColor = 'var(--light-gray)';
+                icon.style.color = 'var(--dark-gray)';
+            }
+
+
+            // Chamada AJAX
+            $.ajax({
+                url: 'toggle_favorite.php',
+                method: 'POST',
+                data: {
+                    book_id: bookId,
+                    action: isFavorited ? 'remove' : 'add'
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    // Reverte visualmente em caso de erro
+                    button.classList.toggle('favorited');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('fas');
+                    if (!isFavorited) { // Se era para favoritar e falhou
+                        button.style.backgroundColor = 'var(--light-gray)';
+                        icon.style.color = 'var(--dark-gray)';
+                    } else { // Se era para desfavoritar e falhou
+                        button.style.backgroundColor = '#ffebee';
+                        icon.style.color = '#e0245e';
+                    }
+                }
+            });
+        }
+
+
+        // Popup para criar review (seção existente)
+        function abrirModalPopUp() {
+            document.getElementById('reviewPopupOverlay').style.display = 'flex';
+        }
+
+        document.querySelector('.popup-overlay .btn-close').addEventListener('click', function() {
+            document.getElementById('reviewPopupOverlay').style.display = 'none';
+        });
+
+        document.getElementById('reviewPopupOverlay').addEventListener('click', function(event) {
+            if (event.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
     $conteudo = $_POST["conteudo"];
     $idLivro = isset($_POST["idLivro"]) && !empty($_POST["idLivro"]) ? $_POST["idLivro"] : null;
 
-    $sql_insert = "INSERT INTO tblPublicacao (conteudo, idUsuario, idLivro, dataPublic) 
+    $sql_insert = "INSERT INTO tblPublicacao (conteudo, idUsuario, idLivro, dataPublic)
                   VALUES (?, ?, ?, GETDATE())";
     $params_insert = array($conteudo, $_SESSION["usuario_id"], $idLivro);
     $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
@@ -32,7 +32,7 @@ $termo_busca = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 $usuarios = [];
 if (!empty($termo_busca)) {
     $termo_like = "%$termo_busca%";
-    $sql_usuarios = "SELECT 
+    $sql_usuarios = "SELECT
         u.idUsuario, u.nome, u.arroba_usuario, u.fotoUsuario,
         (SELECT COUNT(*) FROM tblSeguidores WHERE idSeguido = u.idUsuario) as seguidores,
         (SELECT 1 FROM tblSeguidores WHERE idSeguidor = ? AND idSeguido = u.idUsuario) as segue
@@ -51,10 +51,9 @@ if (!empty($termo_busca)) {
 }
 
 // Busca de livros
-// Busca de livros
 $livros = [];
 if (!empty($termo_busca)) {
-    $sql_livros = "SELECT 
+    $sql_livros = "SELECT
         l.idLivro, l.nomeLivro, l.imgCapa,
         a.nomeAutor as autor,
         g.nomeGenero as genero,
@@ -84,7 +83,7 @@ if (!empty($termo_busca)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explorar - Versami</title>
-    <link rel="stylesheet" href="test/styleExplorar.css">
+    <link rel="stylesheet" href="Explorar/CSS/Explore.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -93,7 +92,6 @@ if (!empty($termo_busca)) {
 <body>
     <div class="content">
         <div class="header-menu">
-            <!-- Barra de navegação -->
             <div id="sidebar">
                 <div class="top-content-sidebar">
                     <img src="Assets/logoVersamiBlue.png" alt="Versami" />
@@ -111,16 +109,10 @@ if (!empty($termo_busca)) {
                             <i class="fa-solid fa-bell"></i> Notificações
                             <?php
                             // Contar notificações não lidas
-                            $sql_count = "SELECT COUNT(*) as total FROM tblNotificacao 
-                                WHERE idUsuario = ? AND visualizada = 0";
-                            $stmt_count = sqlsrv_query($conn, $sql_count, array($_SESSION["usuario_id"]));
-                            if ($stmt_count) {
-                                $count = sqlsrv_fetch_array($stmt_count, SQLSRV_FETCH_ASSOC);
-                                if ($count && $count['total'] > 0): ?>
-                                    <span class="notification-badge"><?= $count['total'] ?></span>
-                                <?php endif;
-                            }
-                            ?>
+                            $total_notificacoes = contarNotificacoesNaoLidas($conn, $_SESSION["usuario_id"]);
+                            if ($total_notificacoes > 0): ?>
+                                <span class="notification-badge"><?= $total_notificacoes ?></span>
+                            <?php endif; ?>
                         </li>
                         <li onclick="location.href='profile.php'">
                             <i class="fa-solid fa-user"></i> Perfil
@@ -140,7 +132,6 @@ if (!empty($termo_busca)) {
                 </div>
             </div>
         </div>
-        <!-- Conteúdo -->
         <div class="principal-content">
             <div class="user">
                 <h2>Explorar</h2>
@@ -157,7 +148,6 @@ if (!empty($termo_busca)) {
                             <div class="tab" onclick="changeTab(1)">Livros</div>
                         </div>
                         <div class="content-container">
-                            <!-- Container de Pessoas -->
                             <div class="contentPosts active">
                                 <div class="containerContent">
                                     <?php if (!empty($termo_busca)): ?>
@@ -176,13 +166,14 @@ if (!empty($termo_busca)) {
                                                     <?php if ($usuario['idUsuario'] != $_SESSION["usuario_id"]): ?>
                                                         <button class="followBtn <?= $usuario['segue'] ? 'following' : '' ?>"
                                                             onclick="seguirUsuario(<?= $usuario['idUsuario'] ?>, this)">
-                                                            <?= $usuario['segue'] ? 'Deixar de seguir' : 'Seguir' ?>
+                                                            <i class="fas fa-<?= $usuario['segue'] ? 'user-minus' : 'user-plus' ?>"></i>
+                                                            <span class="button-text"><?= $usuario['segue'] ? 'Deixar de seguir' : 'Seguir' ?></span>
                                                         </button>
                                                     <?php endif; ?>
                                                 </div>
                                             <?php endforeach; ?>
                                         <?php else: ?>
-                                            <div class="no-results">
+                                            <div class="no-results search-instructions">
                                                 <i class="fa-solid fa-user-slash"></i>
                                                 <p>Nenhum usuário encontrado</p>
                                             </div>
@@ -195,7 +186,6 @@ if (!empty($termo_busca)) {
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <!-- Container de Livros -->
                             <div class="contentPosts">
                                 <div class="containerContent">
                                     <?php if (!empty($termo_busca)): ?>
@@ -242,7 +232,7 @@ if (!empty($termo_busca)) {
                                                 <?php endforeach; ?>
                                             </div>
                                         <?php else: ?>
-                                            <div class="no-results">
+                                            <div class="no-results search-instructions">
                                                 <i class="fa-solid fa-book-skull"></i>
                                                 <p>Nenhum livro encontrado</p>
                                             </div>
@@ -262,7 +252,6 @@ if (!empty($termo_busca)) {
         </div>
     </div>
 
-    <!-- Popup para criar review -->
     <div class="popup-overlay" id="reviewPopupOverlay">
         <div class="popup">
             <div class="btn-top-content">
@@ -275,7 +264,6 @@ if (!empty($termo_busca)) {
                 <textarea name="conteudo" maxlength="380" id="review-content" rows="7" cols="7"
                     placeholder="Compartilhe seus pensamentos..."></textarea>
 
-                <!-- Área para mostrar o livro selecionado -->
                 <div id="selectedBookContainer">
                     <div id="selectedBookCover">
                         <i class="fa-solid fa-book"></i>
@@ -296,7 +284,6 @@ if (!empty($termo_busca)) {
         </div>
     </div>
 
-    <!-- Popup de seleção de livros -->
     <div class="popup-overlay" id="bookSelectionPopup">
         <div class="popup">
             <div class="popup-header">
@@ -312,7 +299,6 @@ if (!empty($termo_busca)) {
         </div>
     </div>
 
-    <!-- Scripts de JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
     <script>

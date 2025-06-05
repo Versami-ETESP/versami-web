@@ -802,7 +802,6 @@ form textarea {
 
 /* ===== LISTA DE USUÁRIOS ===== */
 .userList {
-  background-color: red;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
@@ -811,70 +810,95 @@ form textarea {
 
 .userCard {
   background-color: var(--white-background);
-  width: 70%;
+  width: 90%; /* Occupy more space in smaller containers */
+  max-width: 380px; /* Max width for consistency with other cards/elements */
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  padding: 15px;
+  padding: 20px; /* Increased padding */
   display: flex;
-  align-items: center;
-  gap: 15px;
+  flex-direction: column; /* Stack avatar, info, and button */
+  align-items: center; /* Center content within the card */
+  gap: 15px; /* Spacing between elements */
   transition: var(--transition);
   animation: fadeIn 0.3s ease-out;
+  border: 1px solid var(--medium-gray); /* Subtle border */
+  margin: 0 auto; /* Center the card horizontally within its parent */
+  cursor: pointer; /* Adicionado para indicar que o card é clicável */
 }
 
 .userCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* More prominent shadow on hover */
 }
 
 .userAvatar {
-  width: 50px;
-  height: 50px;
+  width: 80px; /* Larger avatar */
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0;
+  border: 3px solid var(--blue-primary); /* Blue border for avatar */
+  margin-bottom: 10px; /* Space below avatar */
 }
 
 .userDetails {
-  background-color: red;
+  /* background-color: transparent; Removido, será transparente */
   display: flex;
   flex-direction: column;
   gap: 5px;
+  align-items: center; /* Centraliza o texto */
 }
 
 .userInfo {
-  background-color: blue;
+  /* background-color: transparent; Removido, será transparente */
   flex: 1;
   min-width: 0;
+  display: flex; /* Adicionado para organizar nome e @ */
+  flex-direction: column;
+  align-items: center; /* Centraliza o conteúdo */
 }
 
 .userName {
   font-weight: 700;
-  margin-bottom: 3px;
+  font-size: 1.3em; /* Larger font size */
+  color: var(--dark);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--dark);
 }
 
 .userUsername {
   color: var(--dark-gray);
-  font-size: 14px;
+  font-size: 0.9em; /* Adjusted font size */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 5px; /* Space before followers count */
+}
+
+/* Adjust followers count style */
+.userDetails span {
+  /* Selecting the span that contains followers count */
+  font-size: 0.85em;
+  color: var(--dark-gray);
 }
 
 .followBtn {
   background-color: var(--primary);
   color: var(--white-background);
   border: none;
-  padding: 8px 16px;
+  padding: 10px 15px; /* Adjust padding */
   border-radius: var(--border-radius-sm);
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
   white-space: nowrap;
+  width: 80%; /* Make button take more width within the card */
+  font-size: 16px; /* Ensure good readability */
+  margin-top: 10px; /* Space above the button */
+  display: flex; /* For icon and text alignment */
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Space between icon and text */
 }
 
 .followBtn:hover {
@@ -891,6 +915,14 @@ form textarea {
   background-color: var(--light-gray);
   color: var(--error);
   border-color: var(--error);
+}
+
+/* Novo estilo para o placeholder quando o botão não aparece (próprio perfil) */
+.followBtn-placeholder {
+  width: 80%;
+  height: 40px; /* Approximate height of the button */
+  /* background-color: transparent; */ /* No visible placeholder */
+  margin-top: 10px; /* Mantenha o mesmo espaçamento */
 }
 
 /* ===== LISTA DE USUÁRIOS ===== */

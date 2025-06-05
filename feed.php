@@ -81,7 +81,7 @@ if ($result_posts_seguindo === false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="css/style-feed.css">
+    <link rel="stylesheet" href="Feed/CSS/Feed.css">
 </head>
 
 <body>
@@ -217,23 +217,23 @@ if ($result_posts_seguindo === false) {
                                                                     <span class="like-count"><?= $post['total_likes'] ?></span>
                                                                 </button>
                                                             </div>
-                                                            <div id="comment-section-count" class="light">
+                                                            <div id="comment-section-count">
                                                                 <span class="comment-count">
                                                                     <i class="far fa-comment"></i>
                                                                     <span><?= $post['total_comentarios'] ?></span>
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <div id="comment-section" class="light">
+                                                        <div id="comment-section">
                                                             <form method="POST" action="comentar.php" id="comment-form"
-                                                                class="light">
+                                                                >
                                                                 <input type="hidden" name="post_id"
                                                                     value="<?= $post['idPublicacao'] ?>">
                                                                 <input type="text" name="comentario"
                                                                     placeholder="Escreva um comentário..." id="comment-input"
-                                                                    class="light" required>
+                                                                     required>
                                                                 <button type="submit" id="comment-button"
-                                                                    class="light">Comentar</button>
+                                                                    >Comentar</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -259,7 +259,7 @@ if ($result_posts_seguindo === false) {
                                                                 $stmt_like = sqlsrv_query($conn, $sql_verifica_like, $params_like);
                                                                 $ja_curtiu = $stmt_like && sqlsrv_fetch($stmt_like);
                                                                 ?>
-                                                                <div id="comment" class="light">
+                                                                <div id="comment">
                                                                     <div class="comment-header">
                                                                         <img src="<?= displayImage($comentario['fotoUsuario']) ?>"
                                                                             alt="Foto do usuário" class="user-avatar">
