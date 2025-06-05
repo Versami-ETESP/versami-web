@@ -14,16 +14,15 @@ $sql_update_visualizada = "UPDATE tblNotificacao SET visualizada = 1 WHERE idUsu
 sqlsrv_query($conn, $sql_update_visualizada, array($idUsuario));
 
 // Busca notificações
-// A lógica para idPublicacaoAssociada tenta inferir o ID do post/comentário
-// da mensagem, o que pode não ser robusto para todos os cenários.
-// Uma solução mais robusta exigiria a adição de uma coluna idPublicacao ou idComentario
-// na tblNotificacao.
+// A query principal busca apenas os dados da notificação.
+// Os dados do remetente (ator) e do item associado (post, comentário)
+// serão buscados dentro do loop PHP para cada notificação,
+// tentando inferir a partir das tabelas de ação (likes, comentários, seguidores).
 $sql = "SELECT n.*
         FROM tblNotificacao n
         WHERE n.idUsuario = ?
         AND (n.tipoNotificacao = ? OR n.tipoNotificacao = ? OR n.tipoNotificacao = ? OR n.tipoNotificacao = ?)
         ORDER BY n.dataNotificacao DESC";
-
 
 $params = array(
     $idUsuario,
@@ -45,9 +44,8 @@ if ($stmt === false) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notificações - Versami</title>
-    <link rel="stylesheet" href="test/styleNotificacoes.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-</head>
+    <link rel="stylesheet" href="test/styleNotificacoes.css"> </head>
 <body>
     <div class="content">
         <div class="header-menu">
@@ -99,50 +97,99 @@ if ($stmt === false) {
                 <div class="notificacoes-list">
                     <?php if (sqlsrv_has_rows($stmt)): ?>
                         <?php while ($notificacao = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)):
-                            $redirect_url = '#'; // Default fallback
-                            $actor_name_from_message = explode(' ', $notificacao['mensagem'])[0]; // Extrai o primeiro nome da mensagem
-                            $actor_photo_url = 'Assets/padrao.png'; // Imagem padrão para o ator
+                            $redirect_url = '#'; // Fallback padrão
+                            $actor_name_from_message = ''; // Nome do ator será extraído da mensagem
+                            $actor_photo_url = 'Assets/padrao.png'; // Imagem padrão do ator
 
-                            // Tentar obter o ID do ator da ação para buscar a foto de perfil
-                            $actor_id_from_action = null;
+                            $actor_id = null; // ID do usuário que fez a ação
+                            $related_post_id = null; // ID do post relacionado (para redirecionamento)
+
+                            // Tentar inferir o ID do ator e do item relacionado com base no tipo de notificação
                             if ($notificacao['tipoNotificacao'] == NOTIFICACAO_CURTIDA_POST) {
-                                $sql_actor = "SELECT TLP.idUsuario, P.idPublicacao FROM tblLikesPorPost TLP JOIN tblPublicacao P ON TLP.idPublicacao = P.idPublicacao WHERE P.idUsuario = ? AND TLP.idPublicacao = (SELECT TOP 1 idPublicacao FROM tblPublicacao WHERE idUsuario = ? ORDER BY dataPublic DESC)";
-                                $params_actor = array($idUsuario, $idUsuario);
-                                $stmt_actor = sqlsrv_query($conn, $sql_actor, $params_actor);
-                                if ($stmt_actor && $row_actor = sqlsrv_fetch_array($stmt_actor, SQLSRV_FETCH_ASSOC)) {
-                                    $actor_id_from_action = $row_actor['idUsuario'];
-                                    $redirect_url = 'post_details.php?id=' . $row_actor['idPublicacao'];
+                                // Exemplo de mensagem: "Fulano curtiu sua publicação"
+                                $parts = explode(' curtiu sua publicação', $notificacao['mensagem']);
+                                if (isset($parts[0])) {
+                                    $actor_name_from_message = trim($parts[0]);
                                 }
+
+                                // Buscar o ID do usuário que curtiu o post e o ID do post
+                                // Esta query é heurística: busca a última curtida de um post do destinatário.
+                                // Idealmente, 'tblNotificacao' teria um 'idPublicacao' referenciando o post exato.
+                                $sql_actor_info = "SELECT TOP 1 TLP.idUsuario AS actor_id, TLP.idPublicacao AS post_id
+                                                   FROM tblLikesPorPost TLP
+                                                   JOIN tblPublicacao P ON TLP.idPublicacao = P.idPublicacao
+                                                   WHERE P.idUsuario = ? -- O dono do post (destinatário da notificação)
+                                                   ORDER BY TLP.dataLike DESC"; // Ordena pelo mais recente
+                                $stmt_actor_info = sqlsrv_query($conn, $sql_actor_info, array($notificacao['idUsuario']));
+                                if ($stmt_actor_info && $row_actor_info = sqlsrv_fetch_array($stmt_actor_info, SQLSRV_FETCH_ASSOC)) {
+                                    $actor_id = $row_actor_info['actor_id'];
+                                    $related_post_id = $row_actor_info['post_id'];
+                                    $redirect_url = 'post_details.php?id=' . $related_post_id;
+                                }
+
                             } elseif ($notificacao['tipoNotificacao'] == NOTIFICACAO_CURTIDA_COMENTARIO) {
-                                $sql_actor = "SELECT TLC.idUsuario, C.idPublicacao FROM tblLikesPorComentario TLC JOIN tblComentario C ON TLC.idComentario = C.idComentario WHERE C.idUsuario = ? AND TLC.idComentario = (SELECT TOP 1 idComentario FROM tblComentario WHERE idUsuario = ? ORDER BY data_coment DESC)";
-                                $params_actor = array($idUsuario, $idUsuario);
-                                $stmt_actor = sqlsrv_query($conn, $sql_actor, $params_actor);
-                                if ($stmt_actor && $row_actor = sqlsrv_fetch_array($stmt_actor, SQLSRV_FETCH_ASSOC)) {
-                                    $actor_id_from_action = $row_actor['idUsuario'];
-                                    $redirect_url = 'post_details.php?id=' . $row_actor['idPublicacao'];
+                                // Exemplo de mensagem: "Fulano curtiu seu comentário"
+                                $parts = explode(' curtiu seu comentário', $notificacao['mensagem']);
+                                if (isset($parts[0])) {
+                                    $actor_name_from_message = trim($parts[0]);
                                 }
+
+                                // Buscar o ID do usuário que curtiu o comentário e o ID do post do comentário
+                                // Heurística: busca a última curtida de comentário feita em um comentário do destinatário.
+                                $sql_actor_info = "SELECT TOP 1 TLC.idUsuario AS actor_id, TC.idPublicacao AS post_id
+                                                   FROM tblLikesPorComentario TLC
+                                                   JOIN tblComentario TC ON TLC.idComentario = TC.idComentario
+                                                   WHERE TC.idUsuario = ? -- O dono do comentário (destinatário da notificação)
+                                                   ORDER BY TLC.dataLike DESC";
+                                $stmt_actor_info = sqlsrv_query($conn, $sql_actor_info, array($notificacao['idUsuario']));
+                                if ($stmt_actor_info && $row_actor_info = sqlsrv_fetch_array($stmt_actor_info, SQLSRV_FETCH_ASSOC)) {
+                                    $actor_id = $row_actor_info['actor_id'];
+                                    $related_post_id = $row_actor_info['post_id'];
+                                    $redirect_url = 'post_details.php?id=' . $related_post_id; // Redireciona para o post do comentário
+                                }
+
                             } elseif ($notificacao['tipoNotificacao'] == NOTIFICACAO_COMENTARIO) {
-                                $sql_actor = "SELECT C.idUsuario, C.idPublicacao FROM tblComentario C WHERE C.idPublicacao = (SELECT TOP 1 idPublicacao FROM tblPublicacao WHERE idUsuario = ? ORDER BY dataPublic DESC) AND C.idUsuario = (SELECT TOP 1 idUsuario FROM tblComentario WHERE idPublicacao = (SELECT TOP 1 idPublicacao FROM tblPublicacao WHERE idUsuario = ? ORDER BY dataPublic DESC) ORDER BY data_coment DESC)";
-                                $params_actor = array($idUsuario, $idUsuario);
-                                $stmt_actor = sqlsrv_query($conn, $sql_actor, $params_actor);
-                                if ($stmt_actor && $row_actor = sqlsrv_fetch_array($stmt_actor, SQLSRV_FETCH_ASSOC)) {
-                                    $actor_id_from_action = $row_actor['idUsuario'];
-                                    $redirect_url = 'post_details.php?id=' . $row_actor['idPublicacao'];
+                                // Exemplo de mensagem: "Fulano comentou: ..."
+                                $parts = explode(' comentou: ', $notificacao['mensagem']);
+                                if (isset($parts[0])) {
+                                    $actor_name_from_message = trim($parts[0]);
                                 }
+
+                                // Buscar o ID do usuário que comentou e o ID do post do comentário
+                                // Heurística: busca o último comentário feito em um post do destinatário.
+                                $sql_actor_info = "SELECT TOP 1 TC.idUsuario AS actor_id, TC.idPublicacao AS post_id
+                                                   FROM tblComentario TC
+                                                   JOIN tblPublicacao P ON TC.idPublicacao = P.idPublicacao
+                                                   WHERE P.idUsuario = ? -- O dono do post (destinatário da notificação)
+                                                   ORDER BY TC.data_coment DESC";
+                                $stmt_actor_info = sqlsrv_query($conn, $sql_actor_info, array($notificacao['idUsuario']));
+                                if ($stmt_actor_info && $row_actor_info = sqlsrv_fetch_array($stmt_actor_info, SQLSRV_FETCH_ASSOC)) {
+                                    $actor_id = $row_actor_info['actor_id'];
+                                    $related_post_id = $row_actor_info['post_id'];
+                                    $redirect_url = 'post_details.php?id=' . $related_post_id;
+                                }
+
                             } elseif ($notificacao['tipoNotificacao'] == NOTIFICACAO_SEGUIMENTO) {
-                                $sql_actor = "SELECT idSeguidor FROM tblSeguidores WHERE idSeguido = ? AND idSeguidor = (SELECT TOP 1 idSeguidor FROM tblSeguidores WHERE idSeguido = ? ORDER BY idSeguidor DESC)";
-                                $params_actor = array($idUsuario, $idUsuario);
-                                $stmt_actor = sqlsrv_query($conn, $sql_actor, $params_actor);
-                                if ($stmt_actor && $row_actor = sqlsrv_fetch_array($stmt_actor, SQLSRV_FETCH_ASSOC)) {
-                                    $actor_id_from_action = $row_actor['idSeguidor'];
-                                    $redirect_url = 'profile_view.php?id=' . $row_actor['idSeguidor'];
+                                // Exemplo de mensagem: "Fulano começou a te seguir"
+                                $parts = explode(' começou a te seguir', $notificacao['mensagem']);
+                                if (isset($parts[0])) {
+                                    $actor_name_from_message = trim($parts[0]);
+                                }
+
+                                // Buscar o ID do usuário que seguiu
+                                // Heurística: busca o último seguidor do destinatário.
+                                $sql_actor_info = "SELECT TOP 1 idSeguidor AS actor_id FROM tblSeguidores WHERE idSeguido = ? ORDER BY idSeguidor DESC";
+                                $stmt_actor_info = sqlsrv_query($conn, $sql_actor_info, array($notificacao['idUsuario']));
+                                if ($stmt_actor_info && $row_actor_info = sqlsrv_fetch_array($stmt_actor_info, SQLSRV_FETCH_ASSOC)) {
+                                    $actor_id = $row_actor_info['actor_id'];
+                                    $redirect_url = 'profile_view.php?id=' . $row_actor_info['actor_id']; // Redireciona para o perfil do seguidor
                                 }
                             }
 
-                            // Se o ID do ator foi encontrado, buscar a foto de perfil
-                            if ($actor_id_from_action) {
+                            // Fetch actor's photo if actor_id was found
+                            if ($actor_id) {
                                 $sql_actor_photo = "SELECT fotoUsuario FROM tblUsuario WHERE idUsuario = ?";
-                                $stmt_actor_photo = sqlsrv_query($conn, $sql_actor_photo, array($actor_id_from_action));
+                                $stmt_actor_photo = sqlsrv_query($conn, $sql_actor_photo, array($actor_id));
                                 if ($stmt_actor_photo && $row_actor_photo = sqlsrv_fetch_array($stmt_actor_photo, SQLSRV_FETCH_ASSOC)) {
                                     $actor_photo_url = displayImage($row_actor_photo['fotoUsuario']);
                                 }
@@ -229,4 +276,5 @@ if ($stmt === false) {
     <script src="js/script.js"></script>
     <script src="js/script-tema.js"></script>
 </body>
+
 </html>

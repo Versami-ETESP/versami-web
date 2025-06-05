@@ -81,7 +81,7 @@ if ($result_posts_seguindo === false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="Feed/CSS/Feed.css">
+    <link rel="stylesheet" href="Feed/Styles/FeedStyle.css">
 </head>
 
 <body>
@@ -149,7 +149,7 @@ if ($result_posts_seguindo === false) {
                                         while ($post = sqlsrv_fetch_array($result_posts, SQLSRV_FETCH_ASSOC)) {
                                             $has_posts = true;
                                             ?>
-                                            <div class="post">
+                                            <div class="post" data-post-id="<?= $post['idPublicacao'] ?>">
                                                 <div class="content-post">
                                                     <div class="content-original-post">
                                                         <div class="usuario">
@@ -175,170 +175,28 @@ if ($result_posts_seguindo === false) {
                                                                     <button class="follow-btn <?= $ja_segue ? 'following' : '' ?>"
                                                                         data-user-id="<?= $post['idUsuario'] ?>"
                                                                         onclick="seguirUsuario(<?= $post['idUsuario'] ?>, this)">
-                                                                        <?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?>
+                                                                        <i class="fas fa-<?= $ja_segue ? 'user-minus' : 'user-plus' ?>"></i>
+                                                                        <span class="button-text"><?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?></span>
                                                                     </button>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                        <div class="post-content" onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
-                                                            <?= transformURLsIntoLinks($post['conteudo']) ?>
-                                                        </div>
-                                                        <?php if (!empty($post['idLivro'])): ?>
-                                                            <div class="attached-book">
-                                                                <?php if (!empty($post['imgCapa'])): ?>
-                                                                    <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>"
-                                                                        alt="Capa do livro" class="bookCoverAttached">
                                                                 <?php else: ?>
-                                                                    <div class="no-book-cover">
-                                                                        <i class="fa-solid fa-book"></i>
-                                                                    </div>
+                                                                    <div class="followBtn-placeholder"></div>
                                                                 <?php endif; ?>
-                                                                <div class="book-info">
-                                                                    <p class="nomeLivroPost"><?= htmlspecialchars($post['nomeLivro']) ?></p>
-                                                                    <?php if (!empty($post['nomeAutor'])): ?>
-                                                                        <p class="nomeAutorPost">
-                                                                            <?= htmlspecialchars($post['nomeAutor']) ?></p>
-                                                                    <?php endif; ?>
-                                                                    <?php if (!empty($post['descLivro'])): ?>
-                                                                        <div class="book-description">
-                                                                            <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
-                                                                        </div>
-                                                                    <?php endif; ?>
-                                                                </div>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                        <div class="cont-section">
-                                                            <div class="like-section">
-                                                                <button type="button"
-                                                                    class="like-btn <?= ($post['usuario_curtiu'] > 0) ? 'liked' : '' ?>"
-                                                                    onclick="curtir(<?= $post['idPublicacao'] ?>, this)">
-                                                                    <i
-                                                                        class="<?= ($post['usuario_curtiu'] > 0) ? 'fas' : 'far' ?> fa-heart"></i>
-                                                                    <span class="like-count"><?= $post['total_likes'] ?></span>
-                                                                </button>
-                                                            </div>
-                                                            <div id="comment-section-count">
-                                                                <span class="comment-count">
-                                                                    <i class="far fa-comment"></i>
-                                                                    <span><?= $post['total_comentarios'] ?></span>
-                                                                </span>
                                                             </div>
                                                         </div>
-                                                        <div id="comment-section">
-                                                            <form method="POST" action="comentar.php" id="comment-form"
-                                                                >
-                                                                <input type="hidden" name="post_id"
-                                                                    value="<?= $post['idPublicacao'] ?>">
-                                                                <input type="text" name="comentario"
-                                                                    placeholder="Escreva um comentário..." id="comment-input"
-                                                                     required>
-                                                                <button type="submit" id="comment-button"
-                                                                    >Comentar</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <div class="comments-list">
-                                                        <?php
-                                                        $sql_comentarios = "SELECT C.idComentario, C.comentario, C.data_coment, U.idUsuario, U.arroba_usuario, U.fotoUsuario,
-                                                        (SELECT COUNT(*) FROM tblLikesPorComentario WHERE idComentario = C.idComentario) AS totalLikes
-                                                        FROM tblComentario C
-                                                        JOIN tblUsuario U ON C.idUsuario = U.idUsuario
-                                                        WHERE C.idPublicacao = ?
-                                                        ORDER BY C.data_coment ASC";
-
-                                                        $params_comentarios = array($post['idPublicacao']);
-                                                        $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
-
-                                                        if ($comentarios) {
-                                                            while ($comentario = sqlsrv_fetch_array($comentarios, SQLSRV_FETCH_ASSOC)):
-                                                                $data_comentario = $comentario['data_coment']->format('H:i');
-
-                                                                // Verifica se o usuário curtiu este comentário
-                                                                $sql_verifica_like = "SELECT 1 FROM tblLikesPorComentario WHERE idUsuario = ? AND idComentario = ?";
-                                                                $params_like = array($_SESSION["usuario_id"], $comentario['idComentario']);
-                                                                $stmt_like = sqlsrv_query($conn, $sql_verifica_like, $params_like);
-                                                                $ja_curtiu = $stmt_like && sqlsrv_fetch($stmt_like);
-                                                                ?>
-                                                                <div id="comment">
-                                                                    <div class="comment-header">
-                                                                        <img src="<?= displayImage($comentario['fotoUsuario']) ?>"
-                                                                            alt="Foto do usuário" class="user-avatar">
-                                                                        <div class="comment-user-info">
-                                                                            <div class="comment-user-name">
-                                                                                @<?= htmlspecialchars($comentario['arroba_usuario']) ?>
-                                                                            </div>
-                                                                            <div class="comment-divisor">
-                                                                                <i class="fa-solid fa-circle"></i>
-                                                                            </div>
-                                                                            <div class="comment-time">
-                                                                                <?= $data_comentario ?>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="comment-text">
-                                                                        <?= transformURLsIntoLinks($comentario['comentario']) ?>
-                                                                    </div>
-                                                                    <div class="comment-actions">
-                                                                        <button type="button"
-                                                                            class="like-comment-btn <?= $ja_curtiu ? 'likedComment' : '' ?>"
-                                                                            onclick="curtirComentario(<?= $comentario['idComentario'] ?>, this)">
-                                                                            <i class="<?= $ja_curtiu ? 'fas' : 'far' ?> fa-heart"></i>
-                                                                            <span
-                                                                                class="like-comment-count"><?= $comentario['totalLikes'] ?? 0 ?></span>
-                                                                        </button>
-                                                                    </div>
+                                                        <div class="post-menu">
+                                                            <button class="post-menu-btn" onclick="togglePostMenu(event, this)">
+                                                                <i class="fas fa-ellipsis-h"></i>
+                                                            </button>
+                                                            <div class="post-menu-dropdown">
+                                                                <div class="post-menu-item" onclick="denunciarPost(<?= $post['idPublicacao'] ?>)">
+                                                                    <i class="fas fa-flag"></i>
+                                                                    <span>Denunciar</span>
                                                                 </div>
-                                                            <?php endwhile;
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <?php
-                                        }
-                                    }
-                                    if (!$has_posts): ?>
-                                        <div class="no-posts">
-                                            <p>Ainda não tem nenhuma review criada, tente criar uma!</p>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <div class="contentPosts">
-                                <div class="containerContent">
-                                    <?php
-                                    // Verifica se há posts na aba "Seguindo"
-                                    $has_posts_seguindo = false;
-                                    if ($result_posts_seguindo) {
-                                        while ($post = sqlsrv_fetch_array($result_posts_seguindo, SQLSRV_FETCH_ASSOC)) {
-                                            $has_posts_seguindo = true;
-                                            ?>
-                                            <div class="post">
-                                                <div class="content-post">
-                                                    <div class="content-original-post">
-                                                        <div class="usuario">
-                                                            <div class="user-info-container">
-                                                                <img src="<?= displayImage($post['fotoUsuario']) ?>"
-                                                                    alt="Foto do usuário" class="user-avatar">
-                                                                <div class="user-details">
-                                                                    <h2><?= htmlspecialchars($post['nome']) ?></h2>
-                                                                    <p>@<?= htmlspecialchars($post['arroba_usuario']) ?></p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="user-info-follow">
-                                                                <?php if ($post['idUsuario'] != $_SESSION["usuario_id"]): ?>
-                                                                    <?php
-                                                                    $sql_seguindo = "SELECT 1 FROM tblSeguidores
-                                                                            WHERE idSeguidor = ? AND idSeguido = ?";
-                                                                    $params_seguindo = [$_SESSION["usuario_id"], $post['idUsuario']];
-                                                                    $stmt_seguindo = sqlsrv_query($conn, $sql_seguindo, $params_seguindo);
-                                                                    $ja_segue = $stmt_seguindo && sqlsrv_fetch($stmt_seguindo);
-                                                                    ?>
-                                                                    <button class="follow-btn <?= $ja_segue ? 'following' : '' ?>"
-                                                                        data-user-id="<?= $post['idUsuario'] ?>"
-                                                                        onclick="seguirUsuario(<?= $post['idUsuario'] ?>, this)">
-                                                                        <?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?>
-                                                                    </button>
+                                                                <?php if ($post['idUsuario'] == $_SESSION["usuario_id"]): ?>
+                                                                    <div class="post-menu-item delete" onclick="excluirPost(<?= $post['idPublicacao'] ?>)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                        <span>Excluir Review</span>
+                                                                    </div>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
@@ -456,6 +314,187 @@ if ($result_posts_seguindo === false) {
                                             <?php
                                         }
                                     }
+                                    if (!$has_posts): ?>
+                                        <div class="no-posts">
+                                            <p>Ainda não tem nenhuma review criada, tente criar uma!</p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="contentPosts">
+                                <div class="containerContent">
+                                    <?php
+                                    // Verifica se há posts na aba "Seguindo"
+                                    $has_posts_seguindo = false;
+                                    if ($result_posts_seguindo) {
+                                        while ($post = sqlsrv_fetch_array($result_posts_seguindo, SQLSRV_FETCH_ASSOC)) {
+                                            $has_posts_seguindo = true;
+                                            ?>
+                                            <div class="post">
+                                                <div class="content-post">
+                                                    <div class="content-original-post">
+                                                        <div class="usuario">
+                                                            <div class="user-info-container">
+                                                                <img src="<?= displayImage($post['fotoUsuario']) ?>"
+                                                                    alt="Foto do usuário" class="user-avatar">
+                                                                <div class="user-details">
+                                                                    <h2><?= htmlspecialchars($post['nome']) ?></h2>
+                                                                    <p>@<?= htmlspecialchars($post['arroba_usuario']) ?></p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="user-info-follow">
+                                                                <?php if ($post['idUsuario'] != $_SESSION["usuario_id"]): ?>
+                                                                    <?php
+                                                                    $sql_seguindo = "SELECT 1 FROM tblSeguidores
+                                                                            WHERE idSeguidor = ? AND idSeguido = ?";
+                                                                    $params_seguindo = [$_SESSION["usuario_id"], $post['idUsuario']];
+                                                                    $stmt_seguindo = sqlsrv_query($conn, $sql_seguindo, $params_seguindo);
+                                                                    $ja_segue = $stmt_seguindo && sqlsrv_fetch($stmt_seguindo);
+                                                                    ?>
+                                                                    <button class="follow-btn <?= $ja_segue ? 'following' : '' ?>"
+                                                                        data-user-id="<?= $post['idUsuario'] ?>"
+                                                                        onclick="seguirUsuario(<?= $post['idUsuario'] ?>, this)">
+                                                                        <i class="fas fa-<?= $ja_segue ? 'user-minus' : 'user-plus' ?>"></i>
+                                                                        <span class="button-text"><?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?></span>
+                                                                    </button>
+                                                                <?php else: ?>
+                                                                    <div class="followBtn-placeholder"></div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="post-menu">
+                                                            <button class="post-menu-btn" onclick="togglePostMenu(event, this)">
+                                                                <i class="fas fa-ellipsis-h"></i>
+                                                            </button>
+                                                            <div class="post-menu-dropdown">
+                                                                <div class="post-menu-item" onclick="denunciarPost(<?= $post['idPublicacao'] ?>)">
+                                                                    <i class="fas fa-flag"></i>
+                                                                    <span>Denunciar</span>
+                                                                </div>
+                                                                <?php if ($post['idUsuario'] == $_SESSION["usuario_id"]): ?>
+                                                                    <div class="post-menu-item delete" onclick="excluirPost(<?= $post['idPublicacao'] ?>)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                        <span>Excluir Review</span>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="post-content" onclick="window.location.href='post_details.php?id=<?= $post['idPublicacao'] ?>'">
+                                                            <?= transformURLsIntoLinks($post['conteudo']) ?>
+                                                        </div>
+                                                        <?php if (!empty($post['idLivro'])): ?>
+                                                            <div class="attached-book">
+                                                                <?php if (!empty($post['imgCapa'])): ?>
+                                                                    <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>"
+                                                                        alt="Capa do livro">
+                                                                <?php else: ?>
+                                                                    <div class="no-book-cover">
+                                                                        <i class="fa-solid fa-book"></i>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                                <div class="book-info">
+                                                                    <p class="nomeLivroPost">
+                                                                        <?= htmlspecialchars($post['nomeLivro']) ?>
+                                                                    </p>
+                                                                    <?php if (!empty($post['nomeAutor'])): ?>
+                                                                        <p class="nomeAutorPost">
+                                                                            <?= htmlspecialchars($post['nomeAutor']) ?></p>
+                                                                    <?php endif; ?>
+                                                                    <?php if (!empty($post['descLivro'])): ?>
+                                                                        <div class="book-description">
+                                                                            <p><?= nl2br(htmlentities($post['descLivro'], ENT_QUOTES, 'UTF-8')) ?></p>
+                                                                        </div>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                        <div class="cont-section">
+                                                            <div class="like-section">
+                                                                <button type="button"
+                                                                    class="like-btn <?= ($post['usuario_curtiu'] > 0) ? 'liked' : '' ?>"
+                                                                    onclick="curtir(<?= $post['idPublicacao'] ?>, this)">
+                                                                    <i
+                                                                        class="<?= ($post['usuario_curtiu'] > 0) ? 'fas' : 'far' ?> fa-heart"></i>
+                                                                    <span class="like-count"><?= $post['total_likes'] ?></span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="comment-section-count">
+                                                                <span class="comment-count">
+                                                                    <i class="far fa-comment"></i>
+                                                                    <span><?= $post['total_comentarios'] ?></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="comment-section">
+                                                            <form method="POST" action="comentar.php" class="comment-form">
+                                                                <input type="hidden" name="post_id"
+                                                                    value="<?= $post['idPublicacao'] ?>">
+                                                                <input type="text" name="comentario"
+                                                                    placeholder="Escreva um comentário..." class="comment-input"
+                                                                    required>
+                                                                <button type="submit" class="comment-button">Comentar</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="comments-list">
+                                                        <?php
+                                                        $sql_comentarios = "SELECT C.idComentario, C.comentario, C.data_coment, U.idUsuario, U.arroba_usuario, U.fotoUsuario,
+                                                        (SELECT COUNT(*) FROM tblLikesPorComentario WHERE idComentario = C.idComentario) AS totalLikes
+                                                        FROM tblComentario C
+                                                        JOIN tblUsuario U ON C.idUsuario = U.idUsuario
+                                                        WHERE C.idPublicacao = ?
+                                                        ORDER BY C.data_coment ASC";
+
+                                                        $params_comentarios = array($post['idPublicacao']);
+                                                        $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
+
+                                                        if ($comentarios) {
+                                                            while ($comentario = sqlsrv_fetch_array($comentarios, SQLSRV_FETCH_ASSOC)):
+                                                                $data_comentario = $comentario['data_coment']->format('H:i');
+
+                                                                $sql_verifica_like = "SELECT 1 FROM tblLikesPorComentario WHERE idUsuario = ? AND idComentario = ?";
+                                                                $params_like = array($_SESSION["usuario_id"], $comentario['idComentario']);
+                                                                $stmt_like = sqlsrv_query($conn, $sql_verifica_like, $params_like);
+                                                                $ja_curtiu = $stmt_like && sqlsrv_fetch($stmt_like);
+                                                                ?>
+                                                                <div class="comment">
+                                                                    <div class="comment-header">
+                                                                        <img src="<?= displayImage($comentario['fotoUsuario']) ?>"
+                                                                            alt="Foto do usuário" class="user-avatar">
+                                                                        <div class="comment-user-info">
+                                                                            <div class="comment-user-name">
+                                                                                @<?= htmlspecialchars($comentario['arroba_usuario']) ?>
+                                                                            </div>
+                                                                            <div class="comment-divisor">
+                                                                                <i class="fa-solid fa-circle"></i>
+                                                                            </div>
+                                                                            <div class="comment-time">
+                                                                                <?= $data_comentario ?>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="comment-text">
+                                                                        <?= htmlspecialchars($comentario['comentario']) ?>
+                                                                    </div>
+                                                                    <div class="comment-actions">
+                                                                        <button type="button"
+                                                                            class="like-comment-btn <?= $ja_curtiu ? 'likedComment' : '' ?>"
+                                                                            onclick="curtirComentario(<?= $comentario['idComentario'] ?>, this)">
+                                                                            <i class="<?= $ja_curtiu ? 'fas' : 'far' ?> fa-heart"></i>
+                                                                            <span
+                                                                                class="like-comment-count"><?= $comentario['totalLikes'] ?? 0 ?></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            <?php endwhile;
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <?php
+                                        }
+                                    }
                                     if (!$has_posts_seguindo): ?>
                                         <div class="no-posts">
                                             <p>Você não está seguindo ninguém ainda ou os usuários que você segue não
@@ -467,6 +506,17 @@ if ($result_posts_seguindo === false) {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirmation-modal-overlay" id="confirmationModalOverlay">
+        <div class="confirmation-modal-content">
+            <h3>Confirmar Denúncia</h3>
+            <p>Você tem certeza que deseja denunciar esta publicação? Esta ação não pode ser desfeita.</p>
+            <div class="confirmation-modal-buttons">
+                <button class="cancel-btn" id="cancelDenounceBtn">Cancelar</button>
+                <button class="confirm-btn" id="confirmDenounceBtn">Confirmar</button>
             </div>
         </div>
     </div>
