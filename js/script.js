@@ -588,5 +588,71 @@ function closeBookSelection() {
   document.getElementById("bookSelectionPopup").style.display = "none";
 }
 
-// Variável global para armazenar o ID do post a ser denunciado/excluído
-let currentPostId = null;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+v// Função para mostrar/esconder o menu de um post
+function togglePostMenu(button, postId) {
+    const dropdown = button.nextElementSibling;
+    // Fechar todos os outros dropdowns abertos
+    document.querySelectorAll('.post-menu-dropdown.show').forEach(openDropdown => {
+        if (openDropdown !== dropdown) {
+            openDropdown.classList.remove('show');
+        }
+    });
+    dropdown.classList.toggle('show');
+    currentPostId = postId; // Define o ID do post atual para uso nas ações
+}
+
+// Fechar o dropdown do menu do post ao clicar fora
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.post-menu')) {
+        document.querySelectorAll('.post-menu-dropdown.show').forEach(dropdown => {
+            dropdown.classList.remove('show');
+        });
+    }
+});
+
+// Adicionar listener para o botão de denúncia (delegado)
+$(document).on('click', '.report-post-btn', function() {
+    const postIdToReport = $(this).data('post-id');
+    if (confirm("Tem certeza que deseja denunciar esta publicação?")) {
+        denunciarPost(postIdToReport);
+    }
+    // Fechar o menu após a ação
+    $(this).closest('.post-menu-dropdown').classList.remove('show');
+});
+
+// Função para denunciar um post
+function denunciarPost(postId) {
+    $.ajax({
+        url: 'denunciar_post.php', // Seu script PHP para denunciar
+        method: 'POST',
+        data: { post_id: postId },
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert(response.message || "Erro ao denunciar o post.");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Erro na requisição AJAX:", status, error);
+            alert("Ocorreu um erro ao tentar denunciar a publicação. Tente novamente.");
+        }
+    });
+}

@@ -349,23 +349,21 @@ if ($result_posts_seguindo === false) {
                                                             <div class="attached-book">
                                                                 <?php if (!empty($post['imgCapa'])): ?>
                                                                     <img src="data:image/jpeg;base64,<?= base64_encode($post['imgCapa']) ?>"
-                                                                        alt="Capa do livro">
+                                                                        alt="Capa do livro" class="bookCoverAttached">
                                                                 <?php else: ?>
                                                                     <div class="no-book-cover">
                                                                         <i class="fa-solid fa-book"></i>
                                                                     </div>
                                                                 <?php endif; ?>
                                                                 <div class="book-info">
-                                                                    <p class="nomeLivroPost">
-                                                                        <?= htmlspecialchars($post['nomeLivro']) ?>
-                                                                    </p>
+                                                                    <p class="nomeLivroPost"><?= htmlspecialchars($post['nomeLivro']) ?></p>
                                                                     <?php if (!empty($post['nomeAutor'])): ?>
                                                                         <p class="nomeAutorPost">
                                                                             <?= htmlspecialchars($post['nomeAutor']) ?></p>
                                                                     <?php endif; ?>
                                                                     <?php if (!empty($post['descLivro'])): ?>
                                                                         <div class="book-description">
-                                                                            <p><?= nl2br(htmlentities($post['descLivro'], ENT_QUOTES, 'UTF-8')) ?></p>
+                                                                            <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
                                                                         </div>
                                                                     <?php endif; ?>
                                                                 </div>
