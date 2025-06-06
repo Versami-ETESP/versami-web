@@ -3,104 +3,128 @@ session_start();
 include '../config.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    try {
-        // Sanitização e validação
-        $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
-        $arroba = filter_input(INPUT_POST, 'arroba_usuario', FILTER_SANITIZE_SPECIAL_CHARS);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-        $senha = $_POST['senha'] ?? '';
-        $confirma = $_POST['confirma'] ?? '';
-        $data_raw = filter_input(INPUT_POST, 'data_nasc', FILTER_SANITIZE_STRING);
-        $data_nasc = date("Y-m-d", strtotime($data_raw));
+  try {
+    // Sanitização e validação
+    $nome = filter_input(INPUT_POST, 'nome', FILTER_SANITIZE_SPECIAL_CHARS);
+    $arroba = filter_input(INPUT_POST, 'arroba_usuario', FILTER_SANITIZE_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $senha = $_POST['senha'] ?? '';
+    $confirma = $_POST['confirma'] ?? '';
+    $data_raw = filter_input(INPUT_POST, 'data_nasc', FILTER_SANITIZE_STRING);
+    $data_nasc = date("Y-m-d", strtotime($data_raw));
 
-        // Validação
-        if (!$nome || !$arroba || !$email || !$senha || !$confirma || !$data_nasc) {
-            throw new Exception("Todos os campos devem ser preenchidos corretamente.");
-        }
+    // Novos campos para Pergunta Secreta
+    $idPergunta = filter_input(INPUT_POST, 'pergunta_secreta', FILTER_VALIDATE_INT);
+    $respostaSecreta = filter_input(INPUT_POST, 'resposta_secreta', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("E-mail inválido.");
-        }
+    // Validação
+    if (!$nome || !$arroba || !$email || !$senha || !$confirma || !$data_nasc || !$idPergunta || !$respostaSecreta) {
+      throw new Exception("Todos os campos devem ser preenchidos corretamente, incluindo a pergunta e resposta secreta.");
+    }
 
-        if ($senha !== $confirma) {
-            throw new Exception("As senhas não coincidem.");
-        }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      throw new Exception("E-mail inválido.");
+    }
 
-        // Verifica idade mínima (13 anos)
-        $dataAtual = new DateTime();
-        $dataNascimento = new DateTime($data_nasc);
-        $idade = $dataAtual->diff($dataNascimento)->y;
+    if ($senha !== $confirma) {
+      throw new Exception("As senhas não coincidem.");
+    }
 
-        if ($idade < 13) {
-            throw new Exception("Você deve ter pelo menos 13 anos para se cadastrar.");
-        }
+    // Verifica idade mínima (13 anos)
+    $dataAtual = new DateTime();
+    $dataNascimento = new DateTime($data_nasc);
+    $idade = $dataAtual->diff($dataNascimento)->y;
 
-        // Criptografa a senha (SHA-256)
-        $senhaHash = hash("sha256", $senha);
+    if ($idade < 13) {
+      throw new Exception("Você deve ter pelo menos 13 anos para se cadastrar.");
+    }
 
-        // Verifica se o e-mail ou arroba já está cadastrado
-        $checkUser = "SELECT COUNT(*) AS total FROM tblUsuario WHERE email = ? OR arroba_usuario = ?";
-        $paramsCheck = [$email, $arroba];
-        $stmtCheck = sqlsrv_query($conn, $checkUser, $paramsCheck);
+    // Criptografa a senha (SHA-256)
+    $senhaHash = hash("sha256", $senha);
 
-        if ($stmtCheck === false) {
-            throw new Exception("Erro ao verificar usuário. Por favor, tente novamente.");
-        }
+    // Criptografa a resposta secreta (SHA-256 para segurança)
+    $respostaSecretaHash = hash("sha256", $respostaSecreta);
 
-        $row = sqlsrv_fetch_array($stmtCheck, SQLSRV_FETCH_ASSOC);
-        if ($row['total'] > 0) {
-            throw new Exception("E-mail ou @usuário já cadastrado.");
-        }
+    // Verifica se o e-mail ou arroba já está cadastrado
+    $checkUser = "SELECT COUNT(*) AS total FROM tblUsuario WHERE email = ? OR arroba_usuario = ?";
+    $paramsCheck = [$email, $arroba];
+    $stmtCheck = sqlsrv_query($conn, $checkUser, $paramsCheck);
 
-        // Carrega imagens padrão como binário
-        $fotoPadrao = file_exists(FOTO_PADRAO_PATH) ? file_get_contents(FOTO_PADRAO_PATH) : null;
-        $capaPadrao = file_exists(CAPA_PADRAO_PATH) ? file_get_contents(CAPA_PADRAO_PATH) : null;
+    if ($stmtCheck === false) {
+      throw new Exception("Erro ao verificar usuário. Por favor, tente novamente.");
+    }
 
-        // Inserção no banco
-        $sql = "INSERT INTO tblUsuario (nome, data_nasc, arroba_usuario, email, senha, fotoUsuario, fotoCapa, bio_usuario)
-                VALUES (?, ?, ?, ?, ?, CONVERT(varbinary(max), ?), CONVERT(varbinary(max), ?), '');
+    $row = sqlsrv_fetch_array($stmtCheck, SQLSRV_FETCH_ASSOC);
+    if ($row['total'] > 0) {
+      throw new Exception("E-mail ou @usuário já cadastrado.");
+    }
+
+    // Carrega imagens padrão como binário
+    $fotoPadrao = file_exists(FOTO_PADRAO_PATH) ? file_get_contents(FOTO_PADRAO_PATH) : null;
+    $capaPadrao = file_exists(CAPA_PADRAO_PATH) ? file_get_contents(CAPA_PADRAO_PATH) : null;
+
+    // Inserção no banco, incluindo pergunta e resposta secreta
+    $sql = "INSERT INTO tblUsuario (nome, data_nasc, arroba_usuario, email, senha, fotoUsuario, fotoCapa, bio_usuario, idPergunta, resposta)
+                VALUES (?, ?, ?, ?, ?, CONVERT(varbinary(max), ?), CONVERT(varbinary(max), ?), '', ?, ?);
                 SELECT SCOPE_IDENTITY() AS idUsuario;";
 
-        $params = [
-            $nome,
-            $data_nasc,
-            $arroba,
-            $email,
-            $senhaHash,
-            $fotoPadrao,
-            $capaPadrao
-        ];
+    $params = [
+      $nome,
+      $data_nasc,
+      $arroba,
+      $email,
+      $senhaHash,
+      $fotoPadrao,
+      $capaPadrao,
+      $idPergunta,
+      $respostaSecretaHash // Armazena a resposta criptografada
+    ];
 
-        $stmt = sqlsrv_query($conn, $sql, $params);
+    $stmt = sqlsrv_query($conn, $sql, $params);
 
-        if ($stmt) {
-            if (sqlsrv_next_result($stmt)) {
-                $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-                if ($row) {
-                    $_SESSION['idUsuario_setup'] = $row['idUsuario'];
-                    $_SESSION['email_usuario'] = $email;
-                    header("Location: ../setup_profile.php");
-                    exit();
-                }
-            }
-            throw new Exception("Erro ao obter ID do usuário. Por favor, tente novamente.");
-        } else {
-            $errors = sqlsrv_errors();
-            $errorMessage = "Erro ao criar conta: ";
-            foreach ($errors as $error) {
-                $errorMessage .= "SQLSTATE: " . $error['SQLSTATE'] . ", code: " . $error['code'] . " - " . $error['message'];
-            }
-            throw new Exception($errorMessage);
+    if ($stmt) {
+      if (sqlsrv_next_result($stmt)) {
+        $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        if ($row) {
+          $_SESSION['idUsuario_setup'] = $row['idUsuario'];
+          $_SESSION['email_usuario'] = $email;
+          header("Location: ../setup_profile.php");
+          exit();
         }
-    } catch (Exception $e) {
-        header("Location: ../error.php?message=" . urlencode($e->getMessage()));
-        exit();
+      }
+      throw new Exception("Erro ao obter ID do usuário. Por favor, tente novamente.");
+    } else {
+      $errors = sqlsrv_errors();
+      $errorMessage = "Erro ao criar conta: ";
+      foreach ($errors as $error) {
+        $errorMessage .= "SQLSTATE: " . $error['SQLSTATE'] . ", code: " . $error['code'] . " - " . $error['message'];
+      }
+      throw new Exception($errorMessage);
     }
+  } catch (Exception $e) {
+    header("Location: ../error.php?message=" . urlencode($e->getMessage()));
+    exit();
+  }
+}
+
+// Obter as perguntas secretas do banco de dados para popular o dropdown
+$perguntas = [];
+$sql_perguntas = "SELECT idPergunta, pergunta FROM tblPerguntaSecreta ORDER BY idPergunta";
+$result_perguntas = sqlsrv_query($conn, $sql_perguntas);
+
+if ($result_perguntas) {
+  while ($row = sqlsrv_fetch_array($result_perguntas, SQLSRV_FETCH_ASSOC)) {
+    $perguntas[] = $row;
+  }
+} else {
+  // Logar ou exibir erro se não conseguir buscar as perguntas
+  error_log("Erro ao buscar perguntas secretas: " . print_r(sqlsrv_errors(), true));
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -177,6 +201,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           <i class="material-icons-outlined required">lock</i>
           <input type="password" name="confirma" id="confirma" class="entrada" placeholder="Confirme sua senha">
         </div>
+        <div class="envelope">
+          <i class="material-icons-outlined required">help_outline</i>
+          <select name="pergunta_secreta" id="pergunta_secreta" class="entrada" required>
+            <option value="">Selecione uma pergunta secreta</option>
+            <?php foreach ($perguntas as $pergunta): ?>
+              <option value="<?= htmlspecialchars($pergunta['idPergunta']) ?>">
+                <?= htmlspecialchars($pergunta['pergunta']) ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="envelope">
+          <i class="material-icons-outlined required">vpn_key</i>
+          <input type="text" name="resposta_secreta" id="resposta_secreta" maxlength="255" class="entrada"
+            placeholder="Sua resposta secreta" required>
+        </div>
         <input type="submit" value="Criar conta" id="enviar" class="btnPersonalizar">
       </form>
     </div>
@@ -224,4 +264,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   <script src="../JS/Script.js"></script>
 </body>
+
 </html>

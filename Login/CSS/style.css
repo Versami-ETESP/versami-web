@@ -1,210 +1,421 @@
-:root{
-    --versami-cor1: #61c1d1;
-    --versami-cor2: #6189d1;
-    --versami-cor3: #333333;
-    --versami-cor4: #607d8b;
-    --versami-cor5: #ffffff;
-    --versami-cor6: #f5f5f5;
-    --versami-cor7: #3a737d;
+:root {
+  --versami-cor1: #61c1d1;
+  --versami-cor2: #6189d1;
+  --versami-cor3: #333333;
+  --versami-cor4: #607d8b;
+  --versami-cor5: #ffffff;
+  --versami-cor6: #f5f5f5;
+  --versami-cor7: #3a737d;
 }
 
-body{
-    background-image: url(../../Assets/backgroundIndex.png);
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
+body {
+  background-image: url(../../Assets/backgroundIndex.png);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
-main{
-    width: 100%;
-    min-height: 80vh;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+main {
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 div.principal {
-    width: 45vw;
-    min-height: 70vh;
-    border-radius: 10px;
-    background-color: var(--versami-cor6);
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: -20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
-    z-index: 1;
+  width: 45vw;
+  min-height: 70vh;
+  border-radius: 10px;
+  background-color: var(--versami-cor6);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: -20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 
-.form{
-    width: 100%;
-    height: 70%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
+.form {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.tituloPrinc{
-    text-align: center;
-    font-size: 3rem;
-    margin-top: 1rem;
+.tituloPrinc {
+  text-align: center;
+  font-size: 3rem;
+  margin-top: 1rem;
 }
 
-.versami{
-    border-bottom: solid var(--versami-cor1);
+.versami {
+  border-bottom: solid var(--versami-cor1);
 }
 
-.titulo1{
-    text-align: center;
-    color: var(--versami-cor1);
-    font-weight: normal;
-    margin-bottom: 1rem;
+.titulo1 {
+  text-align: center;
+  color: var(--versami-cor1);
+  font-weight: normal;
+  margin-bottom: 1rem;
 }
 
 .msg {
-    background-color: var(--versami-cor1);
-    border-radius: 10px;
-    width: 45vw;
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 3rem;
-    z-index: 5;
-
+  background-color: var(--versami-cor1);
+  border-radius: 10px;
+  width: 45vw;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  z-index: 5;
 }
 
-.msgTitulo{
-    font-size: 3rem;
-    margin-bottom: 2rem;
-    text-align: center;
+.msgTitulo {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
-.msgTexto{
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    text-align: center;
+.msgTexto {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
-.msgindex{
-    margin-left: -20px;
-    z-index: 5;
+.msgindex {
+  margin-left: -20px;
+  z-index: 5;
 }
 
 .entrada {
-    width: 90%;
+  width: 90%;
 }
 
-.btnCadastro{
-    padding: 10px;
-    background-color: transparent;
-    border: 2px solid #FFFFFF;
-    color: #FFFFFF  ;
-    text-decoration: none;
-    border-radius: 8px;
-    outline: none;
+.btnCadastro {
+  padding: 10px;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  outline: none;
 }
 
-.required{
-    color: var(--versami-cor3);
-    padding-left: 0.625rem;
-    padding-right: 0.625rem;
+.required {
+  color: var(--versami-cor3);
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
 }
 
-input[type="date"]{
-    width: 90%;
-    
+input[type="date"] {
+  width: 90%;
 }
 
-input[type='date']::-webkit-calendar-picker-indicator {
-    opacity: 0;
-    width: 70%;
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  width: 70%;
 }
 
 .envelope {
-    background-color: var(--versami-cor5);
-    width: 70%;
-    margin-bottom: 1rem;
-    margin-right: 0.625rem;
-    border: none;
-    border-radius: 5px;
-    outline: none;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  background-color: var(--versami-cor5);
+  width: 70%;
+  margin-bottom: 1rem;
+  margin-right: 0.625rem;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
-#alerta{
-    text-align: center;
-    font-size: 12px;
-    visibility: hidden;
+#alerta {
+  text-align: center;
+  font-size: 12px;
+  visibility: hidden;
 }
 
 .btnPersonalizar {
-    font-family: "Montserrat", sans-serif;
-    background-color: #61c1d1;
-    background-image: linear-gradient(180deg, #61c1d1 0%, #3a737d 100%);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  background-color: #61c1d1;
+  background-image: linear-gradient(180deg, #61c1d1 0%, #3a737d 100%);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.btnPersonalizar:hover {
+  transition: color 0.9s;
+  background-color: #298e9b;
+  background-image: linear-gradient(90deg, #61c1d1 0%, #3a737d 100%);
+}
+
+div.carregando {
+  width: 60px;
+  height: 60px;
+  background-color: transparent;
+  border: 12px solid var(--versami-cor3);
+  border-radius: 50%;
+  border-right: 12px solid transparent;
+  animation: carregando 1s linear infinite;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  display: none;
+  z-index: 9999;
+}
+/* No seu Login/CSS/style.css */
+
+/* Garante que o overlay do popup esteja oculto por padrão,
+   e que a exibição 'flex' via JS seja respeitada */
+.popup-overlay {
+  display: none; /* Inicia oculto por padrão */
+  position: fixed; /* Fixa o popup na tela, independente da rolagem */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+  justify-content: center; /* Centraliza horizontalmente o popup-content */
+  align-items: center; /* Centraliza verticalmente o popup-content */
+  z-index: 10000; /* Garante que fique acima de outros elementos da página */
+  opacity: 0; /* Começa invisível para a transição */
+  transition: opacity 0.3s ease-out; /* Adiciona transição para o overlay */
+}
+
+/* **AJUSTADO:** Torna o overlay visível (e transiciona) quando o JavaScript define display: flex */
+.popup-overlay[style*="display: flex"] {
+  display: flex !important; /* Força a exibição como flex para contornar especificidade */
+  opacity: 1; /* Torna o overlay totalmente visível */
+}
+
+/* Estilo para o conteúdo principal do popup */
+.popup {
+  background: white;
+  padding: 20px;
+  width: 450px; /* Largura ajustada para o modal de senha */
+  max-width: 90%; /* Para responsividade */
+  height: auto;
+  min-height: 350px; /* Altura mínima para o conteúdo ser visível */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center; /* Centraliza itens no popup */
+  position: relative;
+  /* Opacidade e transformação iniciais para a animação */
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease-out 0.1s, transform 0.3s ease-out 0.1s; /* Atraso na transição para aparecer depois do overlay */
+}
+
+/* **AJUSTADO:** Garante que o popup interno (conteúdo) se torna visível quando o overlay é ativado */
+/* Adicionamos .popup-overlay[style*="display: flex"] antes para dar mais especificidade e garantir a transição */
+.popup-overlay[style*="display: flex"] .popup {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Estilos para os campos do formulário dentro do popup */
+#forgotPasswordPopupOverlay .form-group {
+  width: 90%;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#forgotPasswordPopupOverlay .form-group label {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: var(--versami-cor3);
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+
+#forgotPasswordPopupOverlay .form-group input[type="text"],
+#forgotPasswordPopupOverlay .form-group input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--versami-cor4);
+  border-radius: 5px;
+  outline: none;
+  font-size: 1em;
+  color: var(--versami-cor3);
+}
+
+#forgotPasswordPopupOverlay .form-group input[readonly] {
+  background-color: var(--versami-cor6);
+  cursor: not-allowed;
+  border-color: var(--versami-cor4);
+}
+
+#forgotPasswordPopupOverlay .btnPersonalizar {
+  width: 90%;
+  margin-top: 15px;
+}
+
+/* --- Estilos para o botão de fechar (X) e título no topo do popup --- */
+#forgotPasswordPopupOverlay .btn-top-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* Alinha o X à esquerda e o título/botão Salvar à direita */
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--versami-cor6);
+  margin-bottom: 10px;
+}
+
+#forgotPasswordPopupOverlay .btn-top-content h2 {
+  margin: 0; /* Remove margem padrão do h2 */
+  color: var(--versami-cor1);
+  font-size: 1.5em;
+  flex-grow: 1; /* Permite que o título ocupe o espaço central */
+  text-align: center;
+}
+
+#forgotPasswordPopupOverlay .btn-top-content .btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5em; /* Tamanho do X */
+  color: var(--versami-cor4);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  order: -1; /* Força o botão de fechar para a primeira posição (esquerda) */
+}
+
+#forgotPasswordPopupOverlay .btn-top-content .btn-close:hover {
+  background-color: var(--versami-cor6);
+  color: var(--versami-cor3);
+}
+
+/* Remova a classe btn-top-content se ela estiver vazia em Login/login.php HTML */
+/* Se você tiver o botão "Salvar" no canto superior direito do popup, como no profile.php,
+   o layout acima do .btn-top-content com h2 centralizado e botões nas laterais
+   não funcionará bem para o popup de redefinição de senha, que tem um layout mais simples.
+   Vamos simplificar o .btn-top-content para este popup.
+   A estrutura que você me deu para o login.php é:
+   <div class="btn-top-content">
+       <div class="btn-close-content"> <button ...> </button> </div>
+       <h2>Redefinir Senha</h2>
+   </div>
+   Isso está ok e centralizará o título. O X ficará à esquerda.
+*/
+
+/* O restante do seu CSS abaixo */
+@keyframes carregando {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .btnPersonalizar:hover {
-    transition: color 0.9s;
-    background-color: #298e9b;
-    background-image: linear-gradient(90deg, #61c1d1 0%, #3a737d 100%);
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 750px) {
+  main {
+    display: flex;
+    flex-direction: column-reverse;
   }
 
-div.carregando{
-    width: 60px;
-    height: 60px;
-    background-color: transparent;
-    border: 12px solid var(--versami-cor3);
-    border-radius: 50%;
-    border-right: 12px solid transparent;
-    animation: carregando 1s linear infinite;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    display: none;
-    z-index: 9999;
+  .msg {
+    width: 95%;
+    height: 30vh;
+  }
+
+  div.principal {
+    width: 95%;
+    min-height: 45vh;
+    margin-right: 0;
+    margin-top: -15%;
+  }
 }
 
-@keyframes carregando{
-    0%{
-        transform: rotate(0deg);
-    }
-
-    100%{
-        transform: rotate(360deg);
-    }
+.forgot-password-link {
+  display: block; /* Para que o link ocupe sua própria linha */
+  text-align: right; /* Alinha o link à direita */
+  margin-top: 10px; /* Espaço acima do link */
+  font-size: 0.9em;
+  color: var(--versami-cor1); /* Cor da sua variável primária */
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-@media (max-width:750px) {
-    main{
-        display: flex;
-        flex-direction: column-reverse;
-    }
-
-    .msg{
-        width: 95%;
-        height: 30vh;
-    }
-
-    div.principal{
-        width: 95%;
-        min-height: 45vh;
-        margin-right: 0;
-        margin-top: -15%;
-    }
+.forgot-password-link:hover {
+  text-decoration: underline;
+  color: var(--versami-cor7); /* Uma cor de hover mais escura */
 }
 
+/* Adicione também (se não tiver) o estilo para o toast: */
+.toast-notification {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 16px;
+  position: fixed;
+  z-index: 10001;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-size: 17px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s ease-in-out;
+}
 
+.toast-notification.show {
+  visibility: visible;
+  opacity: 1;
+}
 
+.toast-notification.success {
+  background-color: #4caf50;
+}
 
+.toast-notification.error {
+  background-color: #f44336;
+}
+
+.error-message {
+  color: #d32f2f;
+  text-align: center;
+  margin: 0 auto 20px auto;
+  font-size: 14px;
+  padding: 12px;
+  background-color: #ffebee;
+  border-radius: 6px;
+  border: 1px solid #ef9a9a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  max-width: 80%;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
