@@ -138,6 +138,23 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                                 </button>
                             </div>
                         <?php endif; ?>
+                        <div class="post-menu">
+                            <button class="post-menu-btn" onclick="togglePostMenu(event, this)">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                            <div class="post-menu-dropdown">
+                                <div class="post-menu-item" onclick="denunciarPost(<?= $post['idPublicacao'] ?>)">
+                                    <i class="fas fa-flag"></i>
+                                    <span>Denunciar</span>
+                                </div>
+                                <?php if ($post['autor_id'] == $_SESSION["usuario_id"]): ?>
+                                    <div class="post-menu-item delete" onclick="excluirPost(<?= $post['idPublicacao'] ?>)">
+                                        <i class="fas fa-trash"></i>
+                                        <span>Excluir Review</span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     </div>
                     <div class="post-content">
                         <?= transformURLsIntoLinks($post['conteudo']) ?>
@@ -329,6 +346,131 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                         '<i class="far fa-heart"></i> Favoritar';
                 }
             });
+        }
+        // Função para mostrar/esconder o menu de um post
+        function togglePostMenu(event, button) {
+            event.stopPropagation(); // Impede que o clique se propague para o post-details-container
+            const dropdown = button.nextElementSibling;
+            // Fechar todos os outros dropdowns abertos
+            document.querySelectorAll('.post-menu-dropdown.show').forEach(openDropdown => {
+                if (openDropdown !== dropdown) {
+                    openDropdown.classList.remove('show');
+                }
+            });
+            dropdown.classList.toggle('show');
+        }
+
+        // Fechar o dropdown do menu do post ao clicar fora
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.post-menu')) {
+                document.querySelectorAll('.post-menu-dropdown.show').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        });
+
+        // Função para denunciar um post (AGORA CHAMA O POPUP DE CONFIRMAÇÃO)
+        function denunciarPost(postId) {
+            // Esconde o dropdown do menu do post
+            document.querySelectorAll('.post-menu-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+
+            // Exibe o modal de confirmação
+            const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
+            confirmationModalOverlay.classList.add('active');
+
+            // Armazena o postId no modal para uso posterior
+            confirmationModalOverlay.setAttribute('data-post-id', postId);
+        }
+
+        // Nova função para processar a denúncia APÓS a confirmação do modal
+        function confirmarDenuncia() {
+            const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
+            const postIdToReport = confirmationModalOverlay.getAttribute('data-post-id');
+
+            // Esconde o modal de confirmação
+            confirmationModalOverlay.classList.remove('active');
+
+            // Se o postIdToReport for válido, procede com a denúncia via AJAX
+            if (postIdToReport) {
+                $.ajax({
+                    url: 'denunciar_post.php',
+                    method: 'POST',
+                    data: { post_id: postIdToReport },
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message); // Você pode substituir este alert por um feedback mais sofisticado
+                        } else {
+                            alert(response.message || "Erro ao denunciar o post.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Erro na requisição AJAX:", status, error);
+                        alert("Ocorreu um erro ao tentar denunciar a publicação. Tente novamente.");
+                    }
+                });
+            }
+        }
+
+        // Função para cancelar a denúncia (apenas fecha o popup)
+        function cancelarDenuncia() {
+            const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
+            confirmationModalOverlay.classList.remove('active');
+            confirmationModalOverlay.removeAttribute('data-post-id'); // Limpa o ID do post
+        }
+
+        // Adiciona listeners aos botões do modal de confirmação
+        document.addEventListener('DOMContentLoaded', function () {
+            const confirmBtn = document.getElementById('confirmDenounceBtn');
+            const cancelBtn = document.getElementById('cancelDenounceBtn');
+            const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
+
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', confirmarDenuncia);
+            }
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', cancelarDenuncia);
+            }
+            // Fechar modal ao clicar fora
+            if (confirmationModalOverlay) {
+                confirmationModalOverlay.addEventListener('click', function (event) {
+                    if (event.target === confirmationModalOverlay) {
+                        cancelarDenuncia();
+                    }
+                });
+            }
+        });
+
+
+        // Função para excluir um post
+        function excluirPost(postId) {
+            // Esconde o dropdown
+            document.querySelectorAll('.post-menu-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+
+            if (confirm("Tem certeza que deseja excluir esta publicação?")) {
+                $.ajax({
+                    url: 'excluir_post.php', // Seu script PHP para excluir
+                    method: 'POST',
+                    data: { idPublicacao: postId },
+                    dataType: 'json', // Espera uma resposta JSON
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Publicação excluída com sucesso!");
+                            window.location.href = 'feed.php'; // Redireciona para o feed após a exclusão
+                        } else {
+                            alert(response.error || "Erro ao excluir a publicação.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Erro na requisição AJAX:", status, error);
+                        alert("Ocorreu um erro ao tentar excluir a publicação. Tente novamente.");
+                    }
+                });
+            }
         }
     </script>
 </body>

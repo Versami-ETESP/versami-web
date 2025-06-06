@@ -81,7 +81,7 @@ if ($result_posts_seguindo === false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feed</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="Feed/Styles/FeedStyle.css">
+    <link rel="stylesheet" href="Feed/CSS/FeedStyle.css">
 </head>
 
 <body>
@@ -149,7 +149,7 @@ if ($result_posts_seguindo === false) {
                                         while ($post = sqlsrv_fetch_array($result_posts, SQLSRV_FETCH_ASSOC)) {
                                             $has_posts = true;
                                             ?>
-                                            <div class="post" data-post-id="<?= $post['idPublicacao'] ?>">
+                                            <div class="post">
                                                 <div class="content-post">
                                                     <div class="content-original-post">
                                                         <div class="usuario">
@@ -175,28 +175,8 @@ if ($result_posts_seguindo === false) {
                                                                     <button class="follow-btn <?= $ja_segue ? 'following' : '' ?>"
                                                                         data-user-id="<?= $post['idUsuario'] ?>"
                                                                         onclick="seguirUsuario(<?= $post['idUsuario'] ?>, this)">
-                                                                        <i class="fas fa-<?= $ja_segue ? 'user-minus' : 'user-plus' ?>"></i>
-                                                                        <span class="button-text"><?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?></span>
+                                                                        <?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?>
                                                                     </button>
-                                                                <?php else: ?>
-                                                                    <div class="followBtn-placeholder"></div>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                        <div class="post-menu">
-                                                            <button class="post-menu-btn" onclick="togglePostMenu(event, this)">
-                                                                <i class="fas fa-ellipsis-h"></i>
-                                                            </button>
-                                                            <div class="post-menu-dropdown">
-                                                                <div class="post-menu-item" onclick="denunciarPost(<?= $post['idPublicacao'] ?>)">
-                                                                    <i class="fas fa-flag"></i>
-                                                                    <span>Denunciar</span>
-                                                                </div>
-                                                                <?php if ($post['idUsuario'] == $_SESSION["usuario_id"]): ?>
-                                                                    <div class="post-menu-item delete" onclick="excluirPost(<?= $post['idPublicacao'] ?>)">
-                                                                        <i class="fas fa-trash"></i>
-                                                                        <span>Excluir Review</span>
-                                                                    </div>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
@@ -245,13 +225,15 @@ if ($result_posts_seguindo === false) {
                                                             </div>
                                                         </div>
                                                         <div class="comment-section">
-                                                            <form method="POST" action="comentar.php" class="comment-form">
+                                                            <form method="POST" action="comentar.php" class="comment-form"
+                                                                >
                                                                 <input type="hidden" name="post_id"
                                                                     value="<?= $post['idPublicacao'] ?>">
                                                                 <input type="text" name="comentario"
                                                                     placeholder="Escreva um comentário..." class="comment-input"
-                                                                    required>
-                                                                <button type="submit" class="comment-button">Comentar</button>
+                                                                     required>
+                                                                <button type="submit" class="comment-button"
+                                                                    >Comentar</button>
                                                             </form>
                                                         </div>
                                                     </div>
@@ -271,6 +253,7 @@ if ($result_posts_seguindo === false) {
                                                             while ($comentario = sqlsrv_fetch_array($comentarios, SQLSRV_FETCH_ASSOC)):
                                                                 $data_comentario = $comentario['data_coment']->format('H:i');
 
+                                                                // Verifica se o usuário curtiu este comentário
                                                                 $sql_verifica_like = "SELECT 1 FROM tblLikesPorComentario WHERE idUsuario = ? AND idComentario = ?";
                                                                 $params_like = array($_SESSION["usuario_id"], $comentario['idComentario']);
                                                                 $stmt_like = sqlsrv_query($conn, $sql_verifica_like, $params_like);
@@ -293,7 +276,7 @@ if ($result_posts_seguindo === false) {
                                                                         </div>
                                                                     </div>
                                                                     <div class="comment-text">
-                                                                        <?= htmlspecialchars($comentario['comentario']) ?>
+                                                                        <?= transformURLsIntoLinks($comentario['comentario']) ?>
                                                                     </div>
                                                                     <div class="comment-actions">
                                                                         <button type="button"
@@ -354,28 +337,8 @@ if ($result_posts_seguindo === false) {
                                                                     <button class="follow-btn <?= $ja_segue ? 'following' : '' ?>"
                                                                         data-user-id="<?= $post['idUsuario'] ?>"
                                                                         onclick="seguirUsuario(<?= $post['idUsuario'] ?>, this)">
-                                                                        <i class="fas fa-<?= $ja_segue ? 'user-minus' : 'user-plus' ?>"></i>
-                                                                        <span class="button-text"><?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?></span>
+                                                                        <?= $ja_segue ? 'Deixar de seguir' : 'Seguir' ?>
                                                                     </button>
-                                                                <?php else: ?>
-                                                                    <div class="followBtn-placeholder"></div>
-                                                                <?php endif; ?>
-                                                            </div>
-                                                        </div>
-                                                        <div class="post-menu">
-                                                            <button class="post-menu-btn" onclick="togglePostMenu(event, this)">
-                                                                <i class="fas fa-ellipsis-h"></i>
-                                                            </button>
-                                                            <div class="post-menu-dropdown">
-                                                                <div class="post-menu-item" onclick="denunciarPost(<?= $post['idPublicacao'] ?>)">
-                                                                    <i class="fas fa-flag"></i>
-                                                                    <span>Denunciar</span>
-                                                                </div>
-                                                                <?php if ($post['idUsuario'] == $_SESSION["usuario_id"]): ?>
-                                                                    <div class="post-menu-item delete" onclick="excluirPost(<?= $post['idPublicacao'] ?>)">
-                                                                        <i class="fas fa-trash"></i>
-                                                                        <span>Excluir Review</span>
-                                                                    </div>
                                                                 <?php endif; ?>
                                                             </div>
                                                         </div>
@@ -506,17 +469,6 @@ if ($result_posts_seguindo === false) {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="confirmation-modal-overlay" id="confirmationModalOverlay">
-        <div class="confirmation-modal-content">
-            <h3>Confirmar Denúncia</h3>
-            <p>Você tem certeza que deseja denunciar esta publicação? Esta ação não pode ser desfeita.</p>
-            <div class="confirmation-modal-buttons">
-                <button class="cancel-btn" id="cancelDenounceBtn">Cancelar</button>
-                <button class="confirm-btn" id="confirmDenounceBtn">Confirmar</button>
             </div>
         </div>
     </div>

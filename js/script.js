@@ -22,7 +22,7 @@ function seguirUsuario(usuarioId, botao) {
       if (data.success) {
         // Atualiza o botão
         botao.classList.toggle("following");
-        botao.innerHTML = `<i class="fas fa-<span class="math-inline">\{data\.action \=\=\= "follow" ? 'user\-minus' \: 'user\-plus'\}"\></i\> <span class\="button\-text"\></span>{data.action === "follow" ? 'Deixar de seguir' : 'Seguir'}</span>`;
+        botao.innerHTML = `<i class="fas fa-${data.action === "follow" ? 'user-minus' : 'user-plus'}"></i> <span class="button-text">${data.action === "follow" ? 'Deixar de seguir' : 'Seguir'}</span>`;
 
         // Atualiza a contagem de seguidores/seguindo (se houver uma função)
         if (typeof atualizarContadores === "function") {
@@ -30,13 +30,13 @@ function seguirUsuario(usuarioId, botao) {
         }
       } else {
         alert(data.message || "Erro ao processar");
-        botao.innerHTML = `<i class="fas fa-<span class="math-inline">\{estaSeguindo ? 'user\-plus' \: 'user\-minus'\}"\></i\> <span class\="button\-text"\></span>{textoOriginal}</span>`; // Reverte o texto e ícone
+        botao.innerHTML = `<i class="fas fa-${estaSeguindo ? 'user-plus' : 'user-minus'}"></i> <span class="button-text">${textoOriginal}</span>`; // Reverte o texto e ícone
       }
     })
     .catch((error) => {
       console.error("Erro:", error);
       alert("Falha na conexão");
-      botao.innerHTML = `<i class="fas fa-<span class="math-inline">\{estaSeguindo ? 'user\-plus' \: 'user\-minus'\}"\></i\> <span class\="button\-text"\></span>{textoOriginal}</span>`; // Reverte o texto e ícone
+      botao.innerHTML = `<i class="fas fa-${estaSeguindo ? 'user-plus' : 'user-minus'}"></i> <span class="button-text">${textoOriginal}</span>`; // Reverte o texto e ícone
     })
     .finally(() => {
       botao.disabled = false;
@@ -158,7 +158,14 @@ function curtirComentario(comentarioId, elemento) {
 // Sistema de Busca (mantido igual)
 $(document).ready(function () {
   $("#buscar_usuario").on("input", function () {
-    // ... (código original mantido)
+    $.ajax({
+      url: "buscar.php",
+      type: "GET",
+      data: { buscar_usuario: $(this).val() },
+      success: function (response) {
+        $("#resultados").html(response);
+      },
+    });
   });
 });
 
@@ -382,10 +389,10 @@ function renderBooks(books) {
     bookElement.className = "book-item";
     bookElement.innerHTML = `
           <div class="book">
-            <div class="attach-btn" data-book-id="<span class="math-inline">\{book\.idLivro\}"
-data\-book\-title\="</span>{book.nomeLivro}"
-                    data-book-author="<span class="math-inline">\{book\.nomeAutor \|\| ""\}"
-data\-book\-cover\="</span>{book.imagem_base64 || ""}">
+            <div class="attach-btn" data-book-id="${book.idLivro}"
+                    data-book-title="${book.nomeLivro}"
+                    data-book-author="${book.nomeAutor || ""}"
+                    data-book-cover="${book.imagem_base64 || ""}">
                 <div class="book-cover">
                     ${
                       book.imagem_base64
@@ -394,8 +401,8 @@ data\-book\-cover\="</span>{book.imagem_base64 || ""}">
                     }
                 </div>
                 <div class="book-details">
-                    <h3 class="book-name"><span class="math-inline">\{book\.nomeLivro\}</h3\>
-<p class\="author"\></span>{
+                    <h3 class="book-name">${book.nomeLivro}</h3>
+                    <p class="author">${
                       book.nomeAutor || "Autor desconhecido"
                     }</p>
                 </div>
@@ -459,8 +466,8 @@ function selectBook(bookId, title, author, coverImage) {
 
   // Atualiza as informações do livro
   document.getElementById("selectedBookInfo").innerHTML = `
-        <strong><span class="math-inline">\{title\}</strong\>
-<p\></span>{author || "Autor desconhecido"}</p>
+        <strong>${title}</strong>
+        <p>${author || "Autor desconhecido"}</p>
     `;
 
   // Mostra o botão de remoção
@@ -586,73 +593,4 @@ document
 // Mantenha a função closeBookSelection existente
 function closeBookSelection() {
   document.getElementById("bookSelectionPopup").style.display = "none";
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-v// Função para mostrar/esconder o menu de um post
-function togglePostMenu(button, postId) {
-    const dropdown = button.nextElementSibling;
-    // Fechar todos os outros dropdowns abertos
-    document.querySelectorAll('.post-menu-dropdown.show').forEach(openDropdown => {
-        if (openDropdown !== dropdown) {
-            openDropdown.classList.remove('show');
-        }
-    });
-    dropdown.classList.toggle('show');
-    currentPostId = postId; // Define o ID do post atual para uso nas ações
-}
-
-// Fechar o dropdown do menu do post ao clicar fora
-document.addEventListener('click', function(event) {
-    if (!event.target.closest('.post-menu')) {
-        document.querySelectorAll('.post-menu-dropdown.show').forEach(dropdown => {
-            dropdown.classList.remove('show');
-        });
-    }
-});
-
-// Adicionar listener para o botão de denúncia (delegado)
-$(document).on('click', '.report-post-btn', function() {
-    const postIdToReport = $(this).data('post-id');
-    if (confirm("Tem certeza que deseja denunciar esta publicação?")) {
-        denunciarPost(postIdToReport);
-    }
-    // Fechar o menu após a ação
-    $(this).closest('.post-menu-dropdown').classList.remove('show');
-});
-
-// Função para denunciar um post
-function denunciarPost(postId) {
-    $.ajax({
-        url: 'denunciar_post.php', // Seu script PHP para denunciar
-        method: 'POST',
-        data: { post_id: postId },
-        dataType: 'json',
-        success: function(response) {
-            if (response.success) {
-                alert(response.message);
-            } else {
-                alert(response.message || "Erro ao denunciar o post.");
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Erro na requisição AJAX:", status, error);
-            alert("Ocorreu um erro ao tentar denunciar a publicação. Tente novamente.");
-        }
-    });
 }
