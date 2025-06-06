@@ -7,7 +7,7 @@ if (!isset($_SESSION["usuario_id"])) {
     exit;
 }
 
-// Postagem de review
+// Postagem de review (mantida para consistência, mas não diretamente relacionada ao explorar)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
     $conteudo = $_POST["conteudo"];
     $idLivro = isset($_POST["idLivro"]) && !empty($_POST["idLivro"]) ? $_POST["idLivro"] : null;
@@ -153,7 +153,7 @@ if (!empty($termo_busca)) {
                                     <?php if (!empty($termo_busca)): ?>
                                         <?php if (!empty($usuarios)): ?>
                                             <?php foreach ($usuarios as $usuario): ?>
-                                                <div class="userCard">
+                                                <div class="userCard" onclick="window.location.href='profile_view.php?id=<?= $usuario['idUsuario'] ?>'">
                                                     <div class="userInfo">
                                                         <img src="<?= !empty($usuario['fotoUsuario']) ? 'data:image/jpeg;base64,' . base64_encode($usuario['fotoUsuario']) : 'Assets/default-profile.png' ?>"
                                                             alt="Foto do usuário" class="userAvatar">
@@ -165,10 +165,12 @@ if (!empty($termo_busca)) {
                                                     </div>
                                                     <?php if ($usuario['idUsuario'] != $_SESSION["usuario_id"]): ?>
                                                         <button class="followBtn <?= $usuario['segue'] ? 'following' : '' ?>"
-                                                            onclick="seguirUsuario(<?= $usuario['idUsuario'] ?>, this)">
+                                                            onclick="event.stopPropagation(); seguirUsuario(<?= $usuario['idUsuario'] ?>, this);">
                                                             <i class="fas fa-<?= $usuario['segue'] ? 'user-minus' : 'user-plus' ?>"></i>
                                                             <span class="button-text"><?= $usuario['segue'] ? 'Deixar de seguir' : 'Seguir' ?></span>
                                                         </button>
+                                                    <?php else: ?>
+                                                        <div class="followBtn-placeholder"></div>
                                                     <?php endif; ?>
                                                 </div>
                                             <?php endforeach; ?>

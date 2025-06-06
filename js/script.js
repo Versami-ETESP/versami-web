@@ -603,184 +603,188 @@ function closeBookSelection() {
   document.getElementById("bookSelectionPopup").style.display = "none";
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Function to show a toast notification
-    function showToast(message, type = 'success') {
-        const toast = document.getElementById("toastNotification");
-        toast.className = "toast-notification show " + type; // Add 'show' and type class
-        toast.textContent = message;
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toastNotification");
+  toast.className = "toast-notification show " + type; // Add 'show' and type class
+  toast.textContent = message;
 
-        // After 3 seconds, remove the show class
-        setTimeout(function(){
-            toast.className = toast.className.replace("show", "");
-        }, 3000);
-    }
+  // After 3 seconds, remove the show class
+  setTimeout(function () {
+    toast.className = toast.className.replace("show", "");
+  }, 3000);
+}
 
-    // Function to show/hide the post menu dropdown
-    function togglePostMenu(event, button) {
-        event.stopPropagation(); // Prevent the click from propagating to the document body immediately
+// Function to show/hide the post menu dropdown
+function togglePostMenu(event, button) {
+  event.stopPropagation(); // Prevent the click from propagating to the document body immediately
 
-        const dropdown = button.nextElementSibling; // Get the next sibling, which is the dropdown
+  const dropdown = button.nextElementSibling; // Get the next sibling, which is the dropdown
 
-        // Close all other open dropdowns
-        document.querySelectorAll('.post-menu-dropdown.show').forEach(openDropdown => {
-            if (openDropdown !== dropdown) {
-                openDropdown.classList.remove('show');
-            }
-        });
-
-        // Toggle the 'show' class on the clicked dropdown
-        dropdown.classList.toggle('show');
-    }
-
-    // Close the dropdown menu when clicking anywhere outside of it
-    document.addEventListener('click', function (event) {
-        if (!event.target.closest('.post-menu')) {
-            document.querySelectorAll('.post-menu-dropdown.show').forEach(dropdown => {
-                dropdown.classList.remove('show');
-            });
-        }
+  // Close all other open dropdowns
+  document
+    .querySelectorAll(".post-menu-dropdown.show")
+    .forEach((openDropdown) => {
+      if (openDropdown !== dropdown) {
+        openDropdown.classList.remove("show");
+      }
     });
 
-    // Function to handle reporting a post (now triggers a confirmation modal)
-    function denunciarPost(postId) {
-        // Hide all currently open post menu dropdowns
-        document.querySelectorAll('.post-menu-dropdown.show').forEach(dropdown => {
-            dropdown.classList.remove('show');
-        });
+  // Toggle the 'show' class on the clicked dropdown
+  dropdown.classList.toggle("show");
+}
 
-        // Display the confirmation modal
-        const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
-        confirmationModalOverlay.classList.add('active'); // Use 'active' class for display control
+// Close the dropdown menu when clicking anywhere outside of it
+document.addEventListener("click", function (event) {
+  if (!event.target.closest(".post-menu")) {
+    document
+      .querySelectorAll(".post-menu-dropdown.show")
+      .forEach((dropdown) => {
+        dropdown.classList.remove("show");
+      });
+  }
+});
 
-        // Store the postId on the modal for later use when confirming
-        confirmationModalOverlay.setAttribute('data-post-id', postId);
-    }
+// Function to handle reporting a post (now triggers a confirmation modal)
+function denunciarPost(postId) {
+  // Hide all currently open post menu dropdowns
+  document.querySelectorAll(".post-menu-dropdown.show").forEach((dropdown) => {
+    dropdown.classList.remove("show");
+  });
 
-    // Function to confirm and process the denunciation after modal confirmation
-    function confirmarDenuncia() {
-        const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
-        const postIdToReport = confirmationModalOverlay.getAttribute('data-post-id');
+  // Display the confirmation modal
+  const confirmationModalOverlay = document.getElementById(
+    "confirmationModalOverlay"
+  );
+  confirmationModalOverlay.classList.add("active"); // Use 'active' class for display control
 
-        // Hide the confirmation modal
-        confirmationModalOverlay.classList.remove('active');
-        confirmationModalOverlay.removeAttribute('data-post-id'); // Clean up the stored ID
+  // Store the postId on the modal for later use when confirming
+  confirmationModalOverlay.setAttribute("data-post-id", postId);
+}
 
-        // If a valid postId is available, proceed with the AJAX request
-        if (postIdToReport) {
-            $.ajax({
-                url: 'denunciar_post.php',
-                method: 'POST',
-                data: { post_id: postIdToReport },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-                        showToast(response.message, 'success'); // Show success toast
-                    } else {
-                        showToast(response.error || "Erro ao denunciar o post.", 'error'); // Show error toast
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", status, error);
-                    showToast("Ocorreu um erro ao tentar denunciar a publicação. Tente novamente.", 'error'); // Show error toast
-                }
-            });
+// Function to confirm and process the denunciation after modal confirmation
+function confirmarDenuncia() {
+  const confirmationModalOverlay = document.getElementById(
+    "confirmationModalOverlay"
+  );
+  const postIdToReport = confirmationModalOverlay.getAttribute("data-post-id");
+
+  // Hide the confirmation modal
+  confirmationModalOverlay.classList.remove("active");
+  confirmationModalOverlay.removeAttribute("data-post-id"); // Clean up the stored ID
+
+  // If a valid postId is available, proceed with the AJAX request
+  if (postIdToReport) {
+    $.ajax({
+      url: "denunciar_post.php",
+      method: "POST",
+      data: { post_id: postIdToReport },
+      dataType: "json",
+      success: function (response) {
+        if (response.success) {
+          showToast(response.message, "success"); // Show success toast
+        } else {
+          showToast(response.error || "Erro ao denunciar o post.", "error"); // Show error toast
         }
-    }
-
-    // Function to cancel the denunciation (just closes the modal)
-    function cancelarDenuncia() {
-        const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
-        confirmationModalOverlay.classList.remove('active');
-        confirmationModalOverlay.removeAttribute('data-post-id'); // Clean up the stored ID
-    }
-
-    // Function to delete a post
-    function excluirPost(postId) {
-        // Esconde o dropdown
-        document.querySelectorAll('.post-menu-dropdown').forEach(dropdown => {
-            dropdown.classList.remove('show');
-        });
-
-        if (confirm("Tem certeza que deseja excluir esta publicação?")) {
-            $.ajax({
-                url: 'excluir_post.php', // Seu script PHP para excluir
-                method: 'POST',
-                data: { idPublicacao: postId },
-                dataType: 'json', // Espera uma resposta JSON
-                success: function (response) {
-                    if (response.success) {
-                        alert("Publicação excluída com sucesso!"); // You might want to change this to a toast as well
-                        window.location.href = 'feed.php'; // Redireciona para o feed após a exclusão
-                    } else {
-                        alert(response.error || "Erro ao excluir a publicação."); // You might want to change this to a toast as well
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Erro na requisição AJAX:", status, error);
-                    alert("Ocorreu um erro ao tentar excluir a publicação. Tente novamente."); // You might want to change this to a toast as well
-                }
-            });
-        }
-    }
-
-    // Add event listeners for the confirmation modal buttons on DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', function () {
-        const confirmBtn = document.getElementById('confirmDenounceBtn');
-        const cancelBtn = document.getElementById('cancelDenounceBtn');
-        const confirmationModalOverlay = document.getElementById('confirmationModalOverlay');
-
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', confirmarDenuncia);
-        }
-        if (cancelBtn) {
-            // Directly call cancelarDenuncia on click
-            cancelBtn.addEventListener('click', cancelarDenuncia);
-        }
-        // Close modal if clicking on the overlay itself
-        if (confirmationModalOverlay) {
-            confirmationModalOverlay.addEventListener('click', function (event) {
-                // Ensure the click target is the overlay itself, not its children
-                if (event.target === confirmationModalOverlay) {
-                    cancelarDenuncia();
-                }
-            });
-        }
+      },
+      error: function (xhr, status, error) {
+        console.error("AJAX Error:", status, error);
+        showToast(
+          "Ocorreu um erro ao tentar denunciar a publicação. Tente novamente.",
+          "error"
+        ); // Show error toast
+      },
     });
+  }
+}
+
+// Function to cancel the denunciation (just closes the modal)
+function cancelarDenuncia() {
+  const confirmationModalOverlay = document.getElementById(
+    "confirmationModalOverlay"
+  );
+  confirmationModalOverlay.classList.remove("active");
+  confirmationModalOverlay.removeAttribute("data-post-id"); // Clean up the stored ID
+}
+
+// Function to delete a post
+function excluirPost(postId) {
+  // Esconde o dropdown
+  document.querySelectorAll(".post-menu-dropdown").forEach((dropdown) => {
+    dropdown.classList.remove("show");
+  });
+
+  if (confirm("Tem certeza que deseja excluir esta publicação?")) {
+    $.ajax({
+      url: "excluir_post.php", // Seu script PHP para excluir
+      method: "POST",
+      data: { idPublicacao: postId },
+      dataType: "json", // Espera uma resposta JSON
+      success: function (response) {
+        if (response.success) {
+          alert("Publicação excluída com sucesso!"); // You might want to change this to a toast as well
+          window.location.href = "feed.php"; // Redireciona para o feed após a exclusão
+        } else {
+          alert(response.error || "Erro ao excluir a publicação."); // You might want to change this to a toast as well
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Erro na requisição AJAX:", status, error);
+        alert(
+          "Ocorreu um erro ao tentar excluir a publicação. Tente novamente."
+        ); // You might want to change this to a toast as well
+      },
+    });
+  }
+}
+
+// Add event listeners for the confirmation modal buttons on DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function () {
+  const confirmBtn = document.getElementById("confirmDenounceBtn");
+  const cancelBtn = document.getElementById("cancelDenounceBtn");
+  const confirmationModalOverlay = document.getElementById(
+    "confirmationModalOverlay"
+  );
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", confirmarDenuncia);
+  }
+  if (cancelBtn) {
+    // Directly call cancelarDenuncia on click
+    cancelBtn.addEventListener("click", cancelarDenuncia);
+  }
+  // Close modal if clicking on the overlay itself
+  if (confirmationModalOverlay) {
+    confirmationModalOverlay.addEventListener("click", function (event) {
+      // Ensure the click target is the overlay itself, not its children
+      if (event.target === confirmationModalOverlay) {
+        cancelarDenuncia();
+      }
+    });
+  }
+});
+
+function showProfileTab(tabName) {
+  // Remove 'active' de todas as abas e seções de conteúdo
+  document
+    .querySelectorAll(".profile-tab")
+    .forEach((tab) => tab.classList.remove("active"));
+  document
+    .querySelectorAll(".profile-posts-section, .favorite-books-section")
+    .forEach((section) => section.classList.remove("active"));
+
+  // Adiciona 'active' à aba clicada e à seção de conteúdo correspondente
+  if (tabName === "posts") {
+    document
+      .querySelector(".profile-tabs .profile-tab:nth-child(1)")
+      .classList.add("active");
+    document.getElementById("profile-posts-section").classList.add("active");
+  } else if (tabName === "favorites") {
+    document
+      .querySelector(".profile-tabs .profile-tab:nth-child(2)")
+      .classList.add("active");
+    document
+      .getElementById("profile-favorites-section")
+      .classList.add("active");
+  }
+}

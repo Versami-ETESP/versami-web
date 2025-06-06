@@ -80,7 +80,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     <title>Perfil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="Profile/CSS/styleProfile.css">
+    <link rel="stylesheet" href="Profile/CSS/ProfileStyle.css">
 </head>
 
 <body>
@@ -106,7 +106,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                             <span class="notification-badge"><?= $total_notificacoes ?></span>
                         <?php endif; ?>
                     </li>
-                    <li onclick="location.href='profile.php'">
+                    <li onclick="location.href='profile.php'" class="active">
                         <i class="fa-solid fa-user"></i> Perfil
                     </li>
                 </ul>
@@ -137,7 +137,9 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                         <h1 class="profile-name"><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
                         <p class="profile-username">@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
                     </div>
-                    <button class="edit-profile-btn">Editar Perfil</button>
+                    <button class="edit-profile-btn">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </button>
                 </div>
 
                 <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?>
@@ -286,42 +288,297 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             </div>
         </div>
     </div>
+
+    <div class="popup-overlay" id="editProfilePopupOverlay">
+        <div class="popup">
+            <div class="btn-top-content">
+                <div class="btn-close-content">
+                    <button class="btn-close" id="closeEditProfilePopup"><i class="fa-solid fa-x"></i></button>
+                </div>
+                <h2>Editar Perfil</h2>
+                <button class="btn-submit" id="saveProfileChanges">Salvar</button>
+            </div>
+            <form id="editProfileForm" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($usuario['idUsuario'] ?? '') ?>">
+
+                <div class="form-group">
+                    <label for="edit_nome">Nome</label>
+                    <input type="text" id="edit_nome" name="nome" maxlength="50"
+                        value="<?= htmlspecialchars($usuario['nome'] ?? '') ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_arroba_usuario">Nome de Usuário (@)</label>
+                    <input type="text" id="edit_arroba_usuario" name="arroba_usuario"
+                        value="<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?>" readonly
+                        title="Nome de usuário não pode ser alterado">
+                </div>
+
+                <div class="form-group file-input-group">
+                    <label for="edit_fotoUsuario"><i class="fa-solid fa-image"></i> Foto de Perfil</label>
+                    <label for="edit_fotoUsuario" class="file-input-label">
+                        <i class="fa-solid fa-upload"></i> Selecionar Foto
+                    </label>
+                    <input type="file" id="edit_fotoUsuario" name="fotoUsuario"
+                        accept="image/jpeg,image/png,image/gif,image/webp"
+                        onchange="previewImage(this, 'previewEditFotoUsuario')">
+                    <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
+                        pixels.</small>
+                    <div class="preview-container">
+                        <img id="previewEditFotoUsuario" src="<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>"
+                            alt="Pré-visualização da foto de perfil" class="preview-circle">
+                    </div>
+                </div>
+
+                <div class="form-group file-input-group">
+                    <label for="edit_fotoCapa"><i class="fa-solid fa-image"></i> Foto de Capa</label>
+                    <label for="edit_fotoCapa" class="file-input-label">
+                        <i class="fa-solid fa-upload"></i> Selecionar Capa
+                    </label>
+                    <input type="file" id="edit_fotoCapa" name="fotoCapa"
+                        accept="image/jpeg,image/png,image/gif,image/webp"
+                        onchange="previewImage(this, 'previewEditFotoCapa')">
+                    <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
+                        pixels.</small>
+                    <div class="preview-container">
+                        <img id="previewEditFotoCapa" src="<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>"
+                            alt="Pré-visualização da foto de capa" class="preview-rect">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_biografia">Biografia</label>
+                    <textarea id="edit_biografia" name="biografia" maxlength="255"
+                        placeholder="Fale um pouco sobre você..."
+                        rows="4"><?= htmlspecialchars($usuario['bio_usuario'] ?? '') ?></textarea>
+                    <small>Máximo de 255 caracteres.</small>
+                </div>
+
+            </form>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
     <script>
         function showProfileTab(tabName) {
             // Remove 'active' de todas as abas e seções de conteúdo
-            document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.profile-posts-section, .favorite-books-section').forEach(section => section.classList.remove('active'));
+            document
+                .querySelectorAll(".profile-tab")
+                .forEach((tab) => tab.classList.remove("active"));
+            document
+                .querySelectorAll(".profile-posts-section, .favorite-books-section")
+                .forEach((section) => section.classList.remove("active"));
 
             // Adiciona 'active' à aba clicada e à seção de conteúdo correspondente
-            if (tabName === 'posts') {
-                document.querySelector('.profile-tabs .profile-tab:nth-child(1)').classList.add('active');
-                document.getElementById('profile-posts-section').classList.add('active');
-            } else if (tabName === 'favorites') {
-                document.querySelector('.profile-tabs .profile-tab:nth-child(2)').classList.add('active');
-                document.getElementById('profile-favorites-section').classList.add('active');
+            if (tabName === "posts") {
+                document
+                    .querySelector(".profile-tabs .profile-tab:nth-child(1)")
+                    .classList.add("active");
+                document.getElementById("profile-posts-section").classList.add("active");
+            } else if (tabName === "favorites") {
+                document
+                    .querySelector(".profile-tabs .profile-tab:nth-child(2)")
+                    .classList.add("active");
+                document
+                    .getElementById("profile-favorites-section")
+                    .classList.add("active");
+            }
+        }
+        
+        // Função para mostrar uma notificação toast (copiada do post_details.php)
+        function showToast(message, type = 'success') {
+            console.log(`Showing toast: ${message} (${type})`);
+            const toast = document.getElementById("toastNotification");
+            if (!toast) {
+                console.error("Toast notification element not found!");
+                return;
+            }
+            toast.className = "toast-notification show " + type; // Adiciona 'show' e a classe do tipo
+            toast.textContent = message;
+
+            setTimeout(function () {
+                toast.className = toast.className.replace("show", "");
+            }, 3000);
+        }
+        // --- FUNÇÕES PARA O POPUP DE EDIÇÃO DE PERFIL ---
+
+        // Função para exibir a imagem de pré-visualização (adaptada de setup_profile.php)
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            const file = input.files[0];
+            const defaultFotoPerfil = 'Assets/padrao.png'; // URL da imagem padrão de perfil
+            const defaultFotoCapa = 'Assets/padraoCapa.png'; // URL da imagem padrão de capa
+
+            if (file) {
+                const maxSizeMB = 40;
+                const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+                if (file.size > maxSizeBytes) {
+                    alert(`O arquivo é muito grande. Tamanho máximo permitido: ${maxSizeMB}MB`);
+                    input.value = ''; // Limpa o input
+                    preview.src = (previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa;
+                    return;
+                }
+
+                if (!file.type.match('image/jpeg') && !file.type.match('image/png') && !file.type.match('image/gif') && !file.type.match('image/webp')) {
+                    alert('Por favor, selecione um arquivo de imagem (JPEG, PNG, GIF ou WebP)');
+                    input.value = '';
+                    preview.src = (previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa;
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.onload = function () {
+                        const minWidth = 100, minHeight = 100;
+                        const maxWidth = 5000, maxHeight = 5000;
+
+                        if (this.width < minWidth || this.height < minHeight ||
+                            this.width > maxWidth || this.height > maxHeight) {
+                            alert(`A imagem deve ter entre ${minWidth}x${minHeight} e ${maxWidth}x${maxHeight} pixels.`);
+                            input.value = '';
+                            preview.src = (previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa;
+                        } else {
+                            preview.src = e.target.result;
+                        }
+                    };
+                    img.src = e.target.result;
+                }
+
+                reader.readAsDataURL(file);
+            } else {
+                // Se nenhum arquivo for selecionado, volta para a imagem padrão ou mantém a atual
+                const currentSrc = (previewId === 'previewEditFotoUsuario') ? '<?= $fotoUsuarioBase64 ?>' : '<?= $fotoCapaBase64 ?>';
+                preview.src = currentSrc || ((previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa);
+            }
+            // Atualiza o texto do label do arquivo
+            const label = input.previousElementSibling; // O label "Selecionar Foto/Capa"
+            if (label && label.classList.contains('file-input-label')) {
+                if (file) {
+                    label.innerHTML = `<i class="fa-solid fa-check"></i> ${file.name}`;
+                    label.classList.add('changed');
+                } else {
+                    label.innerHTML = `<i class="fa-solid fa-upload"></i> Selecionar ${previewId === 'previewEditFotoUsuario' ? 'Foto' : 'Capa'}`;
+                    label.classList.remove('changed');
+                }
             }
         }
 
-        // Exibe a seção de reviews por padrão ao carregar a página
-        document.addEventListener('DOMContentLoaded', () => {
+        // Função para abrir o popup de edição de perfil
+        function openEditProfileModal() {
+            console.log("Abrindo popup de edição de perfil.");
+            const popupOverlay = document.getElementById('editProfilePopupOverlay');
+            if (popupOverlay) {
+                popupOverlay.style.display = 'flex';
+                // Resetar previews de imagem caso o usuário cancele e abra novamente
+                document.getElementById('previewEditFotoUsuario').src = '<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>';
+                document.getElementById('previewEditFotoCapa').src = '<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>';
+
+                // Limpar campos de input file para permitir novas seleções
+                document.getElementById('edit_fotoUsuario').value = '';
+                document.getElementById('edit_fotoCapa').value = '';
+                // Resetar texto dos labels dos inputs file
+                document.querySelectorAll('#editProfileForm .file-input-label').forEach(label => {
+                    label.classList.remove('changed');
+                    if (label.htmlFor === 'edit_fotoUsuario') {
+                        label.innerHTML = '<i class="fa-solid fa-upload"></i> Selecionar Foto';
+                    } else if (label.htmlFor === 'edit_fotoCapa') {
+                        label.innerHTML = '<i class="fa-solid fa-upload"></i> Selecionar Capa';
+                    }
+                });
+
+
+            } else {
+                console.error("Edit profile popup overlay not found!");
+            }
+        }
+
+        // Função para fechar o popup de edição de perfil
+        function closeEditProfileModal() {
+            console.log("Fechando popup de edição de perfil.");
+            const popupOverlay = document.getElementById('editProfilePopupOverlay');
+            if (popupOverlay) {
+                popupOverlay.style.display = 'none';
+            }
+        }
+
+        // Função para enviar as alterações do perfil via AJAX
+        function saveProfileChanges() {
+            console.log("Tentando salvar alterações do perfil.");
+            const form = document.getElementById('editProfileForm');
+            const formData = new FormData(form);
+
+            // Adiciona o nome do usuário logado à FormData (para verificações no backend, se necessário)
+            // formData.append('usuario_logado_id', '<?= $_SESSION["usuario_id"] ?>');
+
+            $.ajax({
+                url: 'atualizar_perfil.php', // O script PHP para processar a atualização
+                method: 'POST',
+                data: formData,
+                processData: false, // Necessário para FormData
+                contentType: false, // Necessário para FormData
+                dataType: 'json',
+                success: function (response) {
+                    console.log("Resposta de atualização de perfil recebida:", response);
+                    if (response.success) {
+                        showToast(response.message, 'success');
+                        // Recarrega a página para exibir as alterações
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1500); // Atraso para o toast ser visível
+                    } else {
+                        showToast(response.error || "Erro ao atualizar perfil.", 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Erro na requisição AJAX de atualização de perfil:", status, error, xhr.responseText);
+                    let details = xhr.responseJSON ? xhr.responseJSON.error : error;
+                    showToast(`Erro ao atualizar perfil. Detalhes: ${details}`, 'error');
+                }
+            });
+        }
+
+
+        // --- LISTENERS DE EVENTOS ---
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("DOMContentLoaded acionado em profile.php");
+
+            // Listener para o botão "Editar Perfil"
+            const editProfileBtn = document.querySelector('.edit-profile-btn');
+            if (editProfileBtn) {
+                editProfileBtn.addEventListener('click', openEditProfileModal);
+            } else {
+                console.error("Botão 'Editar Perfil' NÃO encontrado.");
+            }
+
+            // Listener para o botão 'X' de fechar o popup de edição
+            const closeEditProfilePopupBtn = document.getElementById('closeEditProfilePopup');
+            if (closeEditProfilePopupBtn) {
+                closeEditProfilePopupBtn.addEventListener('click', closeEditProfileModal);
+            }
+
+            // Listener para fechar o popup ao clicar fora
+            const editProfilePopupOverlay = document.getElementById('editProfilePopupOverlay');
+            if (editProfilePopupOverlay) {
+                editProfilePopupOverlay.addEventListener('click', function (event) {
+                    if (event.target === editProfilePopupOverlay) {
+                        closeEditProfileModal();
+                    }
+                });
+            }
+
+            // Listener para o botão "Salvar" dentro do popup de edição
+            const saveProfileChangesBtn = document.getElementById('saveProfileChanges');
+            if (saveProfileChangesBtn) {
+                saveProfileChangesBtn.addEventListener('click', saveProfileChanges);
+            } else {
+                console.error("Botão 'Salvar' do popup de edição NÃO encontrado.");
+            }
+
+            // Garante que a aba de reviews é a padrão ao carregar a página
             showProfileTab('posts');
-        });
-
-        // Popup para criar review (seção existente)
-        function abrirModalPopUp() {
-            document.getElementById('reviewPopupOverlay').style.display = 'flex';
-        }
-
-        document.querySelector('.popup-overlay .btn-close').addEventListener('click', function () {
-            document.getElementById('reviewPopupOverlay').style.display = 'none';
-        });
-
-        document.getElementById('reviewPopupOverlay').addEventListener('click', function (event) {
-            if (event.target === this) {
-                this.style.display = 'none';
-            }
         });
     </script>
 </body>

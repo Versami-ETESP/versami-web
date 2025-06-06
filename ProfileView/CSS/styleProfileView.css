@@ -20,7 +20,7 @@
   --light-gray: #f5f8fa;
   --medium-gray: #e1e8ed;
   --dark-gray: #657786;
-  --gray-inactive: #aaaaaa33;
+  --gray-inactive: #aaaaaa;
   --black-inactive: #25252565;
   --border: #aaa;
   --dark: #14171a;
@@ -194,6 +194,7 @@ body {
 
 .header-menu {
   width: 100%;
+  background-color: red;
 }
 
 /* The overall content area (main content excluding sidebar) */
@@ -205,7 +206,6 @@ body {
   background-color: var(
     --light-gray
   ); /* Background for the main content area */
-  margin-left: 250px; /* Adjust for sidebar width */
   overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
@@ -549,7 +549,71 @@ form textarea {
   max-height: calc(80vh - 150px);
 }
 
-/* O estilo original do book-item para seleção de livros será mantido */
+.book-item {
+  background-color: #fefefe;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  transition: transform 0.2s;
+  width: 100%;
+  height: 270px; /* Altura padrão fixa */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.book-item:hover {
+  transform: translateY(-5px);
+}
+
+.book-cover {
+  height: 150px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-cover {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 2.5em;
+}
+
+.book-details {
+  padding: 10px;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.book-details .book-name {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-details .author {
+  font-size: 0.85em;
+  color: #666;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .attached-book {
   display: flex;
@@ -564,30 +628,8 @@ form textarea {
 
 /* FIM DO POPUP DA REVIEW */
 
-/* Estilos do perfil */
-/* Ajuste para o conteúdo principal ocupar a largura total menos a sidebar */
-body {
-  display: flex;
-  margin-left: 250px; /* Largura da sidebar */
-  overflow-x: hidden; /* Evita barra de rolagem horizontal */
-  overflow-y: auto; /* Permite rolagem vertical para o conteúdo principal */
-}
-
-.content {
-  width: 100%; /* Ocupa a largura restante */
-  min-height: 100vh; /* Garante altura mínima para rolagem */
-  display: flex;
-  flex-direction: column; /* Para empilhar o header e o container do perfil */
-  background-color: var(--light-gray); /* Fundo da área de conteúdo principal */
-}
-
 .profile-container {
   width: 100%; /* Ocupa a largura total da área de conteúdo */
-  max-width: 900px; /* Limite de largura para o conteúdo do perfil */
-  margin: 20px auto; /* Centraliza o conteúdo do perfil */
-  background-color: var(--white-background);
-  box-shadow: var(--box-shadow);
-  border-radius: var(--border-radius);
   overflow: hidden; /* Para o cover e bordas */
   height: auto; /* Altura automática baseada no conteúdo */
   display: flex;
@@ -627,8 +669,8 @@ body {
 }
 
 .profile-photo-container {
-  width: 120px;
-  height: 120px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background-color: var(--white-background);
   padding: 5px;
@@ -652,7 +694,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
-  margin-top: 60px; /* Desloca o texto para baixo para não sobrepor a foto */
+  margin-top: 70px; /* Desloca o texto para baixo para não sobrepor a foto */
   margin-bottom: 20px; /* Espaço para o botão editar se quebrar linha */
 }
 
@@ -689,14 +731,19 @@ body {
 
 .profile-bio {
   padding: 10px 20px 20px;
+  margin-left: 13.5%;
+  z-index: 10000;
+  position: absolute;
+  top: 30.5%;
+  left: 8.5%;
   color: var(--dark);
   line-height: 1.5;
 }
 
 .profile-stats-container {
   display: flex;
-  justify-content: flex-start;
-  gap: 30px;
+  justify-content: center;
+  gap: 260px;
   padding: 0 20px 20px;
   color: var(--dark);
   flex-wrap: wrap;
@@ -775,8 +822,8 @@ body {
 .post-card {
   background-color: var(--white-background);
   border: 1px solid var(--medium-gray);
-  width: 50%; /* Largura de 50% conforme solicitado */
-  max-width: 450px; /* Limite para não ficar muito largo em telas grandes */
+  width: 70%; /* Largura de 50% conforme solicitado */
+  max-width: 1110px; /* Limite para não ficar muito largo em telas grandes */
   border-radius: var(--border-radius);
   padding: 15px;
   margin-bottom: 15px;
@@ -1075,4 +1122,47 @@ body {
 
 .favorite-btn.favorited i {
   color: var(--error);
+}
+
+.follow-btn {
+  background-color: var(--blue-primary);
+  padding: 10px;
+  width: 10%;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 16px;
+  transition: 0.3s ease all;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.follow-btn:hover {
+  transition: 0.3s ease all;
+  background-color: #4ca2b1;
+}
+
+.follow-btn:active {
+  transition: 0.3s ease all;
+  background-color: #2e8594;
+}
+
+.following {
+  background-color: var(--gray-inactive);
+  padding: 10px;
+  width: auto;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  color: var(--black-inactive);
+  font-weight: 600;
+  font-size: 16px;
+  transition: 0.3s ease all;
+}
+
+.following:hover {
+  color: var(--light-gray);
+  transition: 0.3s ease all;
+  background-color: #505050da;
 }

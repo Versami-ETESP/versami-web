@@ -736,7 +736,6 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  /* Ajuste para alinhar com o lado direito quando não quebra linha */
   margin-left: auto;
   margin-top: 20px; /* Para que o botão não fique colado no username quando em coluna */
 }
@@ -744,6 +743,11 @@ body {
 .edit-profile-btn:hover {
   background-color: #4fa8c7;
 }
+
+.edit-profile-btn i {
+  font-size: 20px;
+}
+
 
 .profile-bio {
   padding: 10px 20px 20px;
@@ -1138,4 +1142,215 @@ body {
 
 .favorite-btn.favorited i {
   color: var(--error);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#editProfilePopupOverlay .popup {
+    width: 800px; /* Largura do popup */
+    max-width: 90%;
+    max-height: 90vh; /* Altura máxima */
+    overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+    position: relative; /* Para posicionar o botão Salvar dentro dele */
+}
+
+/* Esconde o botão de fechar padrão dentro do popup (se ele estiver duplicado pelo btn-top-content) */
+#editProfilePopupOverlay .popup > .btn-top-content .btn-close {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 1; /* Garante que o X fique visível */
+}
+
+
+/* Estilo para o botão Salvar no canto superior direito do popup */
+#saveProfileChanges {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1;
+    background-color: var(--blue-primary); /* Cor primária */
+    color: var(--white-background);
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#saveProfileChanges:hover {
+    background-color: #4fa8c7; /* Tom mais escuro no hover */
+}
+
+
+/* Estilos para grupos de formulário (baseados em style-setup-profile.css) */
+#editProfileForm .form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#editProfileForm label {
+    font-family: 'Montserrat', sans-serif;
+    display: block;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#editProfileForm label i {
+    color: var(--blue-primary);
+    font-size: 18px;
+}
+
+#editProfileForm input[type="text"],
+#editProfileForm textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius-sm);
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
+    resize: vertical;
+    outline: none;
+    font-size: 16px;
+    color: var(--dark);
+}
+
+#editProfileForm input[type="text"][readonly] {
+    background-color: var(--light-gray); /* Fundo para campos bloqueados */
+    cursor: not-allowed;
+    border-color: var(--medium-gray);
+}
+
+
+/* Estilos para file inputs (baseados em style-setup-profile.css) */
+#editProfileForm input[type="file"] {
+    display: none; /* Esconde o input de arquivo nativo */
+}
+
+#editProfileForm .file-input-label {
+    display: inline-block;
+    background-color: var(--light-gray);
+    color: var(--dark);
+    padding: 10px 15px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    border: 1px solid var(--medium-gray);
+    text-align: center;
+    transition: var(--transition);
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#editProfileForm .file-input-label:hover {
+    background-color: var(--medium-gray);
+    border-color: var(--blue-primary);
+}
+
+#editProfileForm .file-input-label i {
+    color: var(--blue-primary);
+}
+
+#editProfileForm small {
+    font-size: 0.8em;
+    color: var(--dark-gray);
+    margin-top: -5px;
+}
+
+/* Estilos para as pré-visualizações de imagem */
+#editProfileForm .preview-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+#editProfileForm .preview-circle { /* Para foto de perfil */
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--blue-primary);
+    box-shadow: var(--box-shadow);
+}
+
+#editProfileForm .preview-rect { /* Para foto de capa */
+    width: 100%; /* Pode ser uma largura maior para capa */
+    max-width: 400px; /* Limite a largura para não estourar */
+    height: 150px;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--medium-gray);
+    box-shadow: var(--box-shadow);
+}
+
+/* Responsividade básica para o modal de edição */
+@media (max-width: 768px) {
+    #editProfilePopupOverlay .popup {
+        padding: 20px;
+        gap: 15px;
+    }
+    #saveProfileChanges, #closeEditProfilePopup {
+        top: 10px;
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+    #saveProfileChanges { right: 10px; }
+    #closeEditProfilePopup { left: 10px; }
+}
+
+@media (max-width: 480px) {
+    #editProfilePopupOverlay .popup {
+        padding: 15px;
+        gap: 10px;
+    }
+    #editProfileForm label, #editProfileForm input[type="text"], #editProfileForm textarea {
+        font-size: 14px;
+    }
+    #editProfileForm .file-input-label {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+    #editProfileForm .preview-circle {
+        width: 100px;
+        height: 100px;
+    }
+    #editProfileForm .preview-rect {
+        height: 120px;
+    }
 }
