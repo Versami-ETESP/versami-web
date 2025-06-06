@@ -86,9 +86,6 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
                 <div class="button-content">
-                    <div class="buttonTema">
-                        <button class="logout-btn" onclick="trocarTema()"><i class="fa-solid fa-palette"></i></button>
-                    </div>
                     <div class="buttonOff">
                         <a href="logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
                     </div>
