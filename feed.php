@@ -79,13 +79,13 @@ if ($result_posts_seguindo === false) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feed</title>
+    <title>Para você - Versami</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="Feed/CSS/FeedStyle.css">
 </head>
 
 <body>
-    <h2>Feed</h2>
+    <h2>Para você</h2>
     <div class="content">
         <div class="header-menu">
             <div id="sidebar">
@@ -136,7 +136,7 @@ if ($result_posts_seguindo === false) {
                     <div class="tabs-container">
                         <img src="Assets/logoVersamiBlue.png" alt="Versami" />
                         <div class="tabs">
-                            <div class="tab active" onclick="changeTab(0)">Feed</div>
+                            <div class="tab active" onclick="changeTab(0)">Para você</div>
                             <div class="tab" onclick="changeTab(1)">Seguindo</div>
                         </div>
                         <div class="content-container">

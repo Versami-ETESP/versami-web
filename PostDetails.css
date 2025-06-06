@@ -686,28 +686,83 @@ form textarea {
   display: block;
 }
 
+.post-action-buttons {
+  position: absolute; /* Posiciona os botões em relação a .post-details-container */
+  top: 15px; /* Distância do topo do contêiner do post */
+  right: 15px; /* Distância da direita do contêiner do post */
+  z-index: 10; /* Garante que fique acima de outros elementos */
+  display: flex; /* Usa flexbox para alinhar os botões lado a lado */
+  gap: 10px; /* Espaçamento entre os botões */
+  align-items: center; /* Alinha verticalmente os itens dentro do flex container */
+  justify-content: flex-end; /* Alinha os itens ao final do flex container (à direita) */
+}
+
 .post-menu-item {
-  padding: 10px 15px;
+  /* IMPORTANTE: Remova qualquer 'position: absolute' ou 'top/right' que possa ter aqui */
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: #333;
-  font-size: 14px;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--light-gray);
+  color: var(--dark-gray);
+  border: 1px solid var(--medium-gray);
+  border-radius: var(--border-radius-sm);
+  font-size: 0.9em;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: var(--transition);
+  white-space: nowrap;
+  text-decoration: none; /* Caso seja um link, remova sublinhado */
+}
+
+.post-menu-item i {
+  font-size: 1.1em;
+  color: var(--dark-gray);
+  transition: var(--transition);
 }
 
 .post-menu-item:hover {
-  background-color: #f5f5f5;
+  background-color: var(--primary-light); /* Um fundo mais claro no hover */
+  color: var(--blue-primary); /* A cor primária no hover */
+  border-color: var(--blue-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-menu-item:hover i {
+  color: var(--blue-primary);
 }
 
 .post-menu-item.delete {
   color: var(--error); /* Cor para ação de exclusão */
 }
 
+.post-menu-item.delete:hover {
+  background-color: var(--error); /* Fundo vermelho no hover para exclusão */
+  color: var(--white-background); /* Texto branco no hover */
+  border-color: var(--error); /* Borda vermelha no hover */
+}
+
 .post-menu-item.delete i {
   color: var(--error);
 }
+
+.post-menu-item.delete:hover i {
+  color: var(--white-background); /* Ícone branco no hover */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .post-header {
   display: flex;
@@ -715,64 +770,38 @@ form textarea {
   margin-bottom: 20px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 /* Toast Notification Styles */
 .toast-notification {
-    visibility: hidden;
-    min-width: 250px;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    border-radius: 8px;
-    padding: 16px;
-    position: fixed;
-    z-index: 10001; /* Higher than any other popup */
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    font-size: 17px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    opacity: 0;
-    transition: visibility 0s, opacity 0.5s ease-in-out;
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 16px;
+  position: fixed;
+  z-index: 10001; /* Higher than any other popup */
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  font-size: 17px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s ease-in-out;
 }
 
 .toast-notification.show {
-    visibility: visible;
-    opacity: 1;
+  visibility: visible;
+  opacity: 1;
 }
 
 .toast-notification.success {
-    background-color: #4CAF50; /* Green for success */
+  background-color: #4caf50; /* Green for success */
 }
 
 .toast-notification.error {
-    background-color: #f44336; /* Red for error */
+  background-color: #f44336; /* Red for error */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Styles for the new confirmation modal */
 .modal-overlay {
@@ -856,40 +885,6 @@ form textarea {
 .modal-btn.confirm:hover {
   background-color: #c0204e; /* */
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .user-avatar {
   width: 65px;

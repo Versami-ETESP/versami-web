@@ -6,6 +6,7 @@ header('Content-Type: application/json');
 
 // Verifica se o usuário está logado
 if (!isset($_SESSION["usuario_id"])) {
+    error_log("Denunciar_post: Usuário não autenticado."); // Added for debugging
     echo json_encode(["success" => false, "error" => "Usuário não autenticado."]);
     exit;
 }
@@ -13,6 +14,7 @@ if (!isset($_SESSION["usuario_id"])) {
 // Verifica se o ID da publicação foi recebido
 $post_id = $_POST["post_id"] ?? null;
 if (!$post_id) {
+    error_log("Denunciar_post: ID da publicação não fornecido."); // Added for debugging
     echo json_encode(["success" => false, "error" => "ID da publicação não fornecido."]);
     exit;
 }
@@ -33,6 +35,7 @@ try {
     }
 
     if (sqlsrv_has_rows($stmt_check_denuncia)) {
+        error_log("Denunciar_post: Usuário já denunciou esta publicação (idUsuario: $idUsuarioLogado, idPublicacao: $post_id)."); // Added for debugging
         echo json_encode(["success" => false, "message" => "Você já denunciou esta publicação."]);
         exit;
     }
@@ -56,6 +59,7 @@ try {
         exit;
     }
 
+    error_log("Denúncia registrada com sucesso! (idUsuario: $idUsuarioLogado, idPublicacao: $post_id)"); // Added for debugging
     echo json_encode(["success" => true, "message" => "Denúncia registrada com sucesso!"]);
 
 } catch (Exception $e) {
