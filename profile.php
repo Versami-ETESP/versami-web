@@ -288,7 +288,6 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/script.js"></script>
-    <script src="js/script-tema.js"></script>
     <script>
         function showProfileTab(tabName) {
             // Remove 'active' de todas as abas e seções de conteúdo

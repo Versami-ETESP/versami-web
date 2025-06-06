@@ -652,6 +652,7 @@ form textarea {
 }
 
 .post-details-container {
+  position: relative;
   width: 50%;
   margin: 20px 0 0 5%;
   padding: 20px;
@@ -660,11 +661,235 @@ form textarea {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.post-menu {
+  position: absolute; /* Changed to absolute */
+  top: 15px; /* Adjust as needed */
+  right: 15px; /* Adjust as needed */
+  z-index: 10;
+}
+
+.post-menu-dropdown {
+  display: none;
+  position: absolute;
+  top: 30px; /* Below the button */
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.post-menu-dropdown.show {
+  display: block;
+}
+
+.post-menu-item {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.post-menu-item:hover {
+  background-color: #f5f5f5;
+}
+
+.post-menu-item.delete {
+  color: var(--error); /* Cor para ação de exclusão */
+}
+
+.post-menu-item.delete i {
+  color: var(--error);
+}
+
 .post-header {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Toast Notification Styles */
+.toast-notification {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 16px;
+    position: fixed;
+    z-index: 10001; /* Higher than any other popup */
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-size: 17px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease-in-out;
+}
+
+.toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.toast-notification.success {
+    background-color: #4CAF50; /* Green for success */
+}
+
+.toast-notification.error {
+    background-color: #f44336; /* Red for error */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Styles for the new confirmation modal */
+.modal-overlay {
+  display: none; /* Hidden by default */
+  position: fixed; /* */
+  top: 0; /* */
+  left: 0; /* */
+  width: 100%; /* */
+  height: 100%; /* */
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+  justify-content: center; /* */
+  align-items: center; /* */
+  z-index: 9999; /* Higher than other popups if any */
+}
+
+.modal-overlay.active {
+  display: flex; /* Show when active */
+}
+
+.modal-content {
+  background-color: #fff; /* */
+  padding: 30px; /* */
+  border-radius: 10px; /* */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* */
+  text-align: center; /* */
+  max-width: 400px; /* */
+  width: 90%; /* */
+  transform: translateY(-20px); /* Initial subtle animation */
+  opacity: 0; /* */
+  animation: fadeInModal 0.3s forwards; /* */
+}
+
+@keyframes fadeInModal {
+  to {
+    transform: translateY(0); /* */
+    opacity: 1; /* */
+  }
+}
+
+.modal-content h2 {
+  color: #333; /* */
+  margin-bottom: 15px; /* */
+  font-size: 20px; /* */
+}
+
+.modal-content p {
+  color: #555; /* */
+  margin-bottom: 25px; /* */
+  line-height: 1.5; /* */
+}
+
+.modal-actions {
+  display: flex; /* */
+  justify-content: space-around; /* */
+  gap: 15px; /* */
+}
+
+.modal-btn {
+  padding: 10px 20px; /* */
+  border: none; /* */
+  border-radius: 5px; /* */
+  cursor: pointer; /* */
+  font-weight: 600; /* */
+  transition: background-color 0.2s ease, transform 0.1s ease; /* */
+}
+
+.modal-btn.cancel {
+  background-color: #ccc; /* */
+  color: #333; /* */
+}
+
+.modal-btn.cancel:hover {
+  background-color: #bbb; /* */
+}
+
+.modal-btn.confirm {
+  background-color: #e0245e; /* Red for denounce */
+  color: white; /* */
+}
+
+.modal-btn.confirm:hover {
+  background-color: #c0204e; /* */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .user-avatar {
   width: 65px;
@@ -1070,77 +1295,4 @@ a.user-link:hover {
 
 .view-book-btn:hover {
   background-color: #4fa8c7;
-}
-
-.post-menu {
-  position: absolute; /* Alterado para absolute */
-  top: 15px; /* Ajuste conforme necessário */
-  right: 15px; /* Ajuste conforme necessário */
-  z-index: 10;
-}
-
-.post-menu-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: #657786; /* Cor dos três pontinhos */
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
-}
-
-.post-menu-btn:hover {
-  background-color: #f0f0f0; /* Fundo leve ao passar o mouse */
-}
-
-.post-menu-dropdown {
-  display: none;
-  position: absolute;
-  top: 30px; /* Abaixo do botão */
-  right: 0;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 150px;
-  z-index: 100;
-  overflow: hidden;
-}
-
-.post-menu-dropdown.show {
-    display: block;
-}
-.post-menu-item {
-  padding: 10px 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #333;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.post-menu-item:hover {
-  background-color: #f5f5f5;
-}
-
-.post-menu-item i {
-  font-size: 16px;
-  color: #657786;
-}
-
-.post-menu-item.delete {
-  color: #e0245e; /* Cor para ação de exclusão */
-}
-
-.post-menu-item.delete i {
-  color: #e0245e;
-}
-
-/* Adicione esta regra para a .post-details-container */
-.post-details-container {
-  position: relative; /* Adicione esta linha */
-  /* ... (outros estilos existentes) ... */
 }
