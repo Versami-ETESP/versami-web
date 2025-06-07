@@ -1,15 +1,16 @@
 <?php
 session_start();
-include 'config.php';
+include 'config.php'; // Inclui config.php
 
 if (!isset($_SESSION['idUsuario_setup'])) {
     header("Location: Cadastro/cadastro.php");
     exit();
 }
 
-// Função para validar imagens (mantida para validação server-side)
+// A função validateImage permanece a mesma
 function validateImage($file, $maxSizeMB = 40, $minWidth = 100, $minHeight = 100, $maxWidth = 5000, $maxHeight = 5000)
 {
+    // ... (código existente da validateImage) ...
     // Verifica se é um upload válido
     if (!is_uploaded_file($file['tmp_name'])) {
         return false;
@@ -45,7 +46,7 @@ function validateImage($file, $maxSizeMB = 40, $minWidth = 100, $minHeight = 100
     return true;
 }
 
-// Função para excluir o cadastro em caso de erro
+// A função rollbackRegistration permanece a mesma
 function rollbackRegistration($conn, $userId)
 {
     $sql = "DELETE FROM tblUsuario WHERE idUsuario = ?";
@@ -58,46 +59,50 @@ function rollbackRegistration($conn, $userId)
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
-        $biografia = $_POST["biografia"] ?? ''; // Captura a biografia do POST
+        $biografia = $_POST["biografia"] ?? '';
         $userId = $_SESSION['idUsuario_setup'];
-        $fotoUsuario = null;
-        $fotoCapa = null;
+        
+        $fotoUsuarioBin = null; // Será os dados binários se upload, senão NULL
+        $fotoCapaBin = null;   // Será os dados binários se upload, senão NULL
 
-        // Valida foto de perfil
+        // Processa foto de perfil
         if (!empty($_FILES["fotoUsuario"]["tmp_name"])) {
             if (!validateImage($_FILES["fotoUsuario"])) {
                 throw new Exception("A foto de perfil deve ser uma imagem válida (JPEG, PNG, GIF ou WebP) com tamanho máximo de 40MB e dimensões entre 100x100 e 5000x5000 pixels.");
             }
-            $fotoUsuario = file_get_contents($_FILES["fotoUsuario"]["tmp_name"]);
+            $fotoUsuarioBin = file_get_contents($_FILES["fotoUsuario"]["tmp_name"]);
         }
+        // Se o usuário não enviou uma foto de perfil, a coluna ficará NULL no BD.
+        // O displayImage em config.php cuidará da imagem padrão.
 
-        // Valida foto de capa
+        // Processa foto de capa
         if (!empty($_FILES["fotoCapa"]["tmp_name"])) {
             if (!validateImage($_FILES["fotoCapa"])) {
                 throw new Exception("A foto de capa deve ser uma imagem válida (JPEG, PNG, GIF ou WebP) com tamanho máximo de 40MB e dimensões entre 100x100 e 5000x5000 pixels.");
             }
-            $fotoCapa = file_get_contents($_FILES["fotoCapa"]["tmp_name"]);
+            $fotoCapaBin = file_get_contents($_FILES["fotoCapa"]["tmp_name"]);
         }
+        // Se o usuário não enviou uma foto de capa, a coluna ficará NULL no BD.
+        // O displayImage em config.php cuidará da imagem padrão.
 
-        // Atualiza o perfil com a biografia
+
+        // SQL para atualização de perfil
+        // Use CASE WHEN para atualizar a coluna APENAS se um novo binário for fornecido.
+        // Se $fotoUsuarioBin ou $fotoCapaBin for NULL, a coluna não é alterada.
+        // Se você quiser que o usuário possa "remover" uma foto e voltar para o padrão,
+        // precisaria de um checkbox ou botão para isso, que enviaria um sinal para o backend
+        // para definir a coluna como NULL explicitamente. Por enquanto, só atualizamos se um novo arquivo for enviado.
+        
         $sql = "UPDATE tblUsuario
                 SET bio_usuario = ?,
-                    fotoUsuario = CASE
-                        WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?)
-                        ELSE fotoUsuario
-                    END,
-                    fotoCapa = CASE
-                        WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?)
-                        ELSE fotoCapa
-                    END
+                    fotoUsuario = CASE WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?) ELSE fotoUsuario END,
+                    fotoCapa = CASE WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?) ELSE fotoCapa END
                 WHERE idUsuario = ?";
 
         $params = array(
-            $biografia, // Parâmetro para a biografia
-            $fotoUsuario,
-            $fotoUsuario,
-            $fotoCapa,
-            $fotoCapa,
+            $biografia,
+            $fotoUsuarioBin, $fotoUsuarioBin, // Parâmetros para fotoUsuario
+            $fotoCapaBin, $fotoCapaBin,     // Parâmetros para fotoCapa
             $userId
         );
 
@@ -109,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: feed.php");
             exit();
         } else {
-            throw new Exception("Erro ao atualizar perfil. Por favor, tente novamente.");
+            throw new Exception("Erro ao atualizar perfil: " . print_r(sqlsrv_errors(), true));
         }
     } catch (Exception $e) {
         // Rollback em caso de erro
@@ -147,9 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <i class="fa-solid fa-upload"></i> Selecionar Imagem
                 </label>
                 <input type="file" id="fotoUsuario" name="fotoUsuario"
-                    accept="image/jpeg,image/png,image/gif,image/webp" onchange="previewImage(this, 'previewFoto')"
-                    required>
-                <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
+                    accept="image/jpeg,image/png,image/gif,image/webp"> <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
                     pixels.</small>
                 <div class="preview">
                     <img id="previewFoto" src="Assets/padrao.png" alt="Pré-visualização da foto de perfil">

@@ -13,8 +13,8 @@ if (!$conn) {
 }
 
 // Definir caminhos para imagens padrão
-define('FOTO_PADRAO_PATH', __DIR__ . '/Assets/padrao.png');
-define('CAPA_PADRAO_PATH', __DIR__ . '/Assets/padraoCapa.png');
+define('FOTO_PADRAO_PATH', __DIR__ . '/Assets/default_profile.png');
+define('CAPA_PADRAO_PATH', __DIR__ . '/Assets/default_cover.png');
 
 // Função para converter dados binários em base64
 function displayImage($binaryData)
@@ -25,11 +25,23 @@ function displayImage($binaryData)
     return 'data:image/jpeg;base64,' . base64_encode($binaryData);
 }
 
+// NOVO: Função para garantir que strings de texto do BD sejam UTF-8
+function convertToUtf8($string) {
+    // Detecta se a string não é UTF-8 (assumindo que a origem pode ser ISO-8859-1)
+    if (mb_detect_encoding($string, 'UTF-8', true) === false) {
+        return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+    }
+    return $string; // Já é UTF-8
+}
+
+
 // Função para transformar URLs em links clicáveis
 function transformURLsIntoLinks($text)
 {
+    // Primeiro, garanta que o texto é UTF-8 antes de htmlspecialchars
+    $text_utf8 = convertToUtf8($text);
     $pattern = '/(https?:\/\/[^\s]+)/';
-    return preg_replace($pattern, '<a href="$1" target="_blank">$1</a>', htmlspecialchars($text));
+    return preg_replace($pattern, '<a href="$1" target="_blank">$1</a>', htmlspecialchars($text_utf8));
 }
 
 // Tipos de Notificação (baseado na inserção em tblTipoNotificacao)

@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'config.php'; // Inclui o arquivo de configuração (assumindo que config.php está no diretório pai ou no mesmo nível)
+include '../config.php'; // Inclui o arquivo de configuração (assumindo que config.php está no diretório pai ou no mesmo nível)
 
 header('Content-Type: application/json');
 
@@ -20,7 +20,7 @@ if (strlen($nova_senha) < 8) {
 
 try {
     // 1. Buscar dados do usuário e a resposta secreta armazenada
-    $sql = "SELECT idUsuario, respostaSecreta FROM tblUsuario WHERE arroba_usuario = ?";
+    $sql = "SELECT idUsuario, resposta FROM tblUsuario WHERE arroba_usuario = ?";
     $params = array($arroba_usuario);
     $stmt = sqlsrv_query($conn, $sql, $params);
 
@@ -40,7 +40,7 @@ try {
     $respostaSecretaHashFornecida = hash("sha256", $resposta_secreta);
 
     // 2. Comparar a resposta fornecida com a armazenada
-    if ($respostaSecretaHashFornecida !== $usuario['respostaSecreta']) {
+    if ($respostaSecretaHashFornecida !== $usuario['resposta']) {
         echo json_encode(["success" => false, "error" => "Resposta secreta incorreta."]);
         exit;
     }

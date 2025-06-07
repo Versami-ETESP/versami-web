@@ -174,61 +174,116 @@ div.carregando {
 }
 /* No seu Login/CSS/style.css */
 
-/* Garante que o overlay do popup esteja oculto por padrão,
-   e que a exibição 'flex' via JS seja respeitada */
+/* No seu Login/CSS/style.css */
+
+/* Reafirmando o popup-overlay como fixo e transparente para o fundo */
 .popup-overlay {
-  display: none; /* Inicia oculto por padrão */
-  position: fixed; /* Fixa o popup na tela, independente da rolagem */
+  display: none; /* Inicia oculto */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
-  justify-content: center; /* Centraliza horizontalmente o popup-content */
-  align-items: center; /* Centraliza verticalmente o popup-content */
-  z-index: 10000; /* Garante que fique acima de outros elementos da página */
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
   opacity: 0; /* Começa invisível para a transição */
   transition: opacity 0.3s ease-out; /* Adiciona transição para o overlay */
 }
 
-/* **AJUSTADO:** Torna o overlay visível (e transiciona) quando o JavaScript define display: flex */
+/* Garante que o overlay esteja visível quando o JS aplica display: flex */
 .popup-overlay[style*="display: flex"] {
-  display: flex !important; /* Força a exibição como flex para contornar especificidade */
+  display: flex !important; /* Força a exibição */
   opacity: 1; /* Torna o overlay totalmente visível */
 }
 
-/* Estilo para o conteúdo principal do popup */
-.popup {
+/* **AJUSTE CRÍTICO AQUI:** Estilo para o conteúdo do popup */
+#forgotPasswordPopupOverlay .popup {
   background: white;
   padding: 20px;
-  width: 450px; /* Largura ajustada para o modal de senha */
+  width: 450px; /* Largura do popup */
   max-width: 90%; /* Para responsividade */
   height: auto;
-  min-height: 350px; /* Altura mínima para o conteúdo ser visível */
+  min-height: 350px; /* Altura mínima para garantir visibilidade */
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 15px;
-  align-items: center; /* Centraliza itens no popup */
+  align-items: center;
   position: relative;
-  /* Opacidade e transformação iniciais para a animação */
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 0.3s ease-out 0.1s, transform 0.3s ease-out 0.1s; /* Atraso na transição para aparecer depois do overlay */
+  /* Remover opacidade e transform para que ele apareça imediatamente com o overlay.
+       A animação pode ser reintroduzida depois que o popup aparecer. */
+  opacity: 1; /* Torna o popup visível imediatamente */
+  transform: translateY(
+    0
+  ); /* Remove o transform inicial para que ele apareça na posição */
+  transition: none; /* Desativa a transição por enquanto para garantir visibilidade */
+
+  /* Garanta que ele esteja sobre o overlay */
+  z-index: 10001; /* Z-index maior que o do overlay */
 }
 
-/* **AJUSTADO:** Garante que o popup interno (conteúdo) se torna visível quando o overlay é ativado */
-/* Adicionamos .popup-overlay[style*="display: flex"] antes para dar mais especificidade e garantir a transição */
+/* Opcional: Se quiser manter a animação de entrada, adicione-a de volta assim:
+   (Você precisaria controlar a classe 'active' no popup, não apenas no overlay)
 .popup-overlay[style*="display: flex"] .popup {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease-out 0.1s, transform 0.3s ease-out 0.1s;
+}
+*/
+
+/* --- Outros estilos do popup (já existentes ou ajustados) --- */
+
+#forgotPasswordPopupOverlay .btn-top-content {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--versami-cor6);
+  margin-bottom: 10px;
 }
 
-/* Estilos para os campos do formulário dentro do popup */
+#forgotPasswordPopupOverlay .btn-top-content h2 {
+  margin: 0;
+  color: var(--versami-cor1);
+  font-size: 1.5em;
+  flex-grow: 1;
+  text-align: center;
+}
+
+#forgotPasswordPopupOverlay .btn-top-content .btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: var(--versami-cor4);
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  order: -1;
+}
+
+#forgotPasswordPopupOverlay .btn-top-content .btn-close:hover {
+  background-color: var(--versami-cor6);
+  color: var(--versami-cor3);
+}
+
+/* --- Estilos para os campos do formulário (já fornecidos e que parecem corretos) --- */
+
+#forgotPasswordPopupOverlay form#resetPasswordForm {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
 #forgotPasswordPopupOverlay .form-group {
   width: 90%;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -251,6 +306,7 @@ div.carregando {
   outline: none;
   font-size: 1em;
   color: var(--versami-cor3);
+  box-sizing: border-box;
 }
 
 #forgotPasswordPopupOverlay .form-group input[readonly] {
@@ -264,101 +320,67 @@ div.carregando {
   margin-top: 15px;
 }
 
-/* --- Estilos para o botão de fechar (X) e título no topo do popup --- */
-#forgotPasswordPopupOverlay .btn-top-content {
-  width: 100%;
-  display: flex;
-  justify-content: space-between; /* Alinha o X à esquerda e o título/botão Salvar à direita */
-  align-items: center;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--versami-cor6);
-  margin-bottom: 10px;
-}
-
-#forgotPasswordPopupOverlay .btn-top-content h2 {
-  margin: 0; /* Remove margem padrão do h2 */
-  color: var(--versami-cor1);
-  font-size: 1.5em;
-  flex-grow: 1; /* Permite que o título ocupe o espaço central */
-  text-align: center;
-}
-
-#forgotPasswordPopupOverlay .btn-top-content .btn-close {
-  background: none;
-  border: none;
-  font-size: 1.5em; /* Tamanho do X */
-  color: var(--versami-cor4);
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 50%;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  order: -1; /* Força o botão de fechar para a primeira posição (esquerda) */
-}
-
-#forgotPasswordPopupOverlay .btn-top-content .btn-close:hover {
-  background-color: var(--versami-cor6);
-  color: var(--versami-cor3);
-}
-
-/* Remova a classe btn-top-content se ela estiver vazia em Login/login.php HTML */
-/* Se você tiver o botão "Salvar" no canto superior direito do popup, como no profile.php,
-   o layout acima do .btn-top-content com h2 centralizado e botões nas laterais
-   não funcionará bem para o popup de redefinição de senha, que tem um layout mais simples.
-   Vamos simplificar o .btn-top-content para este popup.
-   A estrutura que você me deu para o login.php é:
-   <div class="btn-top-content">
-       <div class="btn-close-content"> <button ...> </button> </div>
-       <h2>Redefinir Senha</h2>
-   </div>
-   Isso está ok e centralizará o título. O X ficará à esquerda.
-*/
-
-/* O restante do seu CSS abaixo */
+/* --- ANIMAÇÕES (mantidas) --- */
 @keyframes carregando {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
   }
 }
 
+/* --- MEDIA QUERIES (mantidas) --- */
 @media (max-width: 750px) {
   main {
     display: flex;
     flex-direction: column-reverse;
   }
-
   .msg {
     width: 95%;
     height: 30vh;
   }
-
   div.principal {
     width: 95%;
     min-height: 45vh;
     margin-right: 0;
     margin-top: -15%;
   }
+  /* Responsividade para o popup em telas menores */
+  .popup {
+    width: 95% !important; /* Ocupa quase toda a largura */
+    padding: 15px;
+    min-height: auto; /* Altura flexível */
+  }
+  #forgotPasswordPopupOverlay .btn-top-content {
+    flex-direction: column; /* Empilha título e botão X */
+    gap: 5px;
+  }
+  #forgotPasswordPopupOverlay .btn-top-content .btn-close {
+    order: 0; /* Volta à ordem normal se empilhado */
+    margin-bottom: 5px;
+  }
+  #forgotPasswordPopupOverlay .form-group {
+    width: 95%; /* Ajuste para campos em telas muito pequenas */
+  }
 }
 
+/* --- OUTROS ESTILOS (mantidos) --- */
 .forgot-password-link {
-  display: block; /* Para que o link ocupe sua própria linha */
-  text-align: right; /* Alinha o link à direita */
-  margin-top: 10px; /* Espaço acima do link */
+  display: block;
+  text-align: right;
+  margin-top: 10px;
   font-size: 0.9em;
-  color: var(--versami-cor1); /* Cor da sua variável primária */
+  color: var(--versami-cor1);
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .forgot-password-link:hover {
   text-decoration: underline;
-  color: var(--versami-cor7); /* Uma cor de hover mais escura */
+  color: var(--versami-cor7);
 }
 
-/* Adicione também (se não tiver) o estilo para o toast: */
 .toast-notification {
   visibility: hidden;
   min-width: 250px;
@@ -413,7 +435,6 @@ div.carregando {
     opacity: 0;
     transform: translateY(-10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);

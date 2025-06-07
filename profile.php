@@ -328,6 +328,10 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                         <img id="previewEditFotoUsuario" src="<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>"
                             alt="Pré-visualização da foto de perfil" class="preview-circle">
                     </div>
+                    <div class="remove-image-checkbox">
+                        <input type="checkbox" id="remove_fotoUsuario" name="remove_fotoUsuario" value="1">
+                        <label for="remove_fotoUsuario">Remover foto de perfil</label>
+                    </div>
                 </div>
 
                 <div class="form-group file-input-group">
@@ -343,6 +347,10 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                     <div class="preview-container">
                         <img id="previewEditFotoCapa" src="<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>"
                             alt="Pré-visualização da foto de capa" class="preview-rect">
+                    </div>
+                    <div class="remove-image-checkbox">
+                        <input type="checkbox" id="remove_fotoCapa" name="remove_fotoCapa" value="1">
+                        <label for="remove_fotoCapa">Remover foto de capa</label>
                     </div>
                 </div>
 
@@ -384,7 +392,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                     .classList.add("active");
             }
         }
-        
+
         // Função para mostrar uma notificação toast (copiada do post_details.php)
         function showToast(message, type = 'success') {
             console.log(`Showing toast: ${message} (${type})`);
@@ -403,11 +411,19 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         // --- FUNÇÕES PARA O POPUP DE EDIÇÃO DE PERFIL ---
 
         // Função para exibir a imagem de pré-visualização (adaptada de setup_profile.php)
+        // Dentro do bloco <script> em profile.php
+
+        // Função para exibir a imagem de pré-visualização (AJUSTADA)
         function previewImage(input, previewId) {
             const preview = document.getElementById(previewId);
             const file = input.files[0];
-            const defaultFotoPerfil = 'Assets/padrao.png'; // URL da imagem padrão de perfil
-            const defaultFotoCapa = 'Assets/padraoCapa.png'; // URL da imagem padrão de capa
+            // As URLs padrão são definidas em config.php e devem ser usadas pelo displayImage
+            const defaultFotoPerfilSrc = 'Assets/default_profile.png';
+            const defaultFotoCapaSrc = 'Assets/default_cover.png';
+
+            // Obtém o checkbox de remover foto associado
+            const removeCheckboxId = (previewId === 'previewEditFotoUsuario') ? 'remove_fotoUsuario' : 'remove_fotoCapa';
+            const removeCheckbox = document.getElementById(removeCheckboxId);
 
             if (file) {
                 const maxSizeMB = 40;
@@ -416,19 +432,20 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                 if (file.size > maxSizeBytes) {
                     alert(`O arquivo é muito grande. Tamanho máximo permitido: ${maxSizeMB}MB`);
                     input.value = ''; // Limpa o input
-                    preview.src = (previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa;
+                    preview.src = (previewId === 'previewEditFotoUsuario') ? '<?= $fotoUsuarioBase64 ?: "Assets/padrao.png" ?>' : '<?= $fotoCapaBase64 ?: "Assets/padraoCapa.png" ?>'; // Volta para a foto atual ou padrão
+                    if (removeCheckbox) removeCheckbox.checked = false; // Desmarca se houver erro
                     return;
                 }
 
                 if (!file.type.match('image/jpeg') && !file.type.match('image/png') && !file.type.match('image/gif') && !file.type.match('image/webp')) {
                     alert('Por favor, selecione um arquivo de imagem (JPEG, PNG, GIF ou WebP)');
                     input.value = '';
-                    preview.src = (previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa;
+                    preview.src = (previewId === 'previewEditFotoUsuario') ? '<?= $fotoUsuarioBase64 ?: "Assets/padrao.png" ?>' : '<?= $fotoCapaBase64 ?: "Assets/padraoCapa.png" ?>'; // Volta para a foto atual ou padrão
+                    if (removeCheckbox) removeCheckbox.checked = false; // Desmarca se houver erro
                     return;
                 }
 
                 const reader = new FileReader();
-
                 reader.onload = function (e) {
                     const img = new Image();
                     img.onload = function () {
@@ -439,22 +456,24 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                             this.width > maxWidth || this.height > maxHeight) {
                             alert(`A imagem deve ter entre ${minWidth}x${minHeight} e ${maxWidth}x${maxHeight} pixels.`);
                             input.value = '';
-                            preview.src = (previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa;
+                            preview.src = (previewId === 'previewEditFotoUsuario') ? '<?= $fotoUsuarioBase64 ?: "Assets/padrao.png" ?>' : '<?= $fotoCapaBase64 ?: "Assets/padraoCapa.png" ?>';
+                            if (removeCheckbox) removeCheckbox.checked = false;
                         } else {
                             preview.src = e.target.result;
+                            if (removeCheckbox) removeCheckbox.checked = false; // Desmarca ao selecionar nova foto
                         }
                     };
                     img.src = e.target.result;
                 }
-
                 reader.readAsDataURL(file);
             } else {
-                // Se nenhum arquivo for selecionado, volta para a imagem padrão ou mantém a atual
-                const currentSrc = (previewId === 'previewEditFotoUsuario') ? '<?= $fotoUsuarioBase64 ?>' : '<?= $fotoCapaBase64 ?>';
-                preview.src = currentSrc || ((previewId === 'previewEditFotoUsuario') ? defaultFotoPerfil : defaultFotoCapa);
+                // Se nenhum arquivo foi selecionado (input limpo), volta para a imagem atual ou padrão
+                const currentSrc = (previewId === 'previewEditFotoUsuario') ? '<?= $fotoUsuarioBase64 ?: "Assets/padrao.png" ?>' : '<?= $fotoCapaBase64 ?: "Assets/padraoCapa.png" ?>';
+                preview.src = currentSrc;
+                // Não desmarca o checkbox de remover aqui, a não ser que o input.value tenha sido explicitamente limpo
             }
-            // Atualiza o texto do label do arquivo
-            const label = input.previousElementSibling; // O label "Selecionar Foto/Capa"
+            // Atualiza o texto do label do input file (mantido do seu código anterior)
+            const label = input.previousElementSibling;
             if (label && label.classList.contains('file-input-label')) {
                 if (file) {
                     label.innerHTML = `<i class="fa-solid fa-check"></i> ${file.name}`;
@@ -465,6 +484,52 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                 }
             }
         }
+
+        // NOVO: Adicionar listeners para os checkboxes de remoção de imagem
+        document.addEventListener('DOMContentLoaded', function () {
+            const removeFotoUsuarioCheckbox = document.getElementById('remove_fotoUsuario');
+            const previewEditFotoUsuario = document.getElementById('previewEditFotoUsuario');
+            const editFotoUsuarioInput = document.getElementById('edit_fotoUsuario');
+            const labelFotoUsuario = editFotoUsuarioInput.previousElementSibling;
+
+            const removeFotoCapaCheckbox = document.getElementById('remove_fotoCapa');
+            const previewEditFotoCapa = document.getElementById('previewEditFotoCapa');
+            const editFotoCapaInput = document.getElementById('edit_fotoCapa');
+            const labelFotoCapa = editFotoCapaInput.previousElementSibling;
+
+            // Função auxiliar para redefinir o input file e o label
+            const resetFileInput = (inputElement, labelElement, previewElement, defaultSrc) => {
+                inputElement.value = ''; // Limpa o arquivo selecionado
+                labelElement.innerHTML = `<i class="fa-solid fa-upload"></i> Selecionar ${inputElement.id === 'edit_fotoUsuario' ? 'Foto' : 'Capa'}`;
+                labelElement.classList.remove('changed');
+                previewElement.src = defaultSrc; // Exibe a imagem padrão
+            };
+
+            if (removeFotoUsuarioCheckbox) {
+                removeFotoUsuarioCheckbox.addEventListener('change', function () {
+                    const defaultSrc = 'Assets/padrao.png';
+                    if (this.checked) {
+                        // Se o checkbox está marcado, exibe a imagem padrão no preview e limpa o input de arquivo
+                        resetFileInput(editFotoUsuarioInput, labelFotoUsuario, previewEditFotoUsuario, defaultSrc);
+                    } else {
+                        // Se desmarcado, reverte o preview para a imagem atual do BD (se houver)
+                        // A imagem atual do BD será carregada por PHP na inicialização do modal
+                        previewEditFotoUsuario.src = '<?= $fotoUsuarioBase64 ?: "Assets/padrao.png" ?>';
+                    }
+                });
+            }
+
+            if (removeFotoCapaCheckbox) {
+                removeFotoCapaCheckbox.addEventListener('change', function () {
+                    const defaultSrc = 'Assets/padraoCapa.png';
+                    if (this.checked) {
+                        resetFileInput(editFotoCapaInput, labelFotoCapa, previewEditFotoCapa, defaultSrc);
+                    } else {
+                        previewEditFotoCapa.src = '<?= $fotoCapaBase64 ?: "Assets/padraoCapa.png" ?>';
+                    }
+                });
+            }
+        });
 
         // Função para abrir o popup de edição de perfil
         function openEditProfileModal() {
