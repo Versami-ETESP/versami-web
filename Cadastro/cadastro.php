@@ -30,6 +30,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       throw new Exception("As senhas não coincidem.");
     }
 
+    // verifica se a data de nascimento foi inserida no formato correto
+    $formato = 'Y-m-d';
+    $dataFormatada = DateTime::createFromFormat($formato, $_POST['data_nasc']);
+
+    if(!($dataFormatada && $dataFormatada->format($formato) === $_POST['data_nasc'])){
+      throw new Exception("Data de Nascimento no formato incorreto");
+    }
+
+
     // Verifica idade mínima (13 anos)
     $dataAtual = new DateTime();
     $dataNascimento = new DateTime($data_nasc);
