@@ -73,7 +73,7 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($livro['nomeLivro']) ?> - Versami</title>
-    <link rel="stylesheet" href="test/style-livro.css">
+    <link rel="stylesheet" href="Styles/style-livro.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>

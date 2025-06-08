@@ -289,9 +289,9 @@ form button:hover {
 
 .iconCenterBlue {
   text-align: center;
-  background-color: #3D5A80;
-  -webkit-mask-image: linear-gradient(0deg, #3D5A80, rgba(0, 0, 0, 0));
-  mask-image: linear-gradient(0deg, #3D5A80, rgba(0, 0, 0, 0));
+  background-color: #61c1d1;
+  -webkit-mask-image: linear-gradient(0deg, #61c1d1, rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(0deg, #61c1d1, rgba(0, 0, 0, 0));
 }
 
 .iconCenterBlue i {
@@ -310,7 +310,7 @@ form button:hover {
 
 .iconCenterRotate {
   text-align: center;
-  background-color: #3D5A80;
+  background-color: #61c1d1;
   -webkit-mask-image: linear-gradient(180deg, #000, rgba(0,0,0,0));
   mask-image: linear-gradient(180deg, #000, rgba(0,0,0,0));
 }
@@ -362,7 +362,7 @@ form button:hover {
 }
 
 .telaPesquisa span {
-  border-bottom: 0.188rem solid #4ae1fc;
+  border-bottom: 0.188rem solid #3D5A80;
 }
 
 .telaPesquisa p {
@@ -418,7 +418,7 @@ form button:hover {
   width: 100%;
   min-height: 52rem;
   text-align: center;
-  background-color: #3D5A80;
+  background-color: #61c1d1;
   padding: 9.375rem;
   align-items: flex-start;
 }
@@ -435,7 +435,7 @@ form button:hover {
 }
 
 .telaCategorias span {
-  border-bottom: 0.188rem solid #4ae1fc;
+  border-bottom: 0.188rem solid #3D5A80;
 }
 
 .buttonS {

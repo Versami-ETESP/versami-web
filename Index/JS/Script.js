@@ -7,9 +7,9 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
 });
 
 function BlogPage() {
-  window.location.href = '../../Blogs/Blog/HTML/Blog.html';
+  window.location.href = '../Login/login.php';
 }
 
 function ContaPage() {
-  window.location.href = '../../Login/HTML/login.html';
+  window.location.href = '../Login/login.php';
 }

@@ -42,7 +42,7 @@ if (isset($_GET['id'])) {
     <title>Blog - Versami</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="test/style-blog-usuario.css">
+    <link rel="stylesheet" href="Styles/style-blog-usuario.css">
 </head>
 
 <body>

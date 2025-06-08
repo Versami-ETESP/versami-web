@@ -45,7 +45,7 @@ if ($stmt === false) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notificações - Versami</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="test/styleNotificacoes.css"> </head>
+    <link rel="stylesheet" href="Styles/styleNotificacoes.css"> </head>
 <body>
     <div class="content">
         <div class="header-menu">
