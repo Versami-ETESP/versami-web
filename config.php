@@ -3,7 +3,8 @@ $serverName = "DESKTOP-REJT7MF\SQLEXPRESS";
 $connectionOptions = array(
     "Database" => "versamiredesocialtcc",
     "Uid" => "sa",
-    "PWD" => "12121515"
+    "PWD" => "12121515",
+    "CharacterSet" => "UTF-8"
 );
 // Conexão com o SQL Server
 $conn = sqlsrv_connect($serverName, $connectionOptions);
