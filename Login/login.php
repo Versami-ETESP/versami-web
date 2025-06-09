@@ -88,77 +88,73 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="shortcut icon" href="../../Assets/favicon.png" type="favicon" />
     <link rel="icon" href="../Assets/iconVersami.png" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
-
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="CSS/LoginStyle.css" />
-    <link rel="stylesheet" href="CSS/Style-headerfooter.css" />
     <title>Versami | Acesse sua conta</title>
 </head>
 
 <body>
     <header class="glass">
-        <nav>
-            <div class="logo">
-                <img src="../Assets/logoVersamiBlue.png" alt="Logo Versami" />
-            </div>
-            <ul class="nav-links">
-                <li>
-                    <a href="../Index/Index.php" id="inicio-link" class="active">Início</a>
-                </li>
-                <li>
-                    <a href="../Sobre/sobre.php" id="sobre-link">Sobre nós</a>
-                </li>
-                <li><a href="../Blog/blog.php" id="blog-link">Blog</a></li>
-                <li>
-                    <a href="../Contato/contato.php" id="contato-link">Contato</a>
-                </li>
-            </ul>
-            <div class="user-icon">
-                <span class="material-icons-outlined"><a href="login.php"> account_circle </a></span>
-            </div>
-        </nav>
-    </header>
-    <h1 class="tituloPrinc">
-        Acesse agora a <span class="versami">Versami!</span>
-    </h1>
-    <main>
-        <div class="principal">
-            <h2 class="titulo1">Acessar Conta</h2>
-            <span id="alerta"></span>
-            <?php if (isset($_SESSION['login_error'])): ?>
-                <p class="error-message">
-                    <i class="material-icons-outlined">error_outline</i>
-                    <?php echo $_SESSION['login_error']; ?>
-                </p>
-                <?php unset($_SESSION['login_error']); ?>
-            <?php endif; ?>
-            <form autocomplete="off" class="form" method="POST">
-                <div class="envelope">
-                    <i class="material-icons-outlined required">alternate_email</i>
-                    <input type="email" name="email" id="login2" class="entrada" placeholder="Digite seu email" required
-                        value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" />
-                </div>
-                <div class="envelope">
-                    <i class="material-icons-outlined required">lock</i>
-                    <input type="password" name="senha" id="senha2" class="entrada" placeholder="Digite sua senha"
-                        required />
-                </div>
-                <a href="#" id="forgotPasswordLink" class="forgot-password-link">Esqueceu sua senha?</a>
-
-                <input type="submit" value="Entrar" id="enviar" class="btnPersonalizar" />
-            </form>
+      <nav>
+        <div class="logo">
+          <img src="../Assets/logoVersamiBlue.png" alt="Logo Versami" />
         </div>
-        <div class="msg msgindex">
-            <h1 class="msgTitulo">Sua primeira vez <br />aqui?</h1>
-            <p class="msgTexto">
+        <ul class="nav-links">
+          <li>
+            <a href="../Index/Index.php" id="inicio-link"><i class="fa-solid fa-house"></i></a>
+          </li>
+          <li>
+            <a href="../Sobre/Sobre.php" id="sobre-link"><i class="fa-solid fa-book-open"></i></a>
+          </li>
+          <li>
+            <a href="../Login/Login.php" id="login-link" class="active"><i class="fa-solid fa-user"></i></a>
+          </li>
+        </ul>
+      </nav>
+      <div class="glass-gradient-line"></div>
+    </header>
+    <h1 class="tituloPrincipal">
+        Acesse agora a <span>Versami!</span>
+    </h1>
+    <main class="loginMain">
+        <div class="loginPrincipal">
+            <div class="login-panel">
+                <h2 >Acessar Conta</h2>
+                <?php if (isset($_SESSION['login_error'])): ?>
+                    <p class="error-message">
+                        <i class="material-icons-outlined">error_outline</i>
+                        <?php echo $_SESSION['login_error']; ?>
+                    </p>
+                    <?php unset($_SESSION['login_error']); ?>
+                <?php endif; ?>
+                <form autocomplete="off" class="login-form" method="POST">
+                    <div class="input-group">
+                        <i class="material-icons-outlined">alternate_email</i>
+                        <input type="email" name="email" id="login2" class="form-input" placeholder="Digite seu email" required
+                            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" />
+                    </div>
+                    <div class="input-group">
+                        <i class="material-icons-outlined">lock</i>
+                        <input type="password" name="senha" id="senha2" class="form-input" placeholder="Digite sua senha"
+                            required />
+                    </div>
+                    <a href="#" id="forgotPasswordLink" class="forgot-password-link">Esqueceu sua senha?</a>
+
+                    <button type="submit" class="button submit-button" id="enviar">Entrar</button>
+                </form>
+            </div>
+        </div>
+        <div class="cadastroPrincipal msgindex">
+            <h1>Sua <span>primeira</span> vez <br/>aqui?</h1>
+            <p>
                 Crie agora sua conta e <br />encontre diversos livros!
             </p>
-            <a class="btnCadastro" href="../Cadastro/cadastro.php">Criar Conta <i
+            <a class="button loginButton" href="../Cadastro/cadastro.php">Criar Conta <i
                     class="fa-solid fa-chevron-right"></i></a>
         </div>
         <div class="carregando" id="carregando"></div>
     </main>
-    <footer>
+    <footer> 
         <div class="footer-content">
             <div class="newsletter">
                 <h4>Acompanhe nossa</h4>
@@ -192,7 +188,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </footer>
-
     <div class="popup-overlay" id="forgotPasswordPopupOverlay">
         <div class="popup">
             <div class="btn-top-content">
@@ -230,14 +225,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         placeholder="Confirme sua nova senha">
                 </div>
 
-                <button type="submit" class="btnPersonalizar" id="redefinirSenhaBtn" style="display: none;">Redefinir
+                <button type="submit" class="button" id="redefinirSenhaBtn" style="display: none;">Redefinir
                     Senha</button>
             </form>
         </div>
     </div>
-
     <div id="toastNotification" class="toast-notification"></div>
-
     <script src="../JS/Script.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../JS/user-login.js"></script>

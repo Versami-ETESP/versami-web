@@ -358,7 +358,7 @@ async function openBookSelection() {
     // Mostra loading enquanto carrega
     showBookLoading(true);
 
-    const response = await fetch("get_books.php");
+    const response = await fetch("../Functions/get_books.php");
     const result = await response.json();
 
     if (!result.success) {

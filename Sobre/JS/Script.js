@@ -7,5 +7,5 @@ document.querySelectorAll(".nav-links a").forEach((link) => {
 });
 
 function ContaPage() {
-  window.location.href = "../../Login/HTML/login.html";
+  window.location.href = "../../Login/Login.php";
 }

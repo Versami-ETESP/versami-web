@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($row) {
                 $_SESSION['idUsuario_setup'] = $row['idUsuario'];
                 $_SESSION['email_usuario'] = $email;
-                header("Location: ../setup_profile.php");
+                header("Location: ../SetupProfile/SetupProfile.php");
                 exit();
             }
         }

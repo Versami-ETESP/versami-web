@@ -1,8 +1,0 @@
-- Contagem de likes na pagina post_details.php
-- Estilizar a pagina do Explorar.php
-- Links clicaveis
-- Estilizar Blog de Usuario
-- Estilizar Perfil de Usuario
-- Estilizar  ProfileView.php
-- Criar botão para excluir post
-- Anexar livro

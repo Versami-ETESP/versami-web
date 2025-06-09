@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $formato = 'Y-m-d';
     $dataFormatada = DateTime::createFromFormat($formato, $_POST['data_nasc']);
 
-    if(!($dataFormatada && $dataFormatada->format($formato) === $_POST['data_nasc'])){
+    if (!($dataFormatada && $dataFormatada->format($formato) === $_POST['data_nasc'])) {
       throw new Exception("Data de Nascimento no formato incorreto");
     }
 
@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($row) {
           $_SESSION['idUsuario_setup'] = $row['idUsuario'];
           $_SESSION['email_usuario'] = $email;
-          header("Location: ../setup_profile.php");
+          header("Location: ../SetupProfile/SetupProfile.php");
           exit();
         }
       }
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       throw new Exception($errorMessage);
     }
   } catch (Exception $e) {
-    header("Location: ../error.php?message=" . urlencode($e->getMessage()));
+    header("Location: Erro/Error.php?message=" . urlencode($e->getMessage()));
     exit();
   }
 }
@@ -148,8 +148,7 @@ if ($result_perguntas) {
   <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
   <script src="http://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script type="text/javascript" src="../JS/user-login.js"></script>
-  <link rel="stylesheet" href="CSS/style.css">
-  <link rel="stylesheet" href="CSS/Style-headerfooter.css">
+  <link rel="stylesheet" href="CSS/CadastroStyle.css">
   <title>Versami | Crie sua conta</title>
 </head>
 
@@ -160,73 +159,79 @@ if ($result_perguntas) {
         <img src="../Assets/logoVersamiBlue.png" alt="Logo Versami" />
       </div>
       <ul class="nav-links">
-        <li><a href="../Index/index.php" id="inicio-link" class="active">Início</a></li>
-        <li><a href="../Sobre/sobre.php" id="sobre-link">Sobre nós</a></li>
-        <li><a href="../Blog/blog.php" id="blog-link">Blog</a></li>
-        <li><a href="../Contato/contato.php" id="contato-link">Contato</a></li>
+        <li>
+          <a href="../Index/Index.php" id="inicio-link"><i class="fa-solid fa-house"></i></a>
+        </li>
+        <li>
+          <a href="../Sobre/Sobre.php" id="sobre-link"><i class="fa-solid fa-book-open"></i></a>
+        </li>
+        <li>
+          <a href="../Login/Login.php" id="login-link" class="active"><i class="fa-solid fa-user"></i></a>
+        </li>
       </ul>
-      <div class="user-icon">
-        <span class="material-icons-outlined"><a href="../../Login/HTML/login.html"> account_circle </a></span>
-      </div>
     </nav>
+    <div class="glass-gradient-line"></div>
   </header>
-  <h1 class="tituloPrinc">Descubra agora a <span class="versami">Versami!</span></h1>
-  <main>
-    <div class="msg">
-      <h1 class="msgTitulo">Bem vindo(a)
-        <br>de volta!
-      </h1>
-      <p class="msgTexto">Acesse agora sua conta e
-        <br>avalie seus livros favoritos!
-      </p>
-      <a class="btnLogin" href="../Login/login.php">Entrar <i class="fa-solid fa-chevron-right"></i></a>
+  <h1 class="tituloPrincipal">
+    Descubra agora a <span>Versami!</span>
+  </h1>
+  <main class="cadastroMain">
+    <div class="loginPrincipal">
+      <div class="loginPanel">
+        <h1>Já possui conta na <br /><span>Versami?</span></h1>
+        <p>
+          Entre e avalie<br> seus livros favoritos!
+        </p>
+        <a class="button loginButton" href="../Login/Login.php">Entrar agora <i class="fa-solid fa-chevron-right"></i></a>
+      </div>
     </div>
-    <div class="principal">
+    <div class="cadastroPrincipal msgindex">
       <h2 class="titulo1">Criar Conta</h2>
       <span id="alerta">Mensagem</span>
-      <form id="form" class="form" autocomplete="off" method="POST" enctype="multipart/form-data">
-        <div class="envelope">
+      <form id="form" class="login-form" autocomplete="off" method="POST" enctype="multipart/form-data">
+        <div class="input-group">
           <i class="material-icons-outlined required">person</i>
-          <input type="text" name="nome" id="nome" maxlength="50" class="entrada" placeholder="Nome completo" required>
-        </div>
-        <div class="envelope">
-          <i class="material-icons-outlined required">alternate_email</i>
-          <input type="text" name="arroba_usuario" id="arroba_usuario" class="entrada" placeholder="Nome de usuário"
+          <input type="text" name="nome" id="nome" maxlength="50" class="form-input" placeholder="Nome completo"
             required>
         </div>
-        <div class="envelope">
+        <div class="input-group">
+          <i class="material-icons-outlined required">alternate_email</i>
+          <input type="text" name="arroba_usuario" id="arroba_usuario" class="form-input" placeholder="Nome de usuário"
+            required>
+        </div>
+        <div class="input-group">
           <i class="material-icons-outlined required">calendar_today</i>
           <input type="date" name="data_nasc" id="data_nasc" placeholder="Data de Nascimento" required>
         </div>
-        <div class="envelope">
+        <div class="input-group">
           <i class="material-icons-outlined required">mail</i>
-          <input type="email" name="email" id="email" maxlength="80" class="entrada" placeholder="E-mail" required>
+          <input type="email" name="email" id="email" maxlength="80" class="form-input" placeholder="E-mail" required>
         </div>
-        <div class="envelope">
+        <div class="input-group">
           <i class="material-icons-outlined required">lock</i>
-          <input type="password" name="senha" id="senha" class="entrada" placeholder="Digite sua senha" required>
+          <input type="password" name="senha" id="senha" class="form-input" placeholder="Digite sua senha" required>
         </div>
-        <div class="envelope">
+        <div class="input-group">
           <i class="material-icons-outlined required">lock</i>
-          <input type="password" name="confirma" id="confirma" class="entrada" placeholder="Confirme sua senha">
+          <input type="password" name="confirma" id="confirma" class="form-input" placeholder="Confirme sua senha">
         </div>
-        <div class="envelope">
-          <i class="material-icons-outlined required">help_outline</i>
-          <select name="pergunta_secreta" id="pergunta_secreta" class="entrada" required>
-            <option value="">Selecione uma pergunta secreta</option>
-            <?php foreach ($perguntas as $pergunta): ?>
-              <option value="<?= htmlspecialchars($pergunta['idPergunta']) ?>">
-                <?= htmlspecialchars($pergunta['pergunta']) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
+        <div class="input-group">
+            <i class="material-icons-outlined required">help_outline</i>
+            <select name="pergunta_secreta" id="pergunta_secreta" class="form-input" required>
+              <option value="">Selecione uma pergunta secreta</option>
+              <?php foreach ($perguntas as $pergunta): ?>
+                <option value="<?= htmlspecialchars($pergunta['idPergunta']) ?>">
+                  <?= htmlspecialchars($pergunta['pergunta']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
         </div>
-        <div class="envelope">
-          <i class="material-icons-outlined required">vpn_key</i>
-          <input type="text" name="resposta_secreta" id="resposta_secreta" maxlength="255" class="entrada"
-            placeholder="Sua resposta secreta" required>
+        <div class="input-group">
+            <i class="material-icons-outlined required">vpn_key</i>
+            <input type="text" name="resposta_secreta" id="resposta_secreta" maxlength="255" class="form-input"
+              placeholder="Sua resposta secreta" required>
         </div>
-        <input type="submit" value="Criar conta" id="enviar" class="btnPersonalizar">
+        <input type="submit" value="Criar conta" id="enviar" class="button">
       </form>
     </div>
   </main>

@@ -1,0 +1,1356 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+/* ===== VARIÁVEIS ===== */
+:root {
+  --primary: #1da1f2;
+  --blue-primary: #61c1d1;
+  --blue-inactive: #657786;
+  --primary-light: #e8f5fe;
+  --secondary: #ffad1f;
+  --accent: #17bf63;
+  --like: #ff1493;
+  --error: #e0245e;
+  --white-background: #ffffff;
+  --content-background-dark: #050505;
+  --coment-background-light: #ffffff;
+  --coment-background-dark: #14171a;
+  --coment-border-background-light: #e1e8ed;
+  --coment-border-background-dark: #ffffff;
+  --side-bar-light: #fdfdfd;
+  --side-bar-dark: #252525;
+  --light-gray: #f5f8fa;
+  --medium-gray: #e1e8ed;
+  --dark-gray: #657786;
+  --gray-inactive: #aaaaaa33;
+  --black-inactive: #25252565;
+  --border: #aaa;
+  --dark: #14171a;
+  --border-radius: 15px;
+  --border-radius-sm: 8px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.2s ease;
+}
+
+/* ===== ESTILOS GERAIS ===== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+body {
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#sidebar {
+  width: 250px;
+  height: 100vh;
+  background: var(--side-bar-light);
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  border-right: 0.5px solid var(--border);
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#sidebar img {
+  width: 100px;
+  display: block;
+  margin: 0 auto 20px;
+  cursor: pointer;
+}
+#sidebar ul {
+  list-style: none;
+  display: flex;
+  justify-content: column;
+  align-items: left;
+  flex-direction: column;
+  gap: 15px;
+  list-style: none;
+  outline: none;
+}
+#sidebar ul li {
+  padding: 15px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000000;
+  list-style-type: none;
+  list-style: none;
+  outline: none;
+  font-family: "Montserrat", sans-serif;
+}
+#sidebar ul li i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+#sidebar ul li:hover {
+  background: #f1f5f9;
+  font-weight: bold;
+  border-radius: 8px;
+}
+#sidebar ul li.active {
+  color: #64c1ff;
+  font-weight: bold;
+}
+
+.notification-badge {
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background: #64c1ff;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  border-radius: 30px;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+.button i {
+  margin-left: 8px;
+  font-size: 20px;
+}
+.button:hover {
+  background: #42a5f5;
+}
+.button-content {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonOff {
+  display: inline-block;
+  background: #dadadb;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.buttonOff:hover {
+  transition: 0.3s;
+  background: red;
+}
+
+.buttonOff i {
+  color: #ffffff;
+}
+
+.buttonTema {
+  display: inline-block;
+  background: #dadadb;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.buttonTema:hover {
+  transition: 0.3s;
+  background: var(--blue-primary);
+}
+
+.buttonTema i {
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.logout-btn {
+  background-color: transparent;
+  border: none;
+}
+
+.header-menu {
+  width: 100%;
+}
+
+/* The overall content area (main content excluding sidebar) */
+.content {
+  width: 100%; /* Occupies the remaining width */
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* Stacks header and profile container vertically */
+  background-color: var(
+    --light-gray
+  ); /* Background for the main content area */
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
+}
+
+/* Ensure the body itself can scroll if content exceeds viewport height */
+body {
+  overflow-y: auto;
+}
+
+#principal-content {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--content-background-light);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  height: 100vh;
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* POPUP DA REVIEW */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input,
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: none;
+}
+
+a {
+  outline: none;
+  list-style: none;
+  text-decoration: none;
+  color: #252525;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  transition: all 0.2s ease;
+  color: #1877f2;
+}
+
+input[type="submit"] {
+  background: #1877f2;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+}
+
+input[type="submit"]:hover {
+  background: #145dbf;
+}
+
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+.popup {
+  background: white;
+  padding: 20px;
+  width: 750px;
+  height: auto;
+  border-radius: 10px;
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.popup input {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.popup .btn-send {
+  background: blue;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.btn-close-content {
+  display: flex;
+  justify-content: left;
+  align-items: left;
+}
+
+.btn-top-content {
+  display: flex;
+  flex-direction: row;
+  gap: 35%;
+}
+.popup .btn-close {
+  border: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#iconeImagem {
+  cursor: pointer;
+  font-size: 20px;
+  color: #61c1d1;
+}
+
+#iconeImagem:hover {
+  color: #4c96a3;
+}
+
+#inputImagem {
+  display: none;
+}
+
+#previewDiv {
+  display: none;
+  text-align: center;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.contentPreview {
+  width: 50%;
+}
+
+#previewImg {
+  max-width: 100%;
+  object-fit: cover;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.preview-text {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+.review-content {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: left;
+  gap: 20px;
+}
+
+form textarea {
+  width: 100%;
+  height: auto;
+  background-color: #f3f3f3;
+  padding: 8px;
+  outline: none;
+  border: none;
+  resize: none;
+  font-size: 17px;
+  line-height: 25px;
+  overflow: hidden;
+  color: #252525;
+}
+
+.icons-content {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.icons-left-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 35px;
+}
+
+.icon-class {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.icon-class i {
+  font-size: 20px;
+  color: #61c1d1;
+}
+
+.btn-submit {
+  background-color: #61c1d1;
+  padding: 10px;
+  width: 150px;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  letter-spacing: 2px;
+  font-family: "Montserrat", sans-serif;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: ease-in-out 0.3s;
+  white-space: nowrap;
+}
+
+.btn-submit:hover {
+  transition: ease-in-out 0.3s;
+  background-color: #49a9b9;
+}
+
+.btn-submit:active {
+  transition: ease-in-out 0.3s;
+  background-color: #3a737d;
+  box-shadow: rgba(83, 165, 190, 0.16) 0px 10px 36px 0px,
+    rgba(75, 203, 207, 0.06) 0px 0px 0px 1px;
+}
+
+/* Estilo para o popup de seleção de livros */
+#bookSelectionPopup .popup {
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-body {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+#bookSearch {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Container do livro selecionado */
+#selectedBookContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  margin: 10px 0;
+  background: #f5f5f5;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Ícone do livro padrão */
+#selectedBookCover {
+  width: 50px;
+  height: 70px;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#selectedBookCover i {
+  color: #ccc;
+  font-size: 24px;
+}
+
+/* Informações do livro */
+#selectedBookInfo {
+  flex-grow: 1;
+}
+
+#selectedBookInfo strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#selectedBookInfo p {
+  margin: 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Botão de remoção */
+#removeBookBtn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  display: none; /* Inicialmente oculto */
+}
+
+#booksList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  justify-content: center;
+  padding: 10px;
+  gap: 15px;
+  background-color: #fff; /* Removido fundo vermelho */
+  overflow-y: auto;
+  max-height: calc(80vh - 150px);
+}
+
+.book-item {
+  background-color: #fefefe;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  transition: transform 0.2s;
+  width: 100%;
+  height: 270px; /* Altura padrão fixa */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.book-item:hover {
+  transform: translateY(-5px);
+}
+
+.book-cover {
+  height: 150px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-cover {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 2.5em;
+}
+
+.book-details {
+  padding: 10px;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.book-details .book-name {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-details .author {
+  font-size: 0.85em;
+  color: #666;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attached-book {
+  display: flex;
+  border: 1px var(--border) solid;
+  border-radius: 10px;
+}
+
+.attached-book img {
+  max-height: auto;
+  border-radius: 10px;
+}
+
+/* FIM DO POPUP DA REVIEW */
+
+/* Estilos do perfil */
+/* Ajuste para o conteúdo principal ocupar a largura total menos a sidebar */
+body {
+  display: flex;
+  margin-left: 250px; /* Largura da sidebar */
+  overflow-x: hidden; /* Evita barra de rolagem horizontal */
+  overflow-y: auto; /* Permite rolagem vertical para o conteúdo principal */
+}
+
+.content {
+  width: 100%; /* Ocupa a largura restante */
+  min-height: 100vh; /* Garante altura mínima para rolagem */
+  display: flex;
+  flex-direction: column; /* Para empilhar o header e o container do perfil */
+  background-color: var(--light-gray); /* Fundo da área de conteúdo principal */
+}
+
+.profile-container {
+  width: 100%; /* Ocupa a largura total da área de conteúdo */
+  overflow: hidden; /* Para o cover e bordas */
+  height: auto; /* Altura automática baseada no conteúdo */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Aplica rolagem ao container do perfil */
+  scrollbar-width: none; /* Esconde scrollbar do Firefox */
+  -ms-overflow-style: none; /* Esconde scrollbar do IE/Edge */
+}
+/* Esconder scrollbar para Webkit browsers */
+.profile-container::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-header {
+  position: relative;
+  height: 250px; /* Aumentado para capa um pouco maior */
+  background-color: var(--medium-gray);
+}
+
+.cover-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Container para foto de perfil e informações principais (ajustado para não sobrepor) */
+.profile-main-info {
+  display: flex;
+  align-items: flex-start; /* Alinha a foto e o texto no topo */
+  padding: 0 20px;
+  margin-top: -60px; /* Puxa para cima para "encaixar" abaixo da capa */
+  gap: 20px;
+  position: relative;
+  z-index: 10;
+  flex-wrap: wrap;
+}
+
+.profile-photo-container {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: var(--white-background);
+  padding: 5px;
+  box-shadow: var(--box-shadow);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-text-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 70px; /* Desloca o texto para baixo para não sobrepor a foto */
+  margin-bottom: 20px; /* Espaço para o botão editar se quebrar linha */
+}
+
+.profile-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark);
+  margin: 0;
+}
+
+.profile-username {
+  font-size: 16px;
+  color: var(--dark-gray);
+  margin: 0;
+}
+
+.edit-profile-btn {
+  background-color: var(--blue-primary);
+  color: var(--white-background);
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-left: auto;
+  margin-top: 20px; /* Para que o botão não fique colado no username quando em coluna */
+}
+
+.edit-profile-btn:hover {
+  background-color: #4fa8c7;
+}
+
+.edit-profile-btn i {
+  font-size: 20px;
+}
+
+
+.profile-bio {
+  padding: 10px 20px 20px;
+  margin-left: 13.5%;
+  z-index: 10000;
+  position: absolute;
+  top: 30.5%;
+  left: 8.5%;
+  color: var(--dark);
+  line-height: 1.5;
+}
+
+.profile-stats-container {
+  display: flex;
+  justify-content: center;
+  gap: 260px;
+  padding: 0 20px 20px;
+  color: var(--dark);
+  flex-wrap: wrap;
+}
+
+.profile-stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--dark-gray);
+}
+
+.profile-stat strong {
+  font-size: 18px;
+  color: var(--dark);
+}
+
+.profile-tabs-container {
+  border-top: 1px solid var(--medium-gray);
+  padding: 0 20px;
+  margin-top: 20px;
+}
+
+.profile-tabs {
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid var(--medium-gray);
+}
+
+.profile-tab {
+  padding: 15px 0;
+  flex-grow: 1;
+  text-align: center;
+  font-weight: 600;
+  color: var(--dark-gray);
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+
+.profile-tab.active {
+  color: var(--blue-primary);
+}
+
+.profile-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--blue-primary);
+}
+
+.profile-tab:hover {
+  color: var(--blue-primary);
+  background-color: var(--primary-light);
+}
+
+.profile-posts-section,
+.favorite-books-section {
+  padding: 20px;
+  min-height: 300px; /* Altura mínima para o conteúdo da aba */
+  display: none; /* Controlado por JS */
+  flex-direction: column; /* Garante que os posts fiquem em coluna */
+  align-items: center; /* Centraliza os posts */
+  width: 100%; /* Ocupa a largura total da seção */
+}
+
+.profile-posts-section.active,
+.favorite-books-section.active {
+  display: flex; /* Muda para flex para centralizar */
+}
+
+.post-card {
+  background-color: var(--white-background);
+  border: 1px solid var(--medium-gray);
+  width: 70%; /* Largura de 50% conforme solicitado */
+  max-width: 1110px; /* Limite para não ficar muito largo em telas grandes */
+  border-radius: var(--border-radius);
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Estilos adicionais para o post-card */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Estilos para posts e comentários dentro do perfil (mantidos para consistência) */
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.post-user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-user-info h3 {
+  margin: 0;
+  font-size: 1.1em;
+  color: var(--dark);
+}
+
+.post-user-info p {
+  margin: 0;
+  font-size: 0.9em;
+  color: var(--dark-gray);
+}
+
+.post-content {
+  font-size: 1em;
+  line-height: 1.5;
+  color: var(--dark);
+}
+
+.attached-book-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--medium-gray);
+  border-radius: var(--border-radius-sm);
+  padding: 10px;
+  background-color: var(--light-gray);
+}
+
+.attached-book-profile img {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.attached-book-profile .book-info {
+  flex-grow: 1;
+}
+
+.attached-book-profile .book-title {
+  font-weight: bold;
+  color: var(--dark);
+}
+
+.attached-book-profile .book-author {
+  font-size: 0.9em;
+  color: var(--dark-gray);
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  border-top: 1px solid var(--medium-gray);
+  padding-top: 10px;
+}
+
+.post-action-btn {
+  background: none;
+  border: none;
+  color: var(--dark-gray);
+  cursor: pointer;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.post-action-btn i {
+  font-size: 1.2em;
+}
+
+.post-action-btn.liked {
+  color: var(--like);
+}
+
+.comments-list {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--medium-gray);
+}
+
+.comment-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.comment-item .comment-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.comment-item .comment-text {
+  flex-grow: 1;
+  font-size: 0.9em;
+  color: var(--dark);
+}
+
+.comment-item .comment-text strong {
+  margin-right: 5px;
+}
+
+/* Estilos para Livros Favoritos (replicando styleExplorar.css) */
+.favorite-books-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(180px, 1fr)
+  ); /* Min-width 180px for smaller screens */
+  gap: 20px;
+  width: 100%; /* Ocupa a largura total da seção */
+  justify-content: center; /* Centraliza os itens na grid */
+}
+
+.book-item {
+  /* Este é o card individual de livro dentro da grid */
+  background-color: var(--white-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: var(--transition);
+  width: 100%;
+  max-width: 280px; /* Limite de largura para cada card */
+  margin: 0 auto; /* Centraliza o card individual dentro de sua célula na grid */
+  height: auto; /* Altura flexível para o conteúdo */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.book-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.book-cover-container {
+  position: relative;
+  width: 100%;
+  height: 180px; /* Altura da capa no card */
+  background-color: var(--light-gray);
+  overflow: hidden;
+}
+
+.book-cover {
+  /* Imagem dentro do container */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.book-item:hover .book-cover {
+  transform: scale(1.05);
+}
+
+.no-cover {
+  /* Placeholder para capa inexistente */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark-gray);
+  font-size: 3em;
+}
+
+.book-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.book-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-author {
+  font-size: 0.9em;
+  color: var(--dark-gray);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-stats {
+  /* Adicionado para consistência, pode estar vazio se não houver dados */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 0.85em;
+  color: var(--dark-gray);
+}
+
+.book-favorites {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.book-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.view-btn {
+  /* Estilo para o botão "Ver detalhes/Ver livro" */
+  flex-grow: 1;
+  background-color: var(--blue-primary);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  font-size: 0.9em;
+  text-decoration: none; /* Para ser usado com <a> */
+}
+
+.view-btn:hover {
+  background-color: #4fa8c7;
+}
+
+.favorite-btn {
+  /* Estilo para o botão de coração */
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-gray);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.favorite-btn i {
+  font-size: 1.2em;
+  color: var(--dark-gray);
+  transition: var(--transition);
+}
+
+.favorite-btn:hover {
+  background-color: #ffebee;
+}
+
+.favorite-btn:hover i {
+  color: var(--error);
+}
+
+.favorite-btn.favorited {
+  background-color: #ffebee;
+}
+
+.favorite-btn.favorited i {
+  color: var(--error);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#editProfilePopupOverlay .popup {
+    width: 800px; /* Largura do popup */
+    max-width: 90%;
+    max-height: 90vh; /* Altura máxima */
+    overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+    position: relative; /* Para posicionar o botão Salvar dentro dele */
+}
+
+/* Esconde o botão de fechar padrão dentro do popup (se ele estiver duplicado pelo btn-top-content) */
+#editProfilePopupOverlay .popup > .btn-top-content .btn-close {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 1; /* Garante que o X fique visível */
+}
+
+
+/* Estilo para o botão Salvar no canto superior direito do popup */
+#saveProfileChanges {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1;
+    background-color: var(--blue-primary); /* Cor primária */
+    color: var(--white-background);
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#saveProfileChanges:hover {
+    background-color: #4fa8c7; /* Tom mais escuro no hover */
+}
+
+
+/* Estilos para grupos de formulário (baseados em style-setup-profile.css) */
+#editProfileForm .form-group {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#editProfileForm label {
+    font-family: 'Montserrat', sans-serif;
+    display: block;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#editProfileForm label i {
+    color: var(--blue-primary);
+    font-size: 18px;
+}
+
+#editProfileForm input[type="text"],
+#editProfileForm textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius-sm);
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
+    resize: vertical;
+    outline: none;
+    font-size: 16px;
+    color: var(--dark);
+}
+
+#editProfileForm input[type="text"][readonly] {
+    background-color: var(--light-gray); /* Fundo para campos bloqueados */
+    cursor: not-allowed;
+    border-color: var(--medium-gray);
+}
+
+
+/* Estilos para file inputs (baseados em style-setup-profile.css) */
+#editProfileForm input[type="file"] {
+    display: none; /* Esconde o input de arquivo nativo */
+}
+
+#editProfileForm .file-input-label {
+    display: inline-block;
+    background-color: var(--light-gray);
+    color: var(--dark);
+    padding: 10px 15px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    border: 1px solid var(--medium-gray);
+    text-align: center;
+    transition: var(--transition);
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#editProfileForm .file-input-label:hover {
+    background-color: var(--medium-gray);
+    border-color: var(--blue-primary);
+}
+
+#editProfileForm .file-input-label i {
+    color: var(--blue-primary);
+}
+
+#editProfileForm small {
+    font-size: 0.8em;
+    color: var(--dark-gray);
+    margin-top: -5px;
+}
+
+/* Estilos para as pré-visualizações de imagem */
+#editProfileForm .preview-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+#editProfileForm .preview-circle { /* Para foto de perfil */
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--blue-primary);
+    box-shadow: var(--box-shadow);
+}
+
+#editProfileForm .preview-rect { /* Para foto de capa */
+    width: 100%; /* Pode ser uma largura maior para capa */
+    max-width: 400px; /* Limite a largura para não estourar */
+    height: 150px;
+    object-fit: cover;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--medium-gray);
+    box-shadow: var(--box-shadow);
+}
+
+/* Responsividade básica para o modal de edição */
+@media (max-width: 768px) {
+    #editProfilePopupOverlay .popup {
+        padding: 20px;
+        gap: 15px;
+    }
+    #saveProfileChanges, #closeEditProfilePopup {
+        top: 10px;
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+    #saveProfileChanges { right: 10px; }
+    #closeEditProfilePopup { left: 10px; }
+}
+
+@media (max-width: 480px) {
+    #editProfilePopupOverlay .popup {
+        padding: 15px;
+        gap: 10px;
+    }
+    #editProfileForm label, #editProfileForm input[type="text"], #editProfileForm textarea {
+        font-size: 14px;
+    }
+    #editProfileForm .file-input-label {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+    #editProfileForm .preview-circle {
+        width: 100px;
+        height: 100px;
+    }
+    #editProfileForm .preview-rect {
+        height: 120px;
+    }
+}

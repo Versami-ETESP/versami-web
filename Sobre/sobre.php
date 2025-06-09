@@ -21,8 +21,9 @@
       src="https://kit.fontawesome.com/17dd42404d.js"
       crossorigin="anonymous"
     ></script>
+    <link rel="stylesheet" href="../Index/CSS/Style.css" /> 
     <link rel="stylesheet" href="CSS/Style.css" />
-    <title>Versami</title>
+    <title>Versami | Sobre nós</title>
   </head>
   <body>
     <header class="glass">
@@ -32,92 +33,63 @@
         </div>
         <ul class="nav-links">
           <li>
-            <a href="../Index/index.php" id="inicio-link">Início</a>
+            <a href="../Index/Index.php" id="inicio-link"><i class="fa-solid fa-house"></i></a>
           </li>
           <li>
-            <a href="sobre.php" id="sobre-link" class="active">Sobre nós</a>
+            <a href="../Sobre/Sobre.php" id="sobre-link" class="active"><i class="fa-solid fa-book-open"></i></a>
           </li>
           <li>
-            <a href="../Blog/blog.php" id="blog-link">Blog</a>
-          </li>
-          <li>
-            <a href="../Contato/contato.php" id="contato-link"
-              >Contato</a
-            >
+            <a href="../Login/Login.php"><i class="fa-solid fa-user"></i></a>
           </li>
         </ul>
-        <div class="user-icon">
-          <span class="material-icons-outlined"
-            ><a href="../Login/login.php"> account_circle </a></span
-          >
-        </div>
       </nav>
+      <div class="glass-gradient-line"></div>
     </header>
 
-    <section class="telaPrincipal">
-      <div class="containerLeft">
-        <h2>O que é a Versami?</h2>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit.<br />
-          Cumque, odit doloremque ipsa ducimus culpa tenetur fugit natus
-          accusantium, et modi, aliquid fugiat nulla vitae odio tempora saepe
-          magnam ipsum eligendi. Lorem ipsum, dolor sit amet consectetur
-          adipisicing elit. Cumque, odit doloremque ipsa ducimus culpa tenetur
-          fugit natus accusantium, et modi, aliquid fugiat nulla vitae odio
-          tempora saepe magnam ipsum eligendi.
-        </p>
-        <button class="buttonP" type="button" onclick="ContaPage()">
-          Criar Conta <i class="fa-solid fa-chevron-right"></i>
-        </button>
-      </div>
-    </section>
-
-    <div class="iconCenter">
-      <i class="fa-solid fa-chevron-down"></i>
-    </div>
-
-    <section class="telaPesquisa">
-      <div class="containerCenter">
-        <h2><span>Qual a nossa ideia?</span></h2>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cumque, odit
-          doloremque ipsa ducimus culpa tenetur fugit natus accusantium, et
-          modi, aliquid fugiat nulla vitae odio tempora saepe magnam ipsum
-          eligendi. Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          Cumque, odit doloremque ipsa ducimus culpa tenetur fugit natus
-          accusantium, et modi, aliquid fugiat nulla vitae odio tempora saepe
-          magnam ipsum eligendi. Lorem ipsum, dolor sit amet consectetur
-          adipisicing elit. Cumque, odit doloremque ipsa ducimus culpa tenetur
-          fugit natus accusantium, et modi, aliquid fugiat nulla vitae odio
-          tempora saepe magnam ipsum eligendi.Lorem ipsum, dolor sit amet
-          consectetur adipisicing elit. Cumque, odit doloremque ipsa ducimus
-          culpa tenetur fugit natus accusantium, et modi, aliquid fugiat nulla
-          vitae odio tempora saepe magnam ipsum eligendi.Lorem ipsum, dolor sit
-          amet consectetur adipisicing elit. Cumque, odit doloremque ipsa
-          ducimus culpa tenetur fugit natus accusantium, et modi, aliquid fugiat
-          nulla vitae odio tempora saepe magnam ipsum eligendi.
-        </p>
-        <button class="buttonP" type="button" onclick="ContaPage()">
-          Criar Conta <i class="fa-solid fa-chevron-right"></i>
-        </button>
-      </div>
-    </section>
-
-    <section class="telaApp">
-      <div class="containerEsquerdoApp">
-        <h2>Versami já disponível para <span>Android!</span></h2>
-        <p>
-          Baixe agora o nosso App da Versami para<br />
-          se conectar com leitores e avaliar seus<br />
-          livros favoritos.
-        </p>
-        <img src="../Assets/iconGoogle.png" alt="" />
-      </div>
-      <div class="containerDireitoApp">
-        <img src="../Assets/imgCelulares.png" alt="" />
-      </div>
-    </section>
-
+    <main>
+      <section class="about-hero-section">
+        <div class="about-hero-content">
+          <h2>Conheça a <span>Versami</span><br> e nossa missão</h2>
+          <p>
+            Somos uma rede social apaixonada por leitura, conectando leitores e<br>
+            facilitando a descoberta de novas histórias e comunidades.
+          </p>
+          <a href="../Login/Login.php" class="button"
+            >Criar Conta <i class="fa-solid fa-chevron-right"></i
+          ></a>
+        </div>
+        <div class="about-hero-image">
+          <img src="../Assets/imgSobre01.png" alt="Pessoas lendo livros" /> </div>
+      </section>
+      <section class="our-idea-section">
+        <div class="our-idea-content">
+          <h2>Nossa <span>ideia</span></h2>
+          <p>
+            A Versami nasceu da visão de um espaço onde a paixão por livros transcende as páginas e cria conexões reais. Nosso objetivo é ir além da simples avaliação, oferecendo uma plataforma rica para interações, debates e a construção de uma comunidade vibrante de leitores. Acreditamos que cada livro é uma porta para um novo mundo, e cada leitor é um guia valioso nessa jornada.
+          </p>
+          <p>
+            Com recursos intuitivos e um design pensado para a melhor experiência do usuário, a Versami é o local onde você pode explorar universos literários, compartilhar suas percepções e encontrar inspiração para sua próxima grande leitura.
+          </p>
+          <a href="../Login/Login.php" class="button"
+            >Comece a explorar <i class="fa-solid fa-book-open"></i></i
+          ></a>
+        </div>
+        <div class="our-idea-image">
+          <img src="../Assets/imgSobre02.jpg" alt="Ilustração de ideia" /> </div>
+      </section>
+      <section class="app-section">
+        <div class="app-content-left">
+          <h2>Versami já disponível para <span>Android!</span></h2>
+          <p>Baixe agora o nosso App da Versami para<br />se conectar com leitores e avaliar seus<br />livros
+            favoritos.
+          </p>
+          <img src="../Assets/icongoogle.png" alt="Google Play Store" />
+        </div>
+        <div class="app-content-right">
+          <img src="../Assets/imgCelulares.png" alt="Celulares com o app Versami" />
+        </div>
+      </section>
+    </main>
     <footer>
       <div class="footer-content">
         <div class="newsletter">
