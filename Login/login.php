@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $_SESSION["user_info"] = $user_info;
 
-            header("Location: ../feed.php");
+            header("Location: ../Feed/Feed.php");
             exit();
         } else {
 

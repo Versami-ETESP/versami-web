@@ -7,7 +7,7 @@ function seguirUsuario(usuarioId, botao) {
   botao.disabled = true;
   botao.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span class="button-text">Processando...</span>`;
 
-  fetch("seguir.php", {
+  fetch("../Functions/seguir.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -69,7 +69,7 @@ function curtir(postId, botao) {
   }
 
   // Envia a requisição AJAX
-  fetch("curtir.php", {
+  fetch("../Functions/curtir.php", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",

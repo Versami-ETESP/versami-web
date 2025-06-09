@@ -98,8 +98,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de <?= htmlspecialchars($usuario['nome']) ?></title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../Profile/CSS/styleProfile.css">
     <link rel="stylesheet" href="CSS/ProfileViewStyle.css">
+    <link rel="stylesheet" href="../Profile/CSS/StyleProfile.css">
 </head>
 
 <body>
@@ -398,8 +398,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     <div id="toastNotification" class="toast-notification"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/script-tema.js"></script>
+    <script src="../js/script.js"></script>
     <script>
         function showProfileTab(tabName) {
             // Remove 'active' de todas as abas e seções de conteúdo

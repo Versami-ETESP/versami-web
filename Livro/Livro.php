@@ -263,7 +263,7 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                 </div>
                 <h2>Criar Review</h2>
             </div>
-            <form method="POST" id="postForm" action="post_review.php">
+            <form method="POST" id="postForm" action="../Feed/Feed.php">
                 <input type="hidden" name="idLivro" value="<?= $livro_id ?>">
                 <textarea name="conteudo" maxlength="380" id="review-content" rows="7" cols="7"
                     placeholder="Compartilhe seus pensamentos sobre este livro..." required></textarea>
@@ -302,7 +302,7 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
         
         // Chamada AJAX
         $.ajax({
-            url: 'toggle_favorite.php',
+            url: '../Functions/toggle_favorite.php',
             method: 'POST',
             data: {
                 book_id: livroId,
@@ -334,7 +334,7 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
         
         // Chamada AJAX
         $.ajax({
-            url: 'toggle_like.php',
+            url: '../Functions/curtir.php',
             method: 'POST',
             data: {
                 review_id: reviewId,

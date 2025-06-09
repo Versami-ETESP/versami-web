@@ -366,7 +366,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="../js/script.js"></script>
     <script>
         function showProfileTab(tabName) {
             // Remove 'active' de todas as abas e seções de conteúdo
@@ -579,7 +579,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             // formData.append('usuario_logado_id', '<?= $_SESSION["usuario_id"] ?>');
 
             $.ajax({
-                url: 'atualizar_perfil.php', // O script PHP para processar a atualização
+                url: '../Functions/atualizar_perfil.php', // O script PHP para processar a atualização
                 method: 'POST',
                 data: formData,
                 processData: false, // Necessário para FormData

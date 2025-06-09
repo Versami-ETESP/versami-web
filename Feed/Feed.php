@@ -224,7 +224,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="comment-section">
-                                                                <form method="POST" action="comentar.php" class="comment-form"
+                                                                <form method="POST" action="../Functions/comentar.php" class="comment-form"
                                                                     >
                                                                     <input type="hidden" name="post_id"
                                                                         value="<?= $post['idPublicacao'] ?>">
@@ -388,7 +388,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="comment-section">
-                                                                <form method="POST" action="comentar.php" class="comment-form">
+                                                                <form method="POST" action="../Functions/comentar.php" class="comment-form">
                                                                     <input type="hidden" name="post_id"
                                                                         value="<?= $post['idPublicacao'] ?>">
                                                                     <input type="text" name="comentario"

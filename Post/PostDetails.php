@@ -203,7 +203,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
 
                     <div class="comments-section">
                         <h3>Comentários</h3>
-                        <form method="POST" action="comentar.php" class="comment-form">
+                        <form method="POST" action="../Functions/comentar.php" class="comment-form">
                             <input type="hidden" name="post_id" value="<?= $post['idPublicacao'] ?>">
                             <input type="text" name="comentario" placeholder="Escreva um comentário..."
                                 class="comment-input" required>
@@ -303,8 +303,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
     <div id="toastNotification" class="toast-notification"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/script-tema.js"></script>
+    <script src="../js/script.js"></script>
     <script>
         // Função para mostrar uma notificação toast
         function showToast(message, type = 'success') {
@@ -419,12 +418,12 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
             let redirectUrl = null; // Para redirecionar em caso de sucesso (exclusão)
 
             if (actionType === 'denounce') {
-                url = 'denunciar_post.php';
+                url = '../Functions/denunciar_post.php';
                 data = { post_id: postId };
                 successMessage = 'Denúncia registrada com sucesso!';
                 errorMessage = 'Erro ao registrar a denúncia.';
             } else if (actionType === 'delete') {
-                url = 'excluir_post.php';
+                url = '../Functions/excluir_post.php';
                 data = { idPublicacao: postId };
                 successMessage = 'Publicação e dados relacionados excluídos com sucesso!';
                 errorMessage = 'Erro ao excluir a publicação.';

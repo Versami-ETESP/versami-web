@@ -333,7 +333,7 @@ if (!empty($termo_busca)) {
 
             // Chamada AJAX
             $.ajax({
-                url: 'toggle_favorite.php',
+                url: '../Functions/toggle_favorite.php',
                 method: 'POST',
                 data: {
                     book_id: bookId,
