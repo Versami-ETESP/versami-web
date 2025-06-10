@@ -80,7 +80,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     <title>Perfil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="CSS/StyleProfile.css">
+    <link rel="stylesheet" href="CSS/ProfileStyle.css">
 </head>
 
 <body>
@@ -244,11 +244,11 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                                 // Supondo que 'favoritado' na consulta de favoritos indica se o usuário logado favoritou este livro
                                 $isFavoritedByCurrentUser = $livro['favoritado'] ?? 0;
                                 ?>
-                                <div class="book-item">
+                                <div class="book-item-favorite">
                                     <div class="book-cover-container">
                                         <?php if (!empty($livro['imgCapa'])): ?>
                                             <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>"
-                                                alt="Capa do livro" class="book-cover">
+                                                alt="Capa do livro" class="book-cover-favorite">
                                         <?php else: ?>
                                             <div class="no-cover">
                                                 <i class="fa-solid fa-book"></i>
@@ -694,6 +694,60 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             // Garante que a aba de reviews é a padrão ao carregar a página
             showProfileTab('posts');
         });
+        // Função para renderizar os livros
+        function renderBooks(books) {
+            const booksList = document.getElementById("booksList");
+
+            if (books.length === 0) {
+                booksList.innerHTML = `
+            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 20px;">
+                <i class="fa-solid fa-book-open" style="font-size: 2em; color: #ccc;"></i>
+                <p>Nenhum livro encontrado</p>
+            </div>
+        `;
+                return;
+            }
+
+            booksList.innerHTML = "";
+
+            books.forEach((book) => {
+                const bookElement = document.createElement("div");
+                bookElement.className = "book-item";
+                bookElement.innerHTML = `
+          <div class="book">
+            <div class="attach-btn" data-book-id="${book.idLivro}"
+                    data-book-title="${book.nomeLivro}"
+                    data-book-author="${book.nomeAutor || ""}"
+                    data-book-cover="${book.imagem_base64 || ""}">
+                <div class="book-cover">
+                    ${book.imagem_base64
+                        ? `<img src="data:image/jpeg;base64,${book.imagem_base64}" alt="${book.nomeLivro}">`
+                        : `<div class="no-cover"><i class="fa-solid fa-book"></i></div>`
+                    }
+                </div>
+                <div class="book-details">
+                    <h3 class="book-name">${book.nomeLivro}</h3>
+                    <p class="author">${book.nomeAutor || "Autor desconhecido" // Esta linha foi corrigida. Antes era 'book.genero'
+                    }</p>
+                </div>
+            </div>
+          </div>
+        `;
+                booksList.appendChild(bookElement);
+            });
+
+            // Adiciona eventos aos botões de anexar
+            document.querySelectorAll(".attach-btn").forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    const bookId = this.getAttribute("data-book-id");
+                    const bookTitle = this.getAttribute("data-book-title");
+                    const bookAuthor = this.getAttribute("data-book-author");
+                    const bookCover = this.getAttribute("data-book-cover");
+
+                    selectBook(bookId, bookTitle, bookAuthor, bookCover);
+                });
+            });
+        }
     </script>
 </body>
 

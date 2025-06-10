@@ -988,7 +988,7 @@ body {
   justify-content: center; /* Centraliza os itens na grid */
 }
 
-.book-item {
+.book-item-favorite {
   /* Este é o card individual de livro dentro da grid */
   background-color: var(--white-background);
   border-radius: var(--border-radius);
@@ -1004,12 +1004,12 @@ body {
   justify-content: space-between;
 }
 
-.book-item:hover {
+.book-item-favorite:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-.book-cover-container {
+.book-cover-favorite-container {
   position: relative;
   width: 100%;
   height: 180px; /* Altura da capa no card */
@@ -1017,7 +1017,7 @@ body {
   overflow: hidden;
 }
 
-.book-cover {
+.book-cover-favorite {
   /* Imagem dentro do container */
   width: 100%;
   height: 100%;
@@ -1025,7 +1025,7 @@ body {
   transition: transform 0.3s ease;
 }
 
-.book-item:hover .book-cover {
+.book-item-favorite:hover .book-cover-favorite {
   transform: scale(1.05);
 }
 
