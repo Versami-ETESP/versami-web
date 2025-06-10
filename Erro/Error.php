@@ -16,7 +16,7 @@ session_start();
 <body>
     <div class="error-container">
         <div class="logo">
-            <img src="Assets/logoVersamiBlue.png" alt="Versami">
+            <img src="../Assets/logoVersamiBlue.png" alt="Versami">
         </div>
         <div class="error-icon">
             <i class="fas fa-exclamation-triangle"></i>

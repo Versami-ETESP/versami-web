@@ -3,7 +3,7 @@ session_start();
 include '../config.php';
 
 if (!isset($_SESSION["usuario_id"])) {
-    header("Location: Login/login.php");
+    header("Location: ../Login/login.php");
     exit;
 }
 
@@ -124,13 +124,13 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         <div class="content">
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>" class="cover-photo"
+                    <img src="<?= $fotoCapaBase64 ?: '../Assets/default_cover.png' ?>" class="cover-photo"
                         alt="Capa do perfil">
                 </div>
 
                 <div class="profile-main-info">
                     <div class="profile-photo-container">
-                        <img src="<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>" class="profile-photo"
+                        <img src="<?= $fotoUsuarioBase64 ?: '../Assets/default_profile.png' ?>" class="profile-photo"
                             alt="Foto do perfil">
                     </div>
                     <div class="profile-text-info">
@@ -289,6 +289,54 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         </div>
     </div>
 
+    <div class="popup-overlay" id="reviewPopupOverlay">
+        <div class="popup">
+            <div class="btn-top-content">
+                <div class="btn-close-content">
+                    <button class="btn-close"><i class="fa-solid fa-x"></i></button>
+                </div>
+                <h2>Criar Review</h2>
+            </div>
+            <form method="POST" id="postForm">
+                <textarea name="conteudo" maxlength="380" id="review-content" rows="7" cols="7"
+                    placeholder="Compartilhe seus pensamentos..."></textarea>
+
+                <div id="selectedBookContainer">
+                    <div id="selectedBookCover">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div id="selectedBookInfo"></div>
+                    <button type="button" id="removeBookBtn">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <input type="hidden" name="idLivro" id="selectedBookId">
+                </div>
+
+                <div class="icons-content">
+                    <div class="icons-right-content">
+                        <input class="btn-submit" type="submit" id="publicarPost" value="Postar">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="bookSelectionPopup">
+        <div class="popup">
+            <div class="popup-header">
+                <h2>Selecione um Livro</h2>
+                <button class="btn-close" onclick="closeBookSelection()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="popup-body">
+                <input type="text" id="bookSearch" placeholder="Pesquisar por título, autor ou gênero...">
+                <div id="booksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup de Edição de Perfil -->
     <div class="popup-overlay" id="editProfilePopupOverlay">
         <div class="popup">
             <div class="btn-top-content">
@@ -365,6 +413,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             </form>
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>

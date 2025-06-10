@@ -1,16 +1,15 @@
 <?php
 session_start();
-include 'config.php'; // Inclui config.php
+include '../config.php'; // Inclui config.php
 
 if (!isset($_SESSION['idUsuario_setup'])) {
-    header("Location: Cadastro/cadastro.php");
+    header("Location: ../Cadastro/Cadastro.php");
     exit();
 }
 
 // A função validateImage permanece a mesma
 function validateImage($file, $maxSizeMB = 40, $minWidth = 100, $minHeight = 100, $maxWidth = 5000, $maxHeight = 5000)
 {
-    // ... (código existente da validateImage) ...
     // Verifica se é um upload válido
     if (!is_uploaded_file($file['tmp_name'])) {
         return false;
@@ -61,67 +60,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         $biografia = $_POST["biografia"] ?? '';
         $userId = $_SESSION['idUsuario_setup'];
-        
-        $fotoUsuarioBin = null; // Será os dados binários se upload, senão NULL
-        $fotoCapaBin = null;   // Será os dados binários se upload, senão NULL
 
+        $fotoUsuarioStream = null;
         // Processa foto de perfil
-        if (!empty($_FILES["fotoUsuario"]["tmp_name"])) {
+        if (isset($_FILES["fotoUsuario"]) && $_FILES["fotoUsuario"]["error"] == UPLOAD_ERR_OK) {
             if (!validateImage($_FILES["fotoUsuario"])) {
                 throw new Exception("A foto de perfil deve ser uma imagem válida (JPEG, PNG, GIF ou WebP) com tamanho máximo de 40MB e dimensões entre 100x100 e 5000x5000 pixels.");
             }
-            $fotoUsuarioBin = file_get_contents($_FILES["fotoUsuario"]["tmp_name"]);
+            $fotoUsuarioStream = fopen($_FILES["fotoUsuario"]["tmp_name"], 'rb'); // Abre como stream binário
+            if ($fotoUsuarioStream === false) {
+                throw new Exception("Erro ao abrir arquivo de imagem de perfil.");
+            }
         }
-        // Se o usuário não enviou uma foto de perfil, a coluna ficará NULL no BD.
-        // O displayImage em config.php cuidará da imagem padrão.
 
+        $fotoCapaStream = null;
         // Processa foto de capa
-        if (!empty($_FILES["fotoCapa"]["tmp_name"])) {
+        if (isset($_FILES["fotoCapa"]) && $_FILES["fotoCapa"]["error"] == UPLOAD_ERR_OK) {
             if (!validateImage($_FILES["fotoCapa"])) {
                 throw new Exception("A foto de capa deve ser uma imagem válida (JPEG, PNG, GIF ou WebP) com tamanho máximo de 40MB e dimensões entre 100x100 e 5000x5000 pixels.");
             }
-            $fotoCapaBin = file_get_contents($_FILES["fotoCapa"]["tmp_name"]);
+            $fotoCapaStream = fopen($_FILES["fotoCapa"]["tmp_name"], 'rb'); // Abre como stream binário
+            if ($fotoCapaStream === false) {
+                throw new Exception("Erro ao abrir arquivo de imagem de capa.");
+            }
         }
-        // Se o usuário não enviou uma foto de capa, a coluna ficará NULL no BD.
-        // O displayImage em config.php cuidará da imagem padrão.
 
+        // Construir a query de atualização dinamicamente
+        $updateFields = ["bio_usuario = ?"];
+        $params = [$biografia];
 
-        // SQL para atualização de perfil
-        // Use CASE WHEN para atualizar a coluna APENAS se um novo binário for fornecido.
-        // Se $fotoUsuarioBin ou $fotoCapaBin for NULL, a coluna não é alterada.
-        // Se você quiser que o usuário possa "remover" uma foto e voltar para o padrão,
-        // precisaria de um checkbox ou botão para isso, que enviaria um sinal para o backend
-        // para definir a coluna como NULL explicitamente. Por enquanto, só atualizamos se um novo arquivo for enviado.
-        
-        $sql = "UPDATE tblUsuario
-                SET bio_usuario = ?,
-                    fotoUsuario = CASE WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?) ELSE fotoUsuario END,
-                    fotoCapa = CASE WHEN ? IS NOT NULL THEN CONVERT(varbinary(max), ?) ELSE fotoCapa END
-                WHERE idUsuario = ?";
+        if ($fotoUsuarioStream !== null) {
+            $updateFields[] = "fotoUsuario = ?";
+            // Passar o stream com o tipo SQLSRV_SQLTYPE_VARBINARY('MAX') para garantir tratamento binário
+            $params[] = [$fotoUsuarioStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('MAX')];
+        }
 
-        $params = array(
-            $biografia,
-            $fotoUsuarioBin, $fotoUsuarioBin, // Parâmetros para fotoUsuario
-            $fotoCapaBin, $fotoCapaBin,     // Parâmetros para fotoCapa
-            $userId
-        );
+        if ($fotoCapaStream !== null) {
+            $updateFields[] = "fotoCapa = ?";
+            // Passar o stream com o tipo SQLSRV_SQLTYPE_VARBINARY('MAX') para garantir tratamento binário
+            $params[] = [$fotoCapaStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('MAX')];
+        }
+
+        $sql = "UPDATE tblUsuario SET " . implode(", ", $updateFields) . " WHERE idUsuario = ?";
+        $params[] = $userId; // Adiciona o ID do usuário como o último parâmetro para a cláusula WHERE
 
         $stmt = sqlsrv_query($conn, $sql, $params);
+
+        // Fechar streams após a execução da query
+        if ($fotoUsuarioStream !== null) {
+            fclose($fotoUsuarioStream);
+        }
+        if ($fotoCapaStream !== null) {
+            fclose($fotoCapaStream);
+        }
 
         if ($stmt) {
             $_SESSION["usuario_id"] = $userId;
             unset($_SESSION['idUsuario_setup']);
-            header("Location: feed.php");
+            header("Location: ../Feed/Feed.php");
             exit();
         } else {
             throw new Exception("Erro ao atualizar perfil: " . print_r(sqlsrv_errors(), true));
         }
     } catch (Exception $e) {
         // Rollback em caso de erro
-        rollbackRegistration($conn, $userId);
+        if (isset($userId)) { // Garante que $userId está definido
+            rollbackRegistration($conn, $userId);
+        }
 
         // Redireciona para página de erro
-        header("Location: Erro/Error.php?message=" . urlencode($e->getMessage()));
+        header("Location: ../Erro/Error.php?message=" . urlencode($e->getMessage()));
         exit();
     }
 }
@@ -152,10 +160,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <i class="fa-solid fa-upload"></i> Selecionar Imagem
                 </label>
                 <input type="file" id="fotoUsuario" name="fotoUsuario"
-                    accept="image/jpeg,image/png,image/gif,image/webp"> <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
+                    accept="image/jpeg,image/png,image/gif,image/webp"> <small>Formatos aceitos: JPEG, PNG, GIF, WebP.
+                    Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
                     pixels.</small>
                 <div class="preview">
-                    <img id="previewFoto" src="Assets/padrao.png" alt="Pré-visualização da foto de perfil">
+                    <img id="previewFoto" src="../Assets/default_profile.png" alt="Pré-visualização da foto de perfil">
                 </div>
             </div>
 
@@ -169,25 +178,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <small>Formatos aceitos: JPEG, PNG, GIF, WebP. Tamanho máximo: 40MB. Dimensões: 100x100 a 5000x5000
                     pixels.</small>
                 <div class="preview">
-                    <img id="previewCapa" src="Assets/padraoCapa.png" alt="Pré-visualização da foto de capa">
+                    <img id="previewCapa" src="../Assets/default_cover.png" alt="Pré-visualização da foto de capa">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="biografia"><i class="fa-solid fa-pencil"></i> Biografia</label>
-                <textarea id="biografia" name="biografia" maxlength="255" placeholder="Fale um pouco sobre você..." rows="4"></textarea>
+                <textarea id="biografia" name="biografia" maxlength="255" placeholder="Fale um pouco sobre você..."
+                    rows="4"></textarea>
                 <small>Máximo de 255 caracteres.</small>
             </div>
 
             <input type="submit" value="Finalizar Cadastro">
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/script.js"></script>
     <script>
         function previewImage(input, previewId) {
             const preview = document.getElementById(previewId);
             const file = input.files[0];
-            const defaultFotoPerfil = 'Assets/padrao.png'; // URL da imagem padrão de perfil
-            const defaultFotoCapa = 'Assets/padraoCapa.png'; // URL da imagem padrão de capa
+            const defaultFotoPerfil = '../Assets/default_profile.png'; // URL da imagem padrão de perfil
+            const defaultFotoCapa = '../Assets/default_cover.png'; // URL da imagem padrão de capa
 
             if (file) {
                 // Validação client-side básica de tamanho e tipo

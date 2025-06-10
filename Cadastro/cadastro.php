@@ -38,7 +38,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       throw new Exception("Data de Nascimento no formato incorreto");
     }
 
-
     // Verifica idade mínima (13 anos)
     $dataAtual = new DateTime();
     $dataNascimento = new DateTime($data_nasc);
@@ -68,26 +67,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       throw new Exception("E-mail ou @usuário já cadastrado.");
     }
 
-    // Carrega imagens padrão como binário
-    $fotoPadrao = file_exists(FOTO_PADRAO_PATH) ? file_get_contents(FOTO_PADRAO_PATH) : null;
-    $capaPadrao = file_exists(CAPA_PADRAO_PATH) ? file_get_contents(CAPA_PADRAO_PATH) : null;
+    // Carrega imagens padrão como streams binários para evitar problemas de codificação
+    $fotoPadraoStream = null;
+    if (file_exists(FOTO_PADRAO_PATH)) {
+        $fotoPadraoStream = fopen('php://memory', 'r+');
+        fwrite($fotoPadraoStream, file_get_contents(FOTO_PADRAO_PATH));
+        rewind($fotoPadraoStream);
+    }
+
+    $capaPadraoStream = null;
+    if (file_exists(CAPA_PADRAO_PATH)) {
+        $capaPadraoStream = fopen('php://memory', 'r+');
+        fwrite($capaPadraoStream, file_get_contents(CAPA_PADRAO_PATH));
+        rewind($capaPadraoStream);
+    }
 
     // Inserção no banco, incluindo pergunta e resposta secreta
+    // Removido CONVERT(VARBINARY(MAX), ?) do SQL pois o tipo será definido no array de parâmetros
     $sql = "INSERT INTO tblUsuario (nome, data_nasc, arroba_usuario, email, senha, fotoUsuario, fotoCapa, bio_usuario, idPergunta, resposta)
-                VALUES (?, ?, ?, ?, ?, CONVERT(varbinary(max), ?), CONVERT(varbinary(max), ?), '', ?, ?);
+                VALUES (?, ?, ?, ?, ?, ?, ?, '', ?, ?);
                 SELECT SCOPE_IDENTITY() AS idUsuario;";
 
-    $params = [
-      $nome,
-      $data_nasc,
-      $arroba,
-      $email,
-      $senhaHash,
-      $fotoPadrao,
-      $capaPadrao,
-      $idPergunta,
-      $respostaSecretaHash // Armazena a resposta criptografada
-    ];
+    // Define os parâmetros, especificando o tipo para os campos binários
+    $params = array(
+        $nome,
+        $data_nasc,
+        $arroba,
+        $email,
+        $senhaHash,
+        array($fotoPadraoStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('max')),
+        array($capaPadraoStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('max')),
+        $idPergunta,
+        $respostaSecretaHash
+    );
 
     $stmt = sqlsrv_query($conn, $sql, $params);
 

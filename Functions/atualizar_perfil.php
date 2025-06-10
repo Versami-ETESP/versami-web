@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../config.php'; // Inclui config.php
+include '../config.php'; // Inclui config.php, que agora contém validateImage()
 
 header('Content-Type: application/json'); // Garante que a resposta seja JSON
 
@@ -17,38 +17,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nome = $_POST["nome"] ?? null;
         $biografia = $_POST["biografia"] ?? null;
         
-        $fotoUsuarioBin = null; // Será os dados binários se upload, senão NULL
-        $fotoCapaBin = null;   // Será os dados binários se upload, senão NULL
-
+        $fotoUsuarioStream = null;
+        $fotoCapaStream = null;   
+        
         // --- Lógica para FOTO DE PERFIL ---
-        // Se o arquivo foi enviado, validamos e pegamos o conteúdo binário.
-        if (!empty($_FILES["fotoUsuario"]["tmp_name"]) && $_FILES["fotoUsuario"]["error"] == UPLOAD_ERR_OK) {
-            if (!validateImage($_FILES["fotoUsuario"])) {
+        if (isset($_FILES["fotoUsuario"]) && $_FILES["fotoUsuario"]["error"] == UPLOAD_ERR_OK) {
+            if (!validateImage($_FILES["fotoUsuario"])) { // validateImage() agora está em config.php
                 throw new Exception("A foto de perfil deve ser uma imagem válida (JPEG, PNG, GIF ou WebP) com tamanho máximo de 40MB e dimensões entre 100x100 e 5000x5000 pixels.");
             }
-            $fotoUsuarioBin = file_get_contents($_FILES["fotoUsuario"]["tmp_name"]);
+            $fotoUsuarioStream = fopen($_FILES["fotoUsuario"]["tmp_name"], 'rb'); // Abre como stream binário
+            if ($fotoUsuarioStream === false) {
+                throw new Exception("Erro ao abrir arquivo de imagem de perfil.");
+            }
         } else if (isset($_POST['remove_fotoUsuario']) && $_POST['remove_fotoUsuario'] == '1') {
             // Se o checkbox/sinal de "remover" for enviado, definimos explicitamente como NULL
-            $fotoUsuarioBin = NULL; 
-        } else {
-            // Se nada foi enviado e não há sinal para remover, mantém o valor atual no BD
-            // Precisamos saber se o usuário está querendo manter a foto atual ou se ele simplesmente não carregou uma nova
-            // A melhor forma é se o frontend passar um sinal para "manter a atual" ou "remover"
-            // Por enquanto, vamos manter o que já está no BD se não houver upload E não houver "sinal de remoção"
-            // Para isso, faremos a lógica de UPDATE no SQL de forma mais inteligente.
+            $fotoUsuarioStream = NULL; 
         }
 
         // --- Lógica para FOTO DE CAPA ---
-        if (!empty($_FILES["fotoCapa"]["tmp_name"]) && $_FILES["fotoCapa"]["error"] == UPLOAD_ERR_OK) {
-            if (!validateImage($_FILES["fotoCapa"])) {
+        if (isset($_FILES["fotoCapa"]) && $_FILES["fotoCapa"]["error"] == UPLOAD_ERR_OK) {
+            if (!validateImage($_FILES["fotoCapa"])) { // validateImage() agora está em config.php
                 throw new Exception("A foto de capa deve ser uma imagem válida (JPEG, PNG, GIF ou WebP) com tamanho máximo de 40MB e dimensões entre 100x100 e 5000x5000 pixels.");
             }
-            $fotoCapaBin = file_get_contents($_FILES["fotoCapa"]["tmp_name"]);
+            $fotoCapaStream = fopen($_FILES["fotoCapa"]["tmp_name"], 'rb'); // Abre como stream binário
+            if ($fotoCapaStream === false) {
+                throw new Exception("Erro ao abrir arquivo de imagem de capa.");
+            }
         } else if (isset($_POST['remove_fotoCapa']) && $_POST['remove_fotoCapa'] == '1') {
             // Se o checkbox/sinal de "remover" for enviado
-            $fotoCapaBin = NULL;
-        } else {
-            // Se nada foi enviado e não há sinal para remover, mantém o valor atual no BD
+            $fotoCapaStream = NULL;
         }
 
         // Construir a query de atualização dinamicamente
@@ -65,22 +62,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         
         // --- Atualização condicional para fotoUsuario ---
-        // Se $fotoUsuarioBin for um dado binário (upload), atualiza.
-        // Se $fotoUsuarioBin for NULL (sinal de remoção), atualiza para NULL.
-        // Se não for NULL (não houve upload nem remoção), NÃO inclui no UPDATE para manter o valor atual.
-        if (isset($_FILES["fotoUsuario"]) && $_FILES["fotoUsuario"]["error"] == UPLOAD_ERR_NO_FILE && !(isset($_POST['remove_fotoUsuario']) && $_POST['remove_fotoUsuario'] == '1')) {
-            // Não houve upload e não houve sinal para remover, mantém a foto atual do BD. Não adiciona ao UPDATE.
-        } else {
-            $updateFields[] = "fotoUsuario = CONVERT(varbinary(max), ?)";
-            $params[] = $fotoUsuarioBin; // Já é binário ou NULL
+        // Se $fotoUsuarioStream não é estritamente null (i.e., foi uploaded ou marcado para remover)
+        // Note: UPLOAD_ERR_NO_FILE means no file was selected. In that case, we want to skip updating the column,
+        // unless remove_fotoUsuario was checked.
+        $hasFotoUsuarioChange = (isset($_FILES["fotoUsuario"]) && $_FILES["fotoUsuario"]["error"] == UPLOAD_ERR_OK) || (isset($_POST['remove_fotoUsuario']) && $_POST['remove_fotoUsuario'] == '1');
+
+        if ($hasFotoUsuarioChange) {
+            $updateFields[] = "fotoUsuario = ?";
+            // If it's a stream (uploaded) or NULL (removed), pass with explicit type
+            $params[] = ($fotoUsuarioStream === NULL) ? NULL : [$fotoUsuarioStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('MAX')];
         }
 
         // --- Atualização condicional para fotoCapa ---
-        if (isset($_FILES["fotoCapa"]) && $_FILES["fotoCapa"]["error"] == UPLOAD_ERR_NO_FILE && !(isset($_POST['remove_fotoCapa']) && $_POST['remove_fotoCapa'] == '1')) {
-            // Não houve upload e não houve sinal para remover, mantém a capa atual do BD. Não adiciona ao UPDATE.
-        } else {
-            $updateFields[] = "fotoCapa = CONVERT(varbinary(max), ?)";
-            $params[] = $fotoCapaBin; // Já é binário ou NULL
+        $hasFotoCapaChange = (isset($_FILES["fotoCapa"]) && $_FILES["fotoCapa"]["error"] == UPLOAD_ERR_OK) || (isset($_POST['remove_fotoCapa']) && $_POST['remove_fotoCapa'] == '1');
+
+        if ($hasFotoCapaChange) {
+            $updateFields[] = "fotoCapa = ?";
+            // If it's a stream (uploaded) or NULL (removed), pass with explicit type
+            $params[] = ($fotoCapaStream === NULL) ? NULL : [$fotoCapaStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('MAX')];
         }
 
         if (empty($updateFields)) {
@@ -89,15 +88,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $sql = "UPDATE tblUsuario SET " . implode(", ", $updateFields) . " WHERE idUsuario = ?";
-        $params[] = $userId; // Adiciona o ID do usuário como o último parâmetro
+        $params[] = $userId; // Adiciona o ID do usuário como o último parâmetro para a cláusula WHERE
 
         $stmt = sqlsrv_query($conn, $sql, $params);
+
+        // Fechar streams após a execução da query
+        if (is_resource($fotoUsuarioStream)) { // Ensure it's a resource before closing
+            fclose($fotoUsuarioStream);
+        }
+        if (is_resource($fotoCapaStream)) { // Ensure it's a resource before closing
+            fclose($fotoCapaStream);
+        }
 
         if ($stmt === false) {
             $errors = sqlsrv_errors();
             error_log("Erro no UPDATE de perfil: " . print_r($errors, true));
-            error_log("SQL Query: " . $sql);
-            error_log("SQL Params: " . print_r($params, true));
             throw new Exception("Erro ao atualizar o perfil no banco de dados.");
         }
 
