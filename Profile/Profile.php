@@ -9,15 +9,6 @@ if (!isset($_SESSION["usuario_id"])) {
 
 $usuario_id = $_SESSION["usuario_id"];
 
-// Função para converter varbinary em base64 (já deve estar em config.php)
-// function binaryToBase64($binaryData)
-// {
-//     if ($binaryData === null || empty($binaryData)) {
-//         return '';
-//     }
-//     return 'data:image/jpeg;base64,' . base64_encode($binaryData);
-// }
-
 // Busca dados do usuário logado
 $sql_usuario = "SELECT
     u.*,
@@ -244,11 +235,11 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                                 // Supondo que 'favoritado' na consulta de favoritos indica se o usuário logado favoritou este livro
                                 $isFavoritedByCurrentUser = $livro['favoritado'] ?? 0;
                                 ?>
-                                <div class="book-item-favorite">
+                                <div class="book-item">
                                     <div class="book-cover-container">
                                         <?php if (!empty($livro['imgCapa'])): ?>
                                             <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>"
-                                                alt="Capa do livro" class="book-cover-favorite">
+                                                alt="Capa do livro" class="book-cover">
                                         <?php else: ?>
                                             <div class="no-cover">
                                                 <i class="fa-solid fa-book"></i>
@@ -297,7 +288,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                 </div>
                 <h2>Criar Review</h2>
             </div>
-            <form method="POST" id="postForm">
+            <form method="POST" id="postForm" action="Profile.php" enctype="multipart/form-data">
+                <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($usuario_id) ?>">
                 <textarea name="conteudo" maxlength="380" id="review-content" rows="7" cols="7"
                     placeholder="Compartilhe seus pensamentos..."></textarea>
 
@@ -336,7 +328,6 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         </div>
     </div>
 
-    <!-- Popup de Edição de Perfil -->
     <div class="popup-overlay" id="editProfilePopupOverlay">
         <div class="popup">
             <div class="btn-top-content">
@@ -694,60 +685,6 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             // Garante que a aba de reviews é a padrão ao carregar a página
             showProfileTab('posts');
         });
-        // Função para renderizar os livros
-        function renderBooks(books) {
-            const booksList = document.getElementById("booksList");
-
-            if (books.length === 0) {
-                booksList.innerHTML = `
-            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 20px;">
-                <i class="fa-solid fa-book-open" style="font-size: 2em; color: #ccc;"></i>
-                <p>Nenhum livro encontrado</p>
-            </div>
-        `;
-                return;
-            }
-
-            booksList.innerHTML = "";
-
-            books.forEach((book) => {
-                const bookElement = document.createElement("div");
-                bookElement.className = "book-item";
-                bookElement.innerHTML = `
-          <div class="book">
-            <div class="attach-btn" data-book-id="${book.idLivro}"
-                    data-book-title="${book.nomeLivro}"
-                    data-book-author="${book.nomeAutor || ""}"
-                    data-book-cover="${book.imagem_base64 || ""}">
-                <div class="book-cover">
-                    ${book.imagem_base64
-                        ? `<img src="data:image/jpeg;base64,${book.imagem_base64}" alt="${book.nomeLivro}">`
-                        : `<div class="no-cover"><i class="fa-solid fa-book"></i></div>`
-                    }
-                </div>
-                <div class="book-details">
-                    <h3 class="book-name">${book.nomeLivro}</h3>
-                    <p class="author">${book.nomeAutor || "Autor desconhecido" // Esta linha foi corrigida. Antes era 'book.genero'
-                    }</p>
-                </div>
-            </div>
-          </div>
-        `;
-                booksList.appendChild(bookElement);
-            });
-
-            // Adiciona eventos aos botões de anexar
-            document.querySelectorAll(".attach-btn").forEach((btn) => {
-                btn.addEventListener("click", function () {
-                    const bookId = this.getAttribute("data-book-id");
-                    const bookTitle = this.getAttribute("data-book-title");
-                    const bookAuthor = this.getAttribute("data-book-author");
-                    const bookCover = this.getAttribute("data-book-cover");
-
-                    selectBook(bookId, bookTitle, bookAuthor, bookCover);
-                });
-            });
-        }
     </script>
 </body>
 

@@ -304,6 +304,7 @@ input[type="submit"]:hover {
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
+  resize: none;
 }
 .popup .btn-send {
   background: blue;
@@ -1144,31 +1145,6 @@ body {
   color: var(--error);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #editProfilePopupOverlay .popup {
     width: 800px; /* Largura do popup */
     max-width: 90%;
@@ -1253,6 +1229,10 @@ body {
     background-color: var(--light-gray); /* Fundo para campos bloqueados */
     cursor: not-allowed;
     border-color: var(--medium-gray);
+}
+
+#edit_biografia{
+  resize: none;
 }
 
 
