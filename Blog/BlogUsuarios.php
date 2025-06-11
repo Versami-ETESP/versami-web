@@ -15,7 +15,7 @@ $sql_posts = "SELECT b.idBlogPost, b.titulo, LEFT(b.conteudo, 150) AS resumo, b.
               a.nome AS autor, a.arroba_usuario AS autor_arroba
               FROM tblBlogPost b
               JOIN tblAdmin a ON b.idAdmin = a.idAdmin
-              ORDER BY b.dataPost DESC";    
+              ORDER BY b.dataPost DESC";
 $result_posts = sqlsrv_query($conn, $sql_posts);
 
 // Verifica se foi selecionado um post específico
@@ -92,7 +92,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
         </div>
-            <!-- Conteúdo -->
+        <!-- Conteúdo -->
         <div class="principal-content">
             <div class="blog-container">
                 <div class="posts-list">
@@ -105,8 +105,10 @@ if (isset($_GET['id'])) {
                                     base64_encode(file_get_contents('Assets/blog_placeholder.png')) ?>"
                                     alt="<?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post['titulo']))) ?>">
                                 <div>
-                                    <h3><?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post['titulo']))) ?></h3>
-                                    <p><?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post['resumo']))) ?>...</p>
+                                    <h3><?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post['titulo']))) ?>
+                                    </h3>
+                                    <p><?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post['resumo']))) ?>...
+                                    </p>
                                     <small><?= $post['dataPost']->format('d/m/Y') ?> • Por
                                         <?= htmlspecialchars($post['autor']) ?></small>
                                 </div>
@@ -121,7 +123,8 @@ if (isset($_GET['id'])) {
                 </div>
                 <div class="post-full">
                     <?php if ($post_selecionado): ?>
-                        <h1><?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post_selecionado['titulo']))) ?></h1>
+                        <h1><?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post_selecionado['titulo']))) ?>
+                        </h1>
                         <p class="meta">
                             Publicado em <?= $post_selecionado['dataPost']->format('d/m/Y \à\s H:i') ?>
                             por <?= htmlspecialchars($post_selecionado['autor']) ?>
@@ -135,7 +138,7 @@ if (isset($_GET['id'])) {
                         <?php endif; ?>
 
                         <div class="contentBlog ">
-                             <?= nl2br(transformURLsIntoLinks(mb_convert_encoding($post_selecionado['conteudo'], 'UTF-8', 'ISO-8859-1'))) ?>
+                            <?= nl2br(transformURLsIntoLinks(mb_convert_encoding($post_selecionado['conteudo'], 'UTF-8', 'ISO-8859-1'))) ?>
                         </div>
 
                         <div class="author">
@@ -209,6 +212,70 @@ if (isset($_GET['id'])) {
     <!-- Scripts de JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
+    <script>
+        function loadBlogPost(postId) {
+            // Show a loading indicator
+            $('.post-full').html('<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h2>Carregando Notícia...</h2><p>Por favor, aguarde.</p></div>');
+
+            $.ajax({
+                url: 'Blog/get_blog_post_content.php', // Path relative to BlogUsuarios.php
+                method: 'GET',
+                data: { id: postId },
+                success: function (response) {
+                    $('.post-full').html(response);
+
+                    // Update URL using history.pushState
+                    const newUrl = window.location.pathname + '?id=' + postId;
+                    history.pushState({ id: postId }, '', newUrl);
+
+                    // Highlight the selected post in the list
+                    $('.post-preview').removeClass('active-post');
+                    $(`.post-preview[data-post-id="${postId}"]`).addClass('active-post');
+
+                    // Ensure scroll to top of content if needed, but not necessarily of the page
+                    // This targets the .post-full div itself.
+                    $('.post-full').scrollTop(0);
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Erro ao carregar post:", status, error, xhr.responseText);
+                    $('.post-full').html('<div class="empty-state"><i class="fa-solid fa-exclamation-triangle"></i><h2>Erro ao carregar notícia</h2><p>Não foi possível carregar o conteúdo da notícia. Tente novamente.</p></div>');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            // If an ID is present in the URL on initial page load, ensure the correct post is highlighted.
+            // The PHP already renders the content, so we just need to highlight the preview.
+            if (postId) {
+                $(`.post-preview[data-post-id="${postId}"]`).addClass('active-post');
+            } else {
+                // If no post is selected on initial load, default to showing the first post (optional)
+                // Or keep the "Selecione uma notícia" message. The current PHP handles the latter.
+                // If you want to load the first post automatically:
+                // const firstPostId = $('.post-preview').first().data('post-id');
+                // if (firstPostId) {
+                //     loadBlogPost(firstPostId);
+                // }
+            }
+
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function (event) {
+                const currentUrlParams = new URLSearchParams(window.location.search);
+                const currentPostId = currentUrlParams.get('id');
+                if (currentPostId) {
+                    loadBlogPost(currentPostId);
+                } else {
+                    // If popping back to a state without an ID, revert to initial empty state or first post
+                    $('.post-full').html('<div class="empty-state"><i class="fa-solid fa-newspaper"></i><h2>Selecione uma notícia</h2><p>Clique em uma das notícias ao lado para visualizar o conteúdo completo.</p></div>');
+                    $('.post-preview').removeClass('active-post');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
