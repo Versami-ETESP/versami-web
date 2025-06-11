@@ -135,29 +135,36 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             </div>
             <div class="button-content">
                 <div class="buttonOff">
-                    <a href="logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
+                    <a href="../logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
                 </div>
             </div>
         </div>
         <div class="content">
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="<?= $fotoCapaBase64 ?: 'Assets/padraoCapa.png' ?>" class="cover-photo"
+                    <img src="<?= $fotoCapaBase64 ?: '../Assets/default_cover.png' ?>" class="cover-photo"
                         alt="Capa do perfil">
                 </div>
 
                 <div class="profile-main-info">
                     <div class="profile-photo-container">
-                        <img src="<?= $fotoUsuarioBase64 ?: 'Assets/padrao.png' ?>" class="profile-photo"
+                        <img src="<?= $fotoUsuarioBase64 ?: '../Assets/default_profile.png' ?>" class="profile-photo"
                             alt="Foto do perfil">
                     </div>
                     <div class="profile-text-info">
-                        <h1 class="profile-name"><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
-                        <p class="profile-username">@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
+                        <div class="profile-text-user">
+                            <h1 class="profile-name"><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
+                            <p class="profile-username">@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
+                        </div>
+                        <div class="profile-text-bio">
+                            <p class="profile-bio">
+                                <?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
+                        </div>
                     </div>
 
                     <?php if ($perfil_id == $_SESSION["usuario_id"]): ?>
-                        <button class="edit-profile-btn" onclick="window.location.href='../SetupProfile/SetupProfile.php'">Editar
+                        <button class="edit-profile-btn"
+                            onclick="window.location.href='../SetupProfile/SetupProfile.php'">Editar
                             Perfil</button>
                     <?php else: ?>
                         <button class="follow-btn <?= $seguindo_perfil_atual ? 'following' : '' ?>"
@@ -166,9 +173,6 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                         </button>
                     <?php endif; ?>
                 </div>
-
-                <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?>
-                </p>
 
                 <div class="profile-stats-container">
                     <div class="profile-stat">
@@ -384,7 +388,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         </div>
     </div>
 
-    <div id="toastNotification" class="toast-notification"></div> <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div id="toastNotification" class="toast-notification"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>
         function showProfileTab(tabName) {

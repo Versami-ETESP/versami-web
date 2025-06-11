@@ -66,7 +66,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($row['total'] > 0) {
       throw new Exception("E-mail ou @usuário já cadastrado.");
     }
-
     // Carrega imagens padrão como streams binários para evitar problemas de codificação
     $fotoPadraoStream = null;
     if (file_exists(FOTO_PADRAO_PATH)) {
@@ -123,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       throw new Exception($errorMessage);
     }
   } catch (Exception $e) {
-    header("Location: Erro/Error.php?message=" . urlencode($e->getMessage()));
+    header("Location: ../Erro/Error.php?message=" . urlencode($e->getMessage()));
     exit();
   }
 }

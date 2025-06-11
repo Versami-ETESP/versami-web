@@ -8,42 +8,7 @@ if (!isset($_SESSION['idUsuario_setup'])) {
 }
 
 // A função validateImage permanece a mesma
-function validateImage($file, $maxSizeMB = 40, $minWidth = 100, $minHeight = 100, $maxWidth = 5000, $maxHeight = 5000)
-{
-    // Verifica se é um upload válido
-    if (!is_uploaded_file($file['tmp_name'])) {
-        return false;
-    }
 
-    // Verifica tamanho máximo do arquivo (40MB)
-    $maxSizeBytes = $maxSizeMB * 1024 * 1024;
-    if ($file['size'] > $maxSizeBytes) {
-        return false;
-    }
-
-    // Verifica tipo MIME da imagem
-    $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mimeType = finfo_file($fileInfo, $file['tmp_name']);
-    finfo_close($fileInfo);
-
-    if (!in_array($mimeType, $allowedMimeTypes)) {
-        return false;
-    }
-
-    // Verifica dimensões da imagem
-    $imageSize = getimagesize($file['tmp_name']);
-    if (!$imageSize) {
-        return false;
-    }
-
-    list($width, $height) = $imageSize;
-    if ($width < $minWidth || $height < $minHeight || $width > $maxWidth || $height > $maxHeight) {
-        return false;
-    }
-
-    return true;
-}
 
 // A função rollbackRegistration permanece a mesma
 function rollbackRegistration($conn, $userId)

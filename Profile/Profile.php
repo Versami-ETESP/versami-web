@@ -107,7 +107,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             </div>
             <div class="button-content">
                 <div class="buttonOff">
-                    <a href="logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
+                    <a href="../logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
                 </div>
             </div>
         </div>
@@ -671,7 +671,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             if (editProfilePopupOverlay) {
                 editProfilePopupOverlay.addEventListener('click', function (event) {
                     if (event.target === editProfilePopupOverlay) {
-                        closeEditProfileModal();
+                        closeEditProfileModal();    
                     }
                 });
             }

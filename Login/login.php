@@ -8,69 +8,40 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
-    $senha = $_POST["senha"];
+    // Altera de 'email' para 'arroba_usuario' para corresponder ao formulário
+    $arroba_usuario = $_POST["arroba_usuario"] ?? ''; // Usa 'arroba_usuario' do formulário
+    $senha = hash("sha256", $_POST["senha"]); // Hash da senha para comparação com o BD
 
-    // Busca usuário no banco de dados
-    $sql = "SELECT idUsuario, nome, senha FROM tblUsuario WHERE email = ?";
-    $params = array($email);
-    $stmt = sqlsrv_query($conn, $sql, $params);
-
-    if ($stmt === false) {
-        die(print_r(sqlsrv_errors(), true));
-    }
-
-    $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-
-    if ($user) {
-        // Verifica se a senha está correta
-        if (hash("sha256", $senha) == $user["senha"]) {
-            $_SESSION["usuario_id"] = $user["idUsuario"];
-            $_SESSION["nome"] = $user["nome"];
-
-            // Busca informações adicionais do usuário
-            $sql_info = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario 
-                         FROM tblUsuario WHERE idUsuario = ?";
-            $params_info = array($user["idUsuario"]);
-            $stmt_info = sqlsrv_query($conn, $sql_info, $params_info);
-            $user_info = sqlsrv_fetch_array($stmt_info, SQLSRV_FETCH_ASSOC);
-
-            $_SESSION["user_info"] = $user_info;
-
-            header("Location: ../Feed/Feed.php");
-            exit();
-        } else {
-
-            $_SESSION["login_error"] = "Email ou senha incorretos.";
-        }
-        /*
-        if (password_verify($senha, $user["senha"])) {
-            $_SESSION["usuario_id"] = $user["idUsuario"];
-            $_SESSION["nome"] = $user["nome"];
-            
-            // Busca informações adicionais do usuário
-            $sql_info = "SELECT nome, arroba_usuario, fotoUsuario, fotoCapa, bio_usuario 
-                         FROM tblUsuario WHERE idUsuario = ?";
-            $params_info = array($user["idUsuario"]);
-            $stmt_info = sqlsrv_query($conn, $sql_info, $params_info);
-            $user_info = sqlsrv_fetch_array($stmt_info, SQLSRV_FETCH_ASSOC);
-            
-            $_SESSION["user_info"] = $user_info;
-            
-            header("Location: ../feed.php");
-            exit();
-        } else {
-            // Senha incorreta
-            $_SESSION["login_error"] = "Email ou senha incorretos.";
-        }*/
+    // Verifica se o campo de arroba_usuario não está vazio
+    if (empty($arroba_usuario)) {
+        $_SESSION["login_error"] = "Por favor, digite seu nome de usuário.";
     } else {
-        // Usuário não encontrado
-        $_SESSION["login_error"] = "Email ou senha incorretos.";
-    }
+        // Chamar a stored procedure usp_loginUsuario
+        // A stored procedure já espera arroba_usuario e a senha hasheada
+        $sql_call_sp = "{CALL usp_loginUsuario(?, ?)}";
+        $params_call_sp = array($arroba_usuario, $senha);
+        $stmt_call_sp = sqlsrv_query($conn, $sql_call_sp, $params_call_sp);
 
-    // REMOVEMOS O REDIRECIONAMENTO PARA A MENSAGEM APARECER
-    // header("Location: ".$_SERVER['PHP_SELF']);
-    // exit();
+        if ($stmt_call_sp === false) {
+            error_log("Erro ao chamar stored procedure usp_loginUsuario: " . print_r(sqlsrv_errors(), true));
+            $_SESSION["login_error"] = "Erro interno no servidor de autenticação.";
+        } else {
+            $user_info = sqlsrv_fetch_array($stmt_call_sp, SQLSRV_FETCH_ASSOC);
+
+            if ($user_info) {
+                // Login bem-sucedido
+                $_SESSION["usuario_id"] = $user_info["idUsuario"];
+                $_SESSION["nome"] = $user_info["nome"];
+                $_SESSION["user_info"] = $user_info; // Armazenar todas as informações retornadas pela SP
+
+                header("Location: ../Feed/Feed.php");
+                exit();
+            } else {
+                // Nenhuma linha retornada pela SP = credenciais inválidas
+                $_SESSION["login_error"] = "Nome de usuário ou senha incorretos.";
+            }
+        }
+    }
 }
 ?>
 
@@ -130,8 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <form autocomplete="off" class="login-form" method="POST">
                     <div class="input-group">
                         <i class="material-icons-outlined">alternate_email</i>
-                        <input type="email" name="email" id="login2" class="form-input" placeholder="Digite seu email" required
-                            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" />
+                        <input type="text" name="arroba_usuario" id="login2" class="form-input" placeholder="Digite seu nome de usuário" required
+                            value="<?php echo isset($_POST['arroba_usuario']) ? htmlspecialchars($_POST['arroba_usuario']) : ''; ?>" />
                     </div>
                     <div class="input-group">
                         <i class="material-icons-outlined">lock</i>
@@ -154,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="carregando" id="carregando"></div>
     </main>
-    <footer> 
+    <footer>
         <div class="footer-content">
             <div class="newsletter">
                 <h4>Acompanhe nossa</h4>
