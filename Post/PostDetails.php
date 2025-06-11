@@ -116,7 +116,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
         <div class="principal-content">
             <div class="user">
                 <div class="review-header">
-                    <a href="../Feed/Feed.php" class="back-arrow">
+                    <a href="feed.php" class="back-arrow">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <h2>Review</h2>
@@ -171,7 +171,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                                 <?php endif; ?>
                                 <?php if (!empty($post['descLivro'])): ?>
                                     <p class="book-description">
-                                        <?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?>
+                                        <?= htmlspecialchars(convertToUtf8($post['descLivro'])) ?>
                                     </p>
                                 <?php endif; ?>
 
@@ -427,7 +427,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                 data = { idPublicacao: postId };
                 successMessage = 'Publicação e dados relacionados excluídos com sucesso!';
                 errorMessage = 'Erro ao excluir a publicação.';
-                redirectUrl = '../Profile/Profile.php'; // Redireciona para o feed após exclusão
+                redirectUrl = 'feed.php'; // Redireciona para o feed após exclusão
             } else {
                 console.error("Tipo de ação desconhecido: " + actionType);
                 showToast("Erro interno: tipo de ação inválido.", 'error');

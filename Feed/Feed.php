@@ -1,4 +1,4 @@
-    <?php
+<?php
     session_start();
     header('Content-Type: text/html; charset=utf-8');
     include '../config.php';
@@ -20,7 +20,7 @@
         $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
 
         if ($stmt_insert) {
-            header("Location: Feed.php");
+            header("Location: feed.php");
             exit;
         } else {
             die("Erro ao criar postagem: " . print_r(sqlsrv_errors(), true));
@@ -200,7 +200,7 @@
                                                                         <?php endif; ?>
                                                                         <?php if (!empty($post['descLivro'])): ?>
                                                                             <div class="book-description">
-                                                                                <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
+                                                                                <p><?= htmlspecialchars(convertToUtf8($post['descLivro'])) ?></p>
                                                                             </div>
                                                                         <?php endif; ?>
                                                                     </div>
@@ -364,7 +364,7 @@
                                                                         <?php endif; ?>
                                                                         <?php if (!empty($post['descLivro'])): ?>
                                                                             <div class="book-description">
-                                                                                <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
+                                                                                <p><?= htmlspecialchars(convertToUtf8($post['descLivro'])) ?></p>
                                                                             </div>
                                                                         <?php endif; ?>
                                                                     </div>

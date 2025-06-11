@@ -1,7 +1,7 @@
 <?php
 session_start();
 header('Content-Type: text/html; charset=utf-8');
-include '../../config.php'; // Adjust path as needed based on file location
+include '../config.php'; // CORRIGIDO: O caminho agora é '../config.php'
 
 if (!isset($_SESSION["usuario_id"])) {
     // Optionally redirect or return an error if not logged in
@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
 if ($post_selecionado) {
     // Output only the HTML for the full post content
     ?>
-    <h1><?= nl2br(htmlspecialchars(iconv('ISO-8859-1', 'UTF-8//IGNORE', $post_selecionado['titulo']))) ?></h1>
+    <h1><?= nl2br(htmlspecialchars(convertToUtf8($post_selecionado['titulo']))) ?></h1>
     <p class="meta">
         Publicado em <?= $post_selecionado['dataPost']->format('d/m/Y \à\s H:i') ?>
         por <?= htmlspecialchars($post_selecionado['autor']) ?>
@@ -34,13 +34,13 @@ if ($post_selecionado) {
 
     <?php if (!empty($post_selecionado['imgPost'])): ?>
         <img src="data:image/jpeg;base64,<?= base64_encode($post_selecionado['imgPost']) ?>"
-            alt="<?= htmlspecialchars(mb_convert_encoding($post_selecionado['titulo'], 'UTF-8', 'auto')) ?>">
+            alt="<?= htmlspecialchars(convertToUtf8($post_selecionado['titulo'])) ?>">
     <?php else: ?>
-        <img src="Assets/blog_placeholder.png" alt="<?= htmlspecialchars($post_selecionado['titulo']) ?>">
+        <img src="Assets/blog_placeholder.png" alt="<?= htmlspecialchars(convertToUtf8($post_selecionado['titulo'])) ?>">
     <?php endif; ?>
 
     <div class="contentBlog ">
-         <?= nl2br(transformURLsIntoLinks(mb_convert_encoding($post_selecionado['conteudo'], 'UTF-8', 'ISO-8859-1'))) ?>
+         <?= nl2br(transformURLsIntoLinks(convertToUtf8($post_selecionado['conteudo']))) ?>
     </div>
 
     <div class="author">
