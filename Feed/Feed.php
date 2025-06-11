@@ -20,7 +20,7 @@
         $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
 
         if ($stmt_insert) {
-            header("Location: feed.php");
+            header("Location: Feed.php");
             exit;
         } else {
             die("Erro ao criar postagem: " . print_r(sqlsrv_errors(), true));

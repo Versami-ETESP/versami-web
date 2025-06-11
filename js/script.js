@@ -57,6 +57,10 @@ function curtir(postId, botao) {
   const count = botao.querySelector(".like-count");
   const isLiked = icon.classList.contains("fas"); // Verifica se já está curtido
 
+  // Salva o estado atual para possível reversão
+  const initialIconClass = icon.className;
+  const initialCountText = count ? count.textContent : '';
+
   // Feedback visual imediato
   if (isLiked) {
     icon.classList.replace("fas", "far"); // Muda para não curtido visualmente
@@ -76,35 +80,28 @@ function curtir(postId, botao) {
     },
     body: `post_id=${postId}`,
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro na rede ou no servidor");
+      return response.json();
+    })
     .then((data) => {
       if (!data.success) {
-        // Reverte visualmente se falhar
-        if (isLiked) {
-          icon.classList.replace("far", "fas");
-          botao.classList.add("liked");
-          if (count) count.textContent = parseInt(count.textContent) + 1;
-        } else {
-          icon.classList.replace("fas", "far");
-          botao.classList.remove("liked");
-          if (count) count.textContent = parseInt(count.textContent) - 1;
-        }
+        // Reverte visualmente se falhar na operação do servidor
+        icon.className = initialIconClass; // Volta para a classe de ícone original
+        botao.classList.toggle("liked", isLiked); // Volta para a classe liked original
+        if (count) count.textContent = initialCountText; // Volta para o texto do contador original
+        alert(data.message || "Erro ao curtir/descurtir.");
       } else if (count) {
         count.textContent = data.total_likes; // Atualiza com o valor correto do servidor
       }
     })
     .catch((error) => {
       console.error("Erro:", error);
-      // Reverte visualmente em caso de erro
-      if (isLiked) {
-        icon.classList.replace("far", "fas");
-        botao.classList.add("liked");
-        if (count) count.textContent = parseInt(count.textContent) + 1;
-      } else {
-        icon.classList.replace("fas", "far");
-        botao.classList.remove("liked");
-        if (count) count.textContent = parseInt(count.textContent) - 1;
-      }
+      alert("Falha na conexão ou erro inesperado.");
+      // Reverte visualmente em caso de erro de rede ou na promessa
+      icon.className = initialIconClass; // Volta para a classe de ícone original
+      botao.classList.toggle("liked", isLiked); // Volta para a classe liked original
+      if (count) count.textContent = initialCountText; // Volta para o texto do contador original
     });
 }
 
@@ -114,6 +111,11 @@ function curtirComentario(comentarioId, elemento) {
   const count = elemento.querySelector(".like-comment-count");
   const isLiked = icon.classList.contains("fas"); // Verifica classe 'fas' (curtido)
   console.log("Icon classes:", icon.classList);
+
+  // Salva o estado atual para possível reversão
+  const initialIconClass = icon.className;
+  const initialCountText = count ? count.textContent : '';
+
   // Feedback visual imediato
   if (isLiked) {
     icon.classList.replace("fas", "far"); // Muda para vazio
@@ -133,33 +135,28 @@ function curtirComentario(comentarioId, elemento) {
     },
     body: `comentario_id=${comentarioId}`,
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) throw new Error("Erro na rede ou no servidor");
+      return response.json();
+    })
     .then((data) => {
       if (!data.success) {
-        // Reverte visualmente se falhar
-        if (isLiked) {
-          icon.classList.replace("far", "fas");
-          elemento.classList.add("likedComment");
-          if (count) count.textContent = parseInt(count.textContent) + 1;
-        } else {
-          icon.classList.replace("fas", "far");
-          elemento.classList.remove("likedComment");
-          if (count) count.textContent = parseInt(count.textContent) - 1;
-        }
+        // Reverte visualmente se falhar na operação do servidor
+        icon.className = initialIconClass; // Volta para a classe de ícone original
+        elemento.classList.toggle("likedComment", isLiked); // Volta para a classe likedComment original
+        if (count) count.textContent = initialCountText; // Volta para o texto do contador original
+        alert(data.message || "Erro ao curtir/descurtir comentário.");
+      } else if (count) {
+        count.textContent = data.total_likes; // Atualiza com o valor correto do servidor
       }
     })
     .catch((error) => {
       console.error("Erro:", error);
-      // Reverte visualmente
-      if (isLiked) {
-        icon.classList.replace("far", "fas");
-        elemento.classList.add("likedComment");
-        if (count) count.textContent = parseInt(count.textContent) + 1;
-      } else {
-        icon.classList.replace("fas", "far");
-        elemento.classList.remove("likedComment");
-        if (count) count.textContent = parseInt(count.textContent) - 1;
-      }
+      alert("Falha na conexão ou erro inesperado.");
+      // Reverte visualmente em caso de erro de rede ou na promessa
+      icon.className = initialIconClass; // Volta para a classe de ícone original
+      elemento.classList.toggle("likedComment", isLiked); // Volta para a classe likedComment original
+      if (count) count.textContent = initialCountText; // Volta para o texto do contador original
     });
 }
 

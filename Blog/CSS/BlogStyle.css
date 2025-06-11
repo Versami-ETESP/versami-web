@@ -203,7 +203,7 @@ body {
   justify-content: center;
 }
 
-#principal-content {
+.principal-content {
   width: 100%;
   min-height: 100vh;
   background-color: var(--content-background-light);
@@ -824,22 +824,6 @@ form textarea {
 .empty-state p {
   max-width: 400px;
   margin: 0 auto;
-}
-
-/* ===== ANIMAÇÕES ===== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.post-preview {
-  animation: fadeIn 0.5s ease-out;
 }
 
 /* ===== RESPONSIVIDADE ===== */

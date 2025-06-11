@@ -10,6 +10,7 @@
   --like: #ff1493;
   --error: #e0245e;
   --white-background: #ffffff;
+  --white: #ffffff;
   --content-background-dark: #050505;
   --coment-background-light: #ffffff;
   --coment-background-dark: #14171a;
@@ -193,24 +194,15 @@ body {
 }
 
 .header-menu {
+  background-color: red;
   width: 100%;
 }
 
-/* The overall content area (main content excluding sidebar) */
 .content {
-  width: 100%; /* Occupies the remaining width */
+  width: 100%;
   height: 100vh;
   display: flex;
-  flex-direction: column; /* Stacks header and profile container vertically */
-  background-color: var(
-    --light-gray
-  ); /* Background for the main content area */
-  overflow-x: hidden; /* Prevent horizontal scrollbar */
-}
-
-/* Ensure the body itself can scroll if content exceeds viewport height */
-body {
-  overflow-y: auto;
+  justify-content: center;
 }
 
 #principal-content {
@@ -233,47 +225,9 @@ body {
   align-items: center;
 }
 
-/* POPUP DA REVIEW */
+/* POPUP DA REVIEW (e Book Selection) */
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-input,
-textarea {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  resize: none;
-}
-
-a {
-  outline: none;
-  list-style: none;
-  text-decoration: none;
-  color: #252525;
-  transition: all 0.2s ease;
-}
-
-a:hover {
-  transition: all 0.2s ease;
-  color: #1877f2;
-}
-
-input[type="submit"] {
-  background: #1877f2;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-}
-
-input[type="submit"]:hover {
-  background: #145dbf;
-}
-
+/* Estilos para o overlay do popup */
 .popup-overlay {
   display: none;
   position: fixed;
@@ -286,9 +240,12 @@ input[type="submit"]:hover {
   align-items: center;
   z-index: 10000;
 }
+
+/* Estilos gerais para todos os popups (review, seleção de livros, edição de perfil) */
 .popup {
   background: white;
   padding: 20px;
+  /* Largura padrão, pode ser sobrescrita por seletores mais específicos */
   width: 750px;
   height: auto;
   border-radius: 10px;
@@ -297,160 +254,59 @@ input[type="submit"]:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Adicionado box-shadow aqui */
 }
-.popup input {
-  width: 100%;
-  padding: 8px;
-  margin: 10px 0;
+
+/* Estilos de inputs e textareas dentro de popups */
+.popup input,
+.popup textarea {
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   resize: none;
 }
-.popup .btn-send {
-  background: blue;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  width: 100%;
-  border-radius: 5px;
-}
 
-.btn-close-content {
+/* Botões de fechar e cabeçalhos de popup */
+.popup .btn-close-content {
   display: flex;
   justify-content: left;
   align-items: left;
 }
 
-.btn-top-content {
+.popup .btn-top-content {
   display: flex;
   flex-direction: row;
-  gap: 35%;
+  justify-content: space-between; /* Ajustado para espaçar título e botões */
+  align-items: center;
+  padding-bottom: 10px; /* Adicionado padding para separar do conteúdo */
+  border-bottom: 1px solid #eee; /* Adicionado borda para separar cabeçalho */
+  margin-bottom: 10px;
 }
+.popup .btn-top-content h2 {
+    flex-grow: 1; /* Permite que o título ocupe o espaço restante */
+    text-align: center; /* Centraliza o título */
+    margin: 0; /* Remove margens extras */
+    color: var(--blue-primary); /* Cor do título */
+    font-size: 1.5em;
+}
+
 .popup .btn-close {
   border: none;
+  background: none; /* Alterado para remover fundo branco padrão */
   width: 25px;
   height: 25px;
   border-radius: 50%;
   cursor: pointer;
+  color: var(--dark-gray); /* Cor do ícone de fechar */
+  font-size: 1.2em; /* Tamanho do ícone */
+  transition: all 0.2s ease;
+}
+.popup .btn-close:hover {
+    background-color: var(--light-gray);
+    color: var(--error);
 }
 
-#iconeImagem {
-  cursor: pointer;
-  font-size: 20px;
-  color: #61c1d1;
-}
-
-#iconeImagem:hover {
-  color: #4c96a3;
-}
-
-#inputImagem {
-  display: none;
-}
-
-#previewDiv {
-  display: none;
-  text-align: center;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.contentPreview {
-  width: 50%;
-}
-
-#previewImg {
-  max-width: 100%;
-  object-fit: cover;
-  height: auto;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-
-.preview-text {
-  margin-top: 10px;
-  font-size: 16px;
-  color: #555;
-}
-
-.review-content {
-  width: 100%;
-  height: 80%;
-  display: flex;
-  justify-content: left;
-  gap: 20px;
-}
-
-form textarea {
-  width: 100%;
-  height: auto;
-  background-color: #f3f3f3;
-  padding: 8px;
-  outline: none;
-  border: none;
-  resize: none;
-  font-size: 17px;
-  line-height: 25px;
-  overflow: hidden;
-  color: #252525;
-}
-
-.icons-content {
-  width: 100%;
-  height: 15%;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.icons-left-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 35px;
-}
-
-.icon-class {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.icon-class i {
-  font-size: 20px;
-  color: #61c1d1;
-}
-
-.btn-submit {
-  background-color: #61c1d1;
-  padding: 10px;
-  width: 150px;
-  border: none;
-  color: #ffffff;
-  font-size: 16px;
-  letter-spacing: 2px;
-  font-family: "Montserrat", sans-serif;
-  border-radius: 40px;
-  cursor: pointer;
-  transition: ease-in-out 0.3s;
-  white-space: nowrap;
-}
-
-.btn-submit:hover {
-  transition: ease-in-out 0.3s;
-  background-color: #49a9b9;
-}
-
-.btn-submit:active {
-  transition: ease-in-out 0.3s;
-  background-color: #3a737d;
-  box-shadow: rgba(83, 165, 190, 0.16) 0px 10px 36px 0px,
-    rgba(75, 203, 207, 0.06) 0px 0px 0px 1px;
-}
-
-/* Estilo para o popup de seleção de livros */
+/* Estilos específicos do popup de seleção de livros */
 #bookSelectionPopup .popup {
   width: 80%;
   max-width: 800px;
@@ -472,159 +328,127 @@ form textarea {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  overflow: hidden;
+  overflow-y: auto; /* Adiciona rolagem vertical se o conteúdo for muito grande */
+  scrollbar-width: thin; /* Estilo da barra de rolagem para Firefox */
+  scrollbar-color: var(--blue-primary) var(--light-gray); /* Cor da barra de rolagem para Firefox */
 }
 
-#bookSearch {
+/* Esconde a barra de rolagem para Webkit (Chrome, Safari) */
+.popup-body::-webkit-scrollbar {
+  width: 8px; /* Largura da barra de rolagem */
+}
+.popup-body::-webkit-scrollbar-track {
+  background: var(--light-gray); /* Cor da trilha da barra de rolagem */
+  border-radius: 10px;
+}
+.popup-body::-webkit-scrollbar-thumb {
+  background-color: var(--blue-primary); /* Cor do "polegar" da barra de rolagem */
+  border-radius: 10px;
+  border: 2px solid var(--light-gray); /* Borda em volta do "polegar" */
+}
+
+
+/* Estilo da caixa de pesquisa dentro do popup de seleção de livros */
+#bookSelectionPopup #bookSearch {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid var(--medium-gray);
+  border-radius: var(--border-radius-sm);
   font-size: 16px;
+  color: var(--dark);
 }
 
-/* Container do livro selecionado */
-#selectedBookContainer {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  margin: 10px 0;
-  background: #f5f5f5;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Ícone do livro padrão */
-#selectedBookCover {
-  width: 50px;
-  height: 70px;
-  background: #eee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#selectedBookCover i {
-  color: #ccc;
-  font-size: 24px;
-}
-
-/* Informações do livro */
-#selectedBookInfo {
-  flex-grow: 1;
-}
-
-#selectedBookInfo strong {
-  display: block;
-  margin-bottom: 5px;
-}
-
-#selectedBookInfo p {
-  margin: 0;
-  font-size: 0.9em;
-  color: #666;
-}
-
-/* Botão de remoção */
-#removeBookBtn {
-  background: none;
-  border: none;
-  color: #ff6b6b;
-  cursor: pointer;
-  font-size: 16px;
-  padding: 5px;
-  display: none; /* Inicialmente oculto */
-}
-
-#booksList {
+/* Grid para a lista de livros dentro do popup de seleção */
+#bookSelectionPopup #booksList {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   justify-content: center;
   padding: 10px;
   gap: 15px;
-  background-color: #fff; /* Removido fundo vermelho */
-  overflow-y: auto;
-  max-height: calc(80vh - 150px);
+  background-color: var(--white-background);
+  /* Altura máxima para a lista de livros, permitindo rolagem apenas aqui */
+  max-height: calc(80vh - 150px); /* Ajuste conforme a altura real do cabeçalho + campo de busca */
+  overflow-y: auto; /* Garante rolagem aqui se necessário */
 }
 
-.book-item {
-  background-color: #fefefe;
-  border: 1px solid #eee;
-  border-radius: 8px;
+/* Estilo do item individual do livro no popup de seleção */
+#bookSelectionPopup .book-item {
+  background-color: var(--white-background);
+  border: 1px solid var(--medium-gray);
+  border-radius: var(--border-radius);
   overflow: hidden;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  transition: transform 0.2s;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
   width: 100%;
-  height: 270px; /* Altura padrão fixa */
+  height: 270px; /* Mantém uma altura consistente para os cards */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.book-item:hover {
+#bookSelectionPopup .book-item:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-.book-cover {
-  height: 150px;
-  background-color: #f5f5f5;
+/* Estilo da capa do livro no popup de seleção */
+#bookSelectionPopup .book-cover {
+  height: 150px; /* Altura da área da capa */
+  background-color: var(--light-gray);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
-.book-cover img {
+#bookSelectionPopup .book-cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.no-cover {
+#bookSelectionPopup .no-cover {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ccc;
+  color: var(--medium-gray);
   font-size: 2.5em;
 }
 
-.book-details {
+/* Estilo dos detalhes do livro (nome e autor) no popup de seleção */
+#bookSelectionPopup .book-details {
   padding: 10px;
   text-align: center;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }
 
-.book-details .book-name {
+#bookSelectionPopup .book-details .book-name {
   font-size: 1em;
   font-weight: bold;
-  margin: 0 0 5px 0;
+  color: var(--dark);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
 }
 
-.book-details .author {
+#bookSelectionPopup .book-details .author {
   font-size: 0.85em;
-  color: #666;
-  margin: 0;
+  color: var(--dark-gray);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
 }
 
-.attached-book {
-  display: flex;
-  border: 1px var(--border) solid;
-  border-radius: 10px;
-}
-
-.attached-book img {
-  max-height: auto;
-  border-radius: 10px;
-}
 
 /* FIM DO POPUP DA REVIEW */
 
@@ -647,6 +471,7 @@ body {
 
 .profile-container {
   width: 100%; /* Ocupa a largura total da área de conteúdo */
+  min-height: 100vh; /* Garante que o perfil ocupe pelo menos a altura da tela *
   overflow: hidden; /* Para o cover e bordas */
   height: auto; /* Altura automática baseada no conteúdo */
   display: flex;
@@ -710,7 +535,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 5px;
+  gap: 15px;
   margin-top: 70px; /* Desloca o texto para baixo para não sobrepor a foto */
   margin-bottom: 20px; /* Espaço para o botão editar se quebrar linha */
 }
@@ -749,17 +574,14 @@ body {
   font-size: 20px;
 }
 
-
+/* CORREÇÃO PARA A BIOGRAFIA */
 .profile-bio {
-  padding: 10px 20px 20px;
-  margin-left: 13.5%;
-  z-index: 10000;
-  position: absolute;
-  top: 30.5%;
-  left: 8.5%;
   color: var(--dark);
   line-height: 1.5;
+  max-width: 100%; /* Ajuste para não estourar a largura */
+  text-align: left; /* Alinhar texto à esquerda */
 }
+
 
 .profile-stats-container {
   display: flex;
@@ -989,7 +811,7 @@ body {
   justify-content: center; /* Centraliza os itens na grid */
 }
 
-.book-item-favorite {
+.book-item {
   /* Este é o card individual de livro dentro da grid */
   background-color: var(--white-background);
   border-radius: var(--border-radius);
@@ -1005,12 +827,12 @@ body {
   justify-content: space-between;
 }
 
-.book-item-favorite:hover {
+.book-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
-.book-cover-favorite-container {
+.book-cover-container {
   position: relative;
   width: 100%;
   height: 180px; /* Altura da capa no card */
@@ -1018,15 +840,7 @@ body {
   overflow: hidden;
 }
 
-.book-cover-favorite {
-  /* Imagem dentro do container */
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.book-item-favorite:hover .book-cover-favorite {
+.book-item:hover .book-cover-favorite {
   transform: scale(1.05);
 }
 
@@ -1145,6 +959,7 @@ body {
   color: var(--error);
 }
 
+
 #editProfilePopupOverlay .popup {
     width: 800px; /* Largura do popup */
     max-width: 90%;
@@ -1229,10 +1044,6 @@ body {
     background-color: var(--light-gray); /* Fundo para campos bloqueados */
     cursor: not-allowed;
     border-color: var(--medium-gray);
-}
-
-#edit_biografia{
-  resize: none;
 }
 
 

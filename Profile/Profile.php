@@ -71,7 +71,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     <title>Perfil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="CSS/ProfileStyle.css">
+    <link rel="stylesheet" href="CSS/ProfilleStyle.css">
 </head>
 
 <body>
@@ -125,17 +125,18 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                             alt="Foto do perfil">
                     </div>
                     <div class="profile-text-info">
-                        <h1 class="profile-name"><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
-                        <p class="profile-username">@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
+                        <div class="profile-text-user">
+                            <h1 class="profile-name"><?= htmlspecialchars($usuario['nome'] ?? '') ?></h1>
+                            <p class="profile-username">@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
+                        </div>
+                        <div class="profile-text-bio">
+                            <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
+                        </div>
                     </div>
                     <button class="edit-profile-btn">
                         <i class="fa-solid fa-user-gear"></i>
                     </button>
                 </div>
-
-                <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?>
-                </p>
-
                 <div class="profile-stats-container">
                     <div class="profile-stat">
                         <i class="fa-solid fa-calendar"></i>
