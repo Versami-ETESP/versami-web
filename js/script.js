@@ -1,3 +1,60 @@
+// Add this event listener to the existing script.js file
+document.addEventListener('DOMContentLoaded', function() {
+    const postForm = document.getElementById('postForm');
+    if (postForm) {
+        postForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            submitPost(); // Call the AJAX submission function
+        });
+    }
+
+    // Existing DOMContentLoaded listeners should be here too
+    // Função para adicionar e remover a classe 'changed' para o label do input file
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(input => {
+        const label = input.previousElementSibling; // O label "Selecionar Imagem"
+
+        input.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                label.innerHTML = `<i class="fa-solid fa-check"></i> ${this.files[0].name}`;
+                label.classList.add('changed'); // Adiciona uma classe para estilização de "selecionado"
+            } else {
+                label.innerHTML = '<i class="fa-solid fa-upload"></i> Selecionar Imagem';
+                label.classList.remove('changed');
+            }
+        });
+    });
+
+    // Add event listeners for the confirmation modal buttons on DOMContentLoaded (from Profile.php logic)
+    const confirmBtn = document.getElementById("confirmDenounceBtn");
+    const cancelBtn = document.getElementById("cancelDenounceBtn");
+    const confirmationModalOverlay = document.getElementById("confirmationModalOverlay");
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener("click", confirmarDenuncia);
+    }
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", cancelarDenuncia);
+    }
+    if (confirmationModalOverlay) {
+        confirmationModalOverlay.addEventListener("click", function (event) {
+            if (event.target === confirmationModalOverlay) {
+                cancelarDenuncia();
+            }
+        });
+    }
+
+    // Listener para fechar o popup de seleção de livros ao clicar no overlay
+    const bookSelectionPopup = document.getElementById("bookSelectionPopup");
+    if (bookSelectionPopup) {
+        bookSelectionPopup.addEventListener("click", function (event) {
+            if (event.target === this) {
+                closeBookSelection();
+            }
+        });
+    }
+});
+
 // Função para seguir/deixar de seguir
 function seguirUsuario(usuarioId, botao) {
   const estaSeguindo = botao.classList.contains("following");
@@ -57,10 +114,6 @@ function curtir(postId, botao) {
   const count = botao.querySelector(".like-count");
   const isLiked = icon.classList.contains("fas"); // Verifica se já está curtido
 
-  // Salva o estado atual para possível reversão
-  const initialIconClass = icon.className;
-  const initialCountText = count ? count.textContent : '';
-
   // Feedback visual imediato
   if (isLiked) {
     icon.classList.replace("fas", "far"); // Muda para não curtido visualmente
@@ -80,28 +133,35 @@ function curtir(postId, botao) {
     },
     body: `post_id=${postId}`,
   })
-    .then((response) => {
-      if (!response.ok) throw new Error("Erro na rede ou no servidor");
-      return response.json();
-    })
+    .then((response) => response.json())
     .then((data) => {
       if (!data.success) {
-        // Reverte visualmente se falhar na operação do servidor
-        icon.className = initialIconClass; // Volta para a classe de ícone original
-        botao.classList.toggle("liked", isLiked); // Volta para a classe liked original
-        if (count) count.textContent = initialCountText; // Volta para o texto do contador original
-        alert(data.message || "Erro ao curtir/descurtir.");
+        // Reverte visualmente se falhar
+        if (isLiked) {
+          icon.classList.replace("far", "fas");
+          botao.classList.add("liked");
+          if (count) count.textContent = parseInt(count.textContent) + 1;
+        } else {
+          icon.classList.replace("fas", "far");
+          botao.classList.remove("liked");
+          if (count) count.textContent = parseInt(count.textContent) - 1;
+        }
       } else if (count) {
         count.textContent = data.total_likes; // Atualiza com o valor correto do servidor
       }
     })
     .catch((error) => {
       console.error("Erro:", error);
-      alert("Falha na conexão ou erro inesperado.");
-      // Reverte visualmente em caso de erro de rede ou na promessa
-      icon.className = initialIconClass; // Volta para a classe de ícone original
-      botao.classList.toggle("liked", isLiked); // Volta para a classe liked original
-      if (count) count.textContent = initialCountText; // Volta para o texto do contador original
+      // Reverte visualmente em caso de erro
+      if (isLiked) {
+        icon.classList.replace("far", "fas");
+        botao.classList.add("liked");
+        if (count) count.textContent = parseInt(count.textContent) + 1;
+      } else {
+        icon.classList.replace("fas", "far");
+        botao.classList.remove("liked");
+        if (count) count.textContent = parseInt(count.textContent) - 1;
+      }
     });
 }
 
@@ -111,11 +171,6 @@ function curtirComentario(comentarioId, elemento) {
   const count = elemento.querySelector(".like-comment-count");
   const isLiked = icon.classList.contains("fas"); // Verifica classe 'fas' (curtido)
   console.log("Icon classes:", icon.classList);
-
-  // Salva o estado atual para possível reversão
-  const initialIconClass = icon.className;
-  const initialCountText = count ? count.textContent : '';
-
   // Feedback visual imediato
   if (isLiked) {
     icon.classList.replace("fas", "far"); // Muda para vazio
@@ -135,28 +190,33 @@ function curtirComentario(comentarioId, elemento) {
     },
     body: `comentario_id=${comentarioId}`,
   })
-    .then((response) => {
-      if (!response.ok) throw new Error("Erro na rede ou no servidor");
-      return response.json();
-    })
+    .then((response) => response.json())
     .then((data) => {
       if (!data.success) {
-        // Reverte visualmente se falhar na operação do servidor
-        icon.className = initialIconClass; // Volta para a classe de ícone original
-        elemento.classList.toggle("likedComment", isLiked); // Volta para a classe likedComment original
-        if (count) count.textContent = initialCountText; // Volta para o texto do contador original
-        alert(data.message || "Erro ao curtir/descurtir comentário.");
-      } else if (count) {
-        count.textContent = data.total_likes; // Atualiza com o valor correto do servidor
+        // Reverte visualmente se falhar
+        if (isLiked) {
+          icon.classList.replace("far", "fas");
+          elemento.classList.add("likedComment");
+          if (count) count.textContent = parseInt(count.textContent) + 1;
+        } else {
+          icon.classList.replace("fas", "far");
+          elemento.classList.remove("likedComment");
+          if (count) count.textContent = parseInt(count.textContent) - 1;
+        }
       }
     })
     .catch((error) => {
       console.error("Erro:", error);
-      alert("Falha na conexão ou erro inesperado.");
-      // Reverte visualmente em caso de erro de rede ou na promessa
-      icon.className = initialIconClass; // Volta para a classe de ícone original
-      elemento.classList.toggle("likedComment", isLiked); // Volta para a classe likedComment original
-      if (count) count.textContent = initialCountText; // Volta para o texto do contador original
+      // Reverte visualmente
+      if (isLiked) {
+        icon.classList.replace("far", "fas");
+        elemento.classList.add("likedComment");
+        if (count) count.textContent = parseInt(count.textContent) + 1;
+      } else {
+        icon.classList.replace("fas", "far");
+        elemento.classList.remove("likedComment");
+        if (count) count.textContent = parseInt(count.textContent) - 1;
+      }
     });
 }
 
@@ -225,21 +285,35 @@ function changeTab(index) {
   contents[index].classList.add("active");
 }
 
-// Função para enviar posts sem duplicar
+// Função para enviar posts (AGORA VIA AJAX)
 function submitPost() {
   const formData = new FormData(document.getElementById("postForm"));
 
-  fetch("feed.php", {
+  fetch("../Feed/Feed.php", { // Caminho corrigido para o script que processa o post
     method: "POST",
     body: formData,
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest' // Identifica a requisição como AJAX
+    }
   })
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json(); // Espera uma resposta JSON
+    })
     .then((data) => {
-      // Atualiza a lista de posts sem recarregar a página
-      location.reload();
+      if (data.success) {
+        showToast(data.message || "Postagem criada com sucesso!", "success");
+        // Atualiza a lista de posts sem recarregar a página (recarrega para simplificar o exemplo)
+        setTimeout(() => { location.reload(); }, 1500); // Dá tempo para o toast ser visível
+      } else {
+        showToast(data.message || "Erro ao criar postagem.", "error");
+      }
     })
     .catch((error) => {
-      console.error("Error:", error);
+      console.error("Erro na requisição AJAX:", error);
+      showToast("Falha na conexão ou erro do servidor.", "error");
     });
 }
 

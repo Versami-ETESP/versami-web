@@ -9,6 +9,9 @@
         exit;
     }
 
+    // Verifica se a requisição é AJAX
+    $is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
     // Postagem de conteúdo
     if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["conteudo"])) {
         $conteudo = $_POST["conteudo"];
@@ -20,10 +23,23 @@
         $stmt_insert = sqlsrv_query($conn, $sql_insert, $params_insert);
 
         if ($stmt_insert) {
-            header("Location: feed.php");
-            exit;
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(["success" => true, "message" => "Postagem criada com sucesso!"]);
+                exit;
+            } else {
+                header("Location: feed.php"); // Redireciona para submissões de formulário normais
+                exit;
+            }
         } else {
-            die("Erro ao criar postagem: " . print_r(sqlsrv_errors(), true));
+            $error_message = "Erro ao criar postagem: " . print_r(sqlsrv_errors(), true);
+            if ($is_ajax) {
+                header('Content-Type: application/json');
+                echo json_encode(["success" => false, "message" => $error_message]);
+                exit;
+            } else {
+                die($error_message); // Exibe erro para submissões de formulário normais
+            }
         }
     }
 
@@ -54,15 +70,15 @@
     $sql_posts_seguindo = "SELECT
         p.idPublicacao, p.conteudo, p.dataPublic,
         u.idUsuario, u.nome, u.arroba_usuario, u.fotoUsuario,
-        l.idLivro, l.nomeLivro, l.imgCapa, l.descLivro, -- Adicionado l.imgCapa
-        a.nomeAutor as nomeAutor, -- Adicionado a.nomeAutor
+        l.idLivro, l.nomeLivro, l.imgCapa, l.descLivro,
+        a.nomeAutor as nomeAutor,
         (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao) as total_likes,
         (SELECT COUNT(*) FROM tblLikesPorPost WHERE idPublicacao = p.idPublicacao AND idUsuario = ?) as usuario_curtiu,
         (SELECT COUNT(*) FROM tblComentario WHERE idPublicacao = p.idPublicacao) as total_comentarios
     FROM tblPublicacao p
     JOIN tblUsuario u ON p.idUsuario = u.idUsuario
     LEFT JOIN tblLivro l ON p.idLivro = l.idLivro
-    LEFT JOIN tblAutor a ON l.idAutor = a.idAutor -- Adicionado JOIN com tblAutor
+    LEFT JOIN tblAutor a ON l.idAutor = a.idAutor
     WHERE p.idUsuario IN (SELECT idSeguido FROM tblSeguidores WHERE idSeguidor = ?)
     ORDER BY p.dataPublic DESC";
 
