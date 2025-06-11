@@ -687,258 +687,37 @@ form textarea {
   color: #666;
 }
 
-/* .notificacoes-list {
-  width: 60%;
-  margin-left: 5%;
-  margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.toast-notification {
+  visibility: hidden; /* Inicialmente oculto */
+  min-width: 250px; /* Largura mínima */
+  background-color: #333; /* Fundo cinza escuro */
+  color: #fff; /* Texto branco */
+  text-align: center; /* Centralizar texto */
+  border-radius: 8px; /* Cantos arredondados */
+  padding: 16px; /* Espaçamento interno */
+  position: fixed; /* Posição fixa na tela */
+  z-index: 10001; /* Garante que fique acima de outros elementos/popups */
+  left: 50%; /* Centraliza horizontalmente */
+  bottom: 30px; /* Distância da parte inferior */
+  transform: translateX(-50%); /* Ajuste para centralização perfeita */
+  font-size: 17px; /* Tamanho da fonte */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra suave. Nota: Em alguns arquivos, havia '0 44px 12px', que é um erro de digitação e foi corrigido para '0 4px 12px' para uma sombra padrão. */
+  opacity: 0; /* Começa transparente */
+  transition: visibility 0s, opacity 0.5s ease-in-out; /* Transição para visibilidade e opacidade */
 }
 
-.notificacoes-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  gap: 25px;
-  height: 90vh;
+/* Estado visível do toast */
+.toast-notification.show {
+  visibility: visible; /* Torna visível */
+  opacity: 1; /* Totalmente opaco */
 }
 
-.notificacao {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  border-radius: 8px;
-  background: #f9f9f9;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  width: 75%;
-  height: 15%;
-  border: 1px solid var(--border);
+/* Estilo para toast de sucesso */
+.toast-notification.success {
+  background-color: #4caf50; /* Cor de fundo verde */
 }
 
-.notificacao.nova {
-  background: #e8f4fd;
-  border-left: 4px solid #3498db;
+/* Estilo para toast de erro */
+.toast-notification.error {
+  background-color: #f44336; /* Cor de fundo vermelha */
 }
-
-.notificacao:hover {
-  transition: all 0.3s ease;
-  background: #f0f0f0;
-}
-
-.notificacao-user-photo {
-  width: 70px;
-  height: 70px;
-  border-radius: 10px;
-  object-fit: cover;
-  margin-right: 15px;
-  border: 2px solid var(--blue-primary);
-}
-
-.notificacao-content {
-  flex: 1;
-}
-
-.notificacao-content p {
-  margin: 0;
-  color: #333;
-  font-size: 16px;
-}
-
-.notificacao-content p strong {
-  font-weight: 600;
-  color: #333;
-}
-
-.notificacao-time {
-  display: block;
-  margin-top: 5px;
-  font-size: 12px;
-  color: #7f8c8d;
-}
-
-.notificacao-arrow {
-  color: #7f8c8d;
-  margin-left: 10px;
-}
-
-.sem-notificacoes {
-  text-align: center;
-  color: #7f8c8d;
-  padding: 20px;
-}
-
-.notificacao-icon {
-  position: relative;
-  margin-right: 15px;
-}
-
-.notificacao-icon-badge {
-  position: absolute;
-  bottom: -5px;
-  right: -5px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  display: flex;
-  background-color: var(--white);
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  border: 2px solid white;
-}
-
-.notificacao-icon-badge i {
-  color: white;
-  font-size: 18px;
-}
-
-.notificacao-icon-badge .fa-heart {
-  color: #e74c3c;
-}
-
-.notificacao-icon-badge .fa-comment {
-  color: #2ecc71;
-}
-
-.notificacao-icon-badge .fa-user-plus {
-  color: #3498db;
-}
-
-.notificacao-user-photo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #f1f1f1;
-} */
-
-/* .notificacoes-container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.notificacoes-container h1 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-.notificacoes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.notificacao {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  border-radius: 8px;
-  background: #f9f9f9;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.notificacao.nova {
-  background: #e8f4fd;
-  border-left: 4px solid #3498db;
-}
-
-.notificacao:hover {
-  background: #f0f0f0;
-  transform: translateX(5px);
-}
-
-.notificacao-user-photo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 15px;
-  border: 2px solid #3498db;
-}
-
-.notificacao-content {
-  flex: 1;
-}
-
-.notificacao-content p {
-  margin: 0;
-  color: #333;
-  font-size: 16px;
-}
-
-.notificacao-content p strong {
-    font-weight: 600;
-    color: #333;
-}
-
-.notificacao-time {
-  display: block;
-  margin-top: 5px;
-  font-size: 12px;
-  color: #7f8c8d;
-}
-
-.notificacao-arrow {
-  color: #7f8c8d;
-  margin-left: 10px;
-}
-
-.sem-notificacoes {
-  text-align: center;
-  color: #7f8c8d;
-  padding: 20px;
-}
-
-.notificacao-icon {
-    position: relative;
-    margin-right: 15px;
-}
-
-.notificacao-icon-badge {
-    position: absolute;
-    bottom: -5px;
-    right: -5px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background-color: #3498db;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    border: 2px solid white;
-}
-
-.notificacao-icon-badge i {
-    color: white;
-    font-size: 12px;
-}
-
-.notificacao-icon-badge .fa-heart { 
-    color: #e74c3c;
-}
-
-.notificacao-icon-badge .fa-comment {
-    color: #2ecc71;
-}
-
-.notificacao-icon-badge .fa-user-plus {
-    color: #3498db;
-}
-
-.notificacao-user-photo {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #f1f1f1;
-} */

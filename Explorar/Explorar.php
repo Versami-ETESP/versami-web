@@ -150,7 +150,8 @@ if (!empty($termo_busca)) {
                                     <?php if (!empty($termo_busca)): ?>
                                         <?php if (!empty($usuarios)): ?>
                                             <?php foreach ($usuarios as $usuario): ?>
-                                                <div class="userCard" onclick="window.location.href='../ProfileView/ProfileView.php?id=<?= $usuario['idUsuario'] ?>'">
+                                                <div class="userCard"
+                                                    onclick="window.location.href='../ProfileView/ProfileView.php?id=<?= $usuario['idUsuario'] ?>'">
                                                     <div class="userInfo">
                                                         <img src="<?= !empty($usuario['fotoUsuario']) ? 'data:image/jpeg;base64,' . base64_encode($usuario['fotoUsuario']) : 'Assets/default-profile.png' ?>"
                                                             alt="Foto do usuário" class="userAvatar">
@@ -164,7 +165,8 @@ if (!empty($termo_busca)) {
                                                         <button class="followBtn <?= $usuario['segue'] ? 'following' : '' ?>"
                                                             onclick="event.stopPropagation(); seguirUsuario(<?= $usuario['idUsuario'] ?>, this);">
                                                             <i class="fas fa-<?= $usuario['segue'] ? 'user-minus' : 'user-plus' ?>"></i>
-                                                            <span class="button-text"><?= $usuario['segue'] ? 'Deixar de seguir' : 'Seguir' ?></span>
+                                                            <span
+                                                                class="button-text"><?= $usuario['segue'] ? 'Deixar de seguir' : 'Seguir' ?></span>
                                                         </button>
                                                     <?php else: ?>
                                                         <div class="followBtn-placeholder"></div>
@@ -195,7 +197,7 @@ if (!empty($termo_busca)) {
                                                         <div class="book-cover-container">
                                                             <?php if (!empty($livro['imgCapa'])): ?>
                                                                 <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>"
-                                                                    alt="Capa do livro" class="book-cover">
+                                                                    alt="Capa do livro" class="book-cover-favorite">
                                                             <?php else: ?>
                                                                 <div class="no-cover">
                                                                     <i class="fa-solid fa-book"></i>
@@ -298,6 +300,7 @@ if (!empty($termo_busca)) {
         </div>
     </div>
 
+    <div id="toastNotification" class="toast-notification"></div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>

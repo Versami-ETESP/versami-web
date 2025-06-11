@@ -129,14 +129,14 @@ if (isset($_GET['id'])) {
                             <img src="data:image/jpeg;base64,<?= base64_encode($post_selecionado['imgPost']) ?>"
                                 alt="<?= htmlspecialchars(convertToUtf8($post_selecionado['titulo'])) ?>">
                         <?php else: ?>
-                            <img src="Assets/blog_placeholder.png" alt="<?= htmlspecialchars($post_selecionado['titulo']) ?>">
+                            <img src="Assets/blog_placeholder.png" alt="<?= htmlspecialchars(convertToUtf8($post_selecionado['titulo'])) ?>">
                         <?php endif; ?>
 
                         <div class="contentBlog ">
                              <?= nl2br(transformURLsIntoLinks(convertToUtf8($post_selecionado['conteudo']))) ?>
                         </div>
 
-                        <div class="author">
+                        <div class="author-blog">
                             <div class="author-info">
                                 <h4><?= htmlspecialchars($post_selecionado['autor']) ?></h4>
                                 <p>@<?= htmlspecialchars($post_selecionado['autor_arroba']) ?></p>
@@ -200,8 +200,7 @@ if (isset($_GET['id'])) {
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div id="toastNotification" class="toast-notification"></div> <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>
     function loadBlogPost(postId) {

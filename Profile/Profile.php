@@ -130,7 +130,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                             <p class="profile-username">@<?= htmlspecialchars($usuario['arroba_usuario'] ?? '') ?></p>
                         </div>
                         <div class="profile-text-bio">
-                            <p class="profile-bio"><?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
+                            <p class="profile-bio">
+                                <?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
                         </div>
                     </div>
                     <button class="edit-profile-btn">
@@ -240,7 +241,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                                     <div class="book-cover-container">
                                         <?php if (!empty($livro['imgCapa'])): ?>
                                             <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>"
-                                                alt="Capa do livro" class="book-cover">
+                                                alt="Capa do livro" class="book-cover-favorite">
                                         <?php else: ?>
                                             <div class="no-cover">
                                                 <i class="fa-solid fa-book"></i>

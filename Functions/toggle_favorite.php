@@ -16,19 +16,32 @@ $bookId = $_POST['book_id'];
 $userId = $_SESSION["usuario_id"];
 $action = $_POST['action'];
 
-if ($action === 'add') {
-    $sql = "INSERT INTO tblLivrosFavoritos (idUsuario, idLivro) VALUES (?, ?)";
-} else {
-    $sql = "DELETE FROM tblLivrosFavoritos WHERE idUsuario = ? AND idLivro = ?";
-}
+try {
+    if ($action === 'add') {
+        $sql = "INSERT INTO tblLivrosFavoritos (idUsuario, idLivro) VALUES (?, ?)";
+    } else {
+        $sql = "DELETE FROM tblLivrosFavoritos WHERE idUsuario = ? AND idLivro = ?";
+    }
 
-$params = array($userId, $bookId);
-$stmt = sqlsrv_query($conn, $sql, $params);
+    $params = array($userId, $bookId);
+    $stmt = sqlsrv_query($conn, $sql, $params);
 
-if ($stmt) {
-    echo json_encode(['success' => true]);
-} else {
+    if ($stmt) {
+        // Get the updated total favorites count for this book
+        $sql_count = "SELECT COUNT(*) as total FROM tblLivrosFavoritos WHERE idLivro = ?";
+        $stmt_count = sqlsrv_query($conn, $sql_count, array($bookId));
+        $total_favorites = 0;
+        if ($stmt_count && $row_count = sqlsrv_fetch_array($stmt_count, SQLSRV_FETCH_ASSOC)) {
+            $total_favorites = $row_count['total'];
+        }
+
+        echo json_encode(['success' => true, 'total_favorites' => $total_favorites, 'action' => $action]);
+    } else {
+        header("HTTP/1.1 500 Internal Server Error");
+        echo json_encode(['success' => false, 'error' => print_r(sqlsrv_errors(), true)]);
+    }
+} catch (Exception $e) {
     header("HTTP/1.1 500 Internal Server Error");
-    echo json_encode(['error' => print_r(sqlsrv_errors(), true)]);
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 ?>

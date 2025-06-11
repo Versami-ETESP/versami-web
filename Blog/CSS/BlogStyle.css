@@ -10,6 +10,7 @@
   --like: #ff1493;
   --error: #e0245e;
   --white-background: #ffffff;
+  --white: #ffffff;
   --content-background-dark: #050505;
   --coment-background-light: #ffffff;
   --coment-background-dark: #14171a;
@@ -203,7 +204,7 @@ body {
   justify-content: center;
 }
 
-.principal-content {
+#principal-content {
   width: 100%;
   min-height: 100vh;
   background-color: var(--content-background-light);
@@ -771,7 +772,7 @@ form textarea {
 }
 
 /* ===== AUTOR ===== */
-.author {
+.author-blog {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -780,7 +781,7 @@ form textarea {
   border-top: 1px solid var(--border);
 }
 
-.author img {
+.author-blog img {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -852,3 +853,38 @@ form textarea {
 }
 
 /* FIM DO CONTEUDO PRINCIPAL */
+
+.toast-notification {
+  visibility: hidden; /* Inicialmente oculto */
+  min-width: 250px; /* Largura mínima */
+  background-color: #333; /* Fundo cinza escuro */
+  color: #fff; /* Texto branco */
+  text-align: center; /* Centralizar texto */
+  border-radius: 8px; /* Cantos arredondados */
+  padding: 16px; /* Espaçamento interno */
+  position: fixed; /* Posição fixa na tela */
+  z-index: 10001; /* Garante que fique acima de outros elementos/popups */
+  left: 50%; /* Centraliza horizontalmente */
+  bottom: 30px; /* Distância da parte inferior */
+  transform: translateX(-50%); /* Ajuste para centralização perfeita */
+  font-size: 17px; /* Tamanho da fonte */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra suave. Nota: Em alguns arquivos, havia '0 44px 12px', que é um erro de digitação e foi corrigido para '0 4px 12px' para uma sombra padrão. */
+  opacity: 0; /* Começa transparente */
+  transition: visibility 0s, opacity 0.5s ease-in-out; /* Transição para visibilidade e opacidade */
+}
+
+/* Estado visível do toast */
+.toast-notification.show {
+  visibility: visible; /* Torna visível */
+  opacity: 1; /* Totalmente opaco */
+}
+
+/* Estilo para toast de sucesso */
+.toast-notification.success {
+  background-color: #4caf50; /* Cor de fundo verde */
+}
+
+/* Estilo para toast de erro */
+.toast-notification.error {
+  background-color: #f44336; /* Cor de fundo vermelha */
+}

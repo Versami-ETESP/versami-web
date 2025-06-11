@@ -1,58 +1,61 @@
 // Add this event listener to the existing script.js file
-document.addEventListener('DOMContentLoaded', function() {
-    const postForm = document.getElementById('postForm');
-    if (postForm) {
-        postForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-            submitPost(); // Call the AJAX submission function
-        });
-    }
-
-    // Existing DOMContentLoaded listeners should be here too
-    // Função para adicionar e remover a classe 'changed' para o label do input file
-    const fileInputs = document.querySelectorAll('input[type="file"]');
-    fileInputs.forEach(input => {
-        const label = input.previousElementSibling; // O label "Selecionar Imagem"
-
-        input.addEventListener('change', function () {
-            if (this.files && this.files[0]) {
-                label.innerHTML = `<i class="fa-solid fa-check"></i> ${this.files[0].name}`;
-                label.classList.add('changed'); // Adiciona uma classe para estilização de "selecionado"
-            } else {
-                label.innerHTML = '<i class="fa-solid fa-upload"></i> Selecionar Imagem';
-                label.classList.remove('changed');
-            }
-        });
+document.addEventListener("DOMContentLoaded", function () {
+  const postForm = document.getElementById("postForm");
+  if (postForm) {
+    postForm.addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent default form submission
+      submitPost(); // Call the AJAX submission function
     });
+  }
 
-    // Add event listeners for the confirmation modal buttons on DOMContentLoaded (from Profile.php logic)
-    const confirmBtn = document.getElementById("confirmDenounceBtn");
-    const cancelBtn = document.getElementById("cancelDenounceBtn");
-    const confirmationModalOverlay = document.getElementById("confirmationModalOverlay");
+  // Existing DOMContentLoaded listeners should be here too
+  // Função para adicionar e remover a classe 'changed' para o label do input file
+  const fileInputs = document.querySelectorAll('input[type="file"]');
+  fileInputs.forEach((input) => {
+    const label = input.previousElementSibling; // O label "Selecionar Imagem"
 
-    if (confirmBtn) {
-        confirmBtn.addEventListener("click", confirmarDenuncia);
-    }
-    if (cancelBtn) {
-        cancelBtn.addEventListener("click", cancelarDenuncia);
-    }
-    if (confirmationModalOverlay) {
-        confirmationModalOverlay.addEventListener("click", function (event) {
-            if (event.target === confirmationModalOverlay) {
-                cancelarDenuncia();
-            }
-        });
-    }
+    input.addEventListener("change", function () {
+      if (this.files && this.files[0]) {
+        label.innerHTML = `<i class="fa-solid fa-check"></i> ${this.files[0].name}`;
+        label.classList.add("changed"); // Adiciona uma classe para estilização de "selecionado"
+      } else {
+        label.innerHTML =
+          '<i class="fa-solid fa-upload"></i> Selecionar Imagem';
+        label.classList.remove("changed");
+      }
+    });
+  });
 
-    // Listener para fechar o popup de seleção de livros ao clicar no overlay
-    const bookSelectionPopup = document.getElementById("bookSelectionPopup");
-    if (bookSelectionPopup) {
-        bookSelectionPopup.addEventListener("click", function (event) {
-            if (event.target === this) {
-                closeBookSelection();
-            }
-        });
-    }
+  // Add event listeners for the confirmation modal buttons on DOMContentLoaded (from Profile.php logic)
+  const confirmBtn = document.getElementById("confirmDenounceBtn");
+  const cancelBtn = document.getElementById("cancelDenounceBtn");
+  const confirmationModalOverlay = document.getElementById(
+    "confirmationModalOverlay"
+  );
+
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", confirmarDenuncia);
+  }
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", cancelarDenuncia);
+  }
+  if (confirmationModalOverlay) {
+    confirmationModalOverlay.addEventListener("click", function (event) {
+      if (event.target === confirmationModalOverlay) {
+        cancelarDenuncia();
+      }
+    });
+  }
+
+  // Listener para fechar o popup de seleção de livros ao clicar no overlay
+  const bookSelectionPopup = document.getElementById("bookSelectionPopup");
+  if (bookSelectionPopup) {
+    bookSelectionPopup.addEventListener("click", function (event) {
+      if (event.target === this) {
+        closeBookSelection();
+      }
+    });
+  }
 });
 
 // Função para seguir/deixar de seguir
@@ -286,15 +289,18 @@ function changeTab(index) {
 }
 
 // Função para enviar posts (AGORA VIA AJAX)
+// Função para enviar posts (AGORA VIA AJAX)
 function submitPost() {
   const formData = new FormData(document.getElementById("postForm"));
+  const reviewPopupOverlay = document.getElementById("reviewPopupOverlay"); // Obtenha a referência para o popup
 
-  fetch("../Feed/Feed.php", { // Caminho corrigido para o script que processa o post
+  fetch("../Feed/Feed.php", {
+    // Caminho para o script que processa o post
     method: "POST",
     body: formData,
     headers: {
-        'X-Requested-With': 'XMLHttpRequest' // Identifica a requisição como AJAX
-    }
+      "X-Requested-With": "XMLHttpRequest", // Identifica a requisição como AJAX
+    },
   })
     .then((response) => {
       if (!response.ok) {
@@ -304,9 +310,28 @@ function submitPost() {
     })
     .then((data) => {
       if (data.success) {
+        // 1. Fecha o popup de review
+        if (reviewPopupOverlay) {
+          reviewPopupOverlay.style.display = "none";
+        }
+        // 2. Exibe o toast de confirmação
         showToast(data.message || "Postagem criada com sucesso!", "success");
-        // Atualiza a lista de posts sem recarregar a página (recarrega para simplificar o exemplo)
-        setTimeout(() => { location.reload(); }, 1500); // Dá tempo para o toast ser visível
+
+        // 3. Recarrega a página CONDICIONALMENTE (apenas se for feed.php)
+        // Usa includes para ser flexível com o caminho base (ex: /versami-web/Feed/Feed.php)
+        if (
+          window.location.pathname.includes("/Feed/Feed.php") ||
+          window.location.pathname.includes("/feed.php")
+        ) {
+          // Recarrega após um pequeno atraso para que o toast seja visível
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+        } else {
+          // Para outras páginas, limpa o formulário e remove o livro anexado (boa prática)
+          document.getElementById("postForm").reset();
+          removeSelectedBook(); // Garante que o livro anexado também seja limpo
+        }
       } else {
         showToast(data.message || "Erro ao criar postagem.", "error");
       }
@@ -794,7 +819,7 @@ function excluirPost(postId) {
       success: function (response) {
         if (response.success) {
           alert("Publicação excluída com sucesso!"); // You might want to change this to a toast as well
-          window.location.href = "feed.php"; // Redireciona para o feed após a exclusão
+          window.location.href = "../Feed/Feed.php"; // Redireciona para o feed após a exclusão
         } else {
           alert(response.error || "Erro ao excluir a publicação."); // You might want to change this to a toast as well
         }
@@ -858,4 +883,72 @@ function showProfileTab(tabName) {
       .getElementById("profile-favorites-section")
       .classList.add("active");
   }
+}
+
+function toggleFavorite(button, bookId) { // Renomeado de toggleBookFavorite para toggleFavorite
+    const isFavorited = button.classList.contains('favorited');
+    const icon = button.querySelector('i');
+    
+    // Atualiza visualmente imediatamente
+    button.classList.toggle('favorited');
+    icon.classList.toggle('far');
+    icon.classList.toggle('fas');
+
+    if (isFavorited) {
+        button.style.backgroundColor = '';
+        icon.style.color = '';
+    } else {
+        button.style.backgroundColor = '#ffebee';
+        icon.style.color = '#e0245e';
+
+        button.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            button.style.transform = 'scale(1)';
+        }, 300);
+    }
+
+    // Chamada AJAX para o backend
+    fetch('../Functions/toggle_favorite.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `book_id=${bookId}&action=${isFavorited ? 'remove' : 'add'}`,
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (!data.success) {
+            console.error('Erro ao favoritar/desfavoritar livro:', data.error || 'Erro desconhecido');
+            // Reverte as alterações visuais se a operação no servidor falhou
+            button.classList.toggle('favorited');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            if (isFavorited) {
+                 button.style.backgroundColor = '#ffebee';
+                 icon.style.color = '#e0245e';
+            } else {
+                 button.style.backgroundColor = '';
+                 icon.style.color = '';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Falha na requisição AJAX:', error);
+        // Reverte as alterações visuais em caso de erro de rede
+        button.classList.toggle('favorited');
+        icon.classList.toggle('far');
+        icon.classList.toggle('fas');
+        if (isFavorited) {
+             button.style.backgroundColor = '#ffebee';
+             icon.style.color = '#e0245e';
+        } else {
+             button.style.backgroundColor = '';
+             icon.style.color = '';
+        }
+    });
 }

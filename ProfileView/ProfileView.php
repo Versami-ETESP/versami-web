@@ -384,20 +384,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         </div>
     </div>
 
-    <!-- <div class="modal-overlay" id="confirmationModalOverlay">
-        <div class="modal-content">
-            <h2>Confirmar Denúncia</h2>
-            <p>Você tem certeza que deseja denunciar esta publicação?</p>
-            <div class="modal-actions">
-                <button id="cancelDenounceBtn" class="modal-btn cancel">Cancelar</button>
-                <button id="confirmDenounceBtn" class="modal-btn confirm">Denunciar</button>
-            </div>
-        </div>
-    </div> -->
-
-    <div id="toastNotification" class="toast-notification"></div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div id="toastNotification" class="toast-notification"></div> <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>
         function showProfileTab(tabName) {
