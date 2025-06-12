@@ -597,3 +597,165 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     transform: translateY(0);
   }
 }
+
+/* Responsiveness for CadastroStyle.css */
+@media (max-width: 1200px) {
+  .loginPrincipal, .cadastroPrincipal {
+    width: 45vw; /* Increase width for medium screens */
+  }
+  .tituloPrincipal {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .nav-links {
+    max-width: 100%;
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+  .nav-links li {
+    margin: 0 1rem;
+  }
+  .logo img {
+    width: 6rem;
+  }
+  .logo span {
+    font-size: 1.2rem;
+  }
+  .user-icon {
+    display: none; /* Hide user icon in nav on smaller screens */
+  }
+  main {
+    flex-direction: column-reverse; /* Stack elements for smaller screens */
+    padding: 2rem 0;
+  }
+  .loginPrincipal, .cadastroPrincipal {
+    width: 80vw; /* Take more width on tablets */
+    min-height: auto;
+    padding: 2rem;
+    margin: 1rem auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .msgindex {
+    margin-left: 0; /* Remove left margin when stacked */
+  }
+  .loginPanel h1, .cadastroPrincipal h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .loginPanel p, .cadastroPrincipal p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .input-group {
+    width: 90%; /* Increase input group width */
+  }
+  .button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .tituloPrincipal {
+    font-size: 2rem;
+    margin-top: 1rem;
+  }
+  footer .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .newsletter, .middle, .about {
+    text-align: center;
+  }
+  .newsletter form {
+    justify-content: center;
+  }
+  .social-links {
+    justify-content: center;
+  }
+  .social-links a i {
+    margin: 0 1rem;
+  }
+  .about p {
+    max-width: 90%; /* Adjust max-width for about text */
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 1rem;
+  }
+  .nav-links {
+    display: none; /* Hide nav links on smaller screens; consider a hamburger menu if main site has one */
+  }
+  .logo {
+    width: auto;
+    margin: 0 auto; /* Center logo */
+  }
+  .loginPrincipal, .cadastroPrincipal {
+    width: 95vw; /* Almost full width on mobile */
+    padding: 1.5rem;
+  }
+  .loginPanel h1, .cadastroPrincipal h1 {
+    font-size: 1.8rem;
+  }
+  .loginPanel p, .cadastroPrincipal p {
+    font-size: 0.9rem;
+  }
+  .tituloPrincipal {
+    font-size: 1.8rem;
+  }
+  .input-group {
+    width: 95%;
+    padding: 0.6rem 0.8rem;
+  }
+  .form-input, .input-group i {
+    font-size: 0.9rem;
+  }
+  .button {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+  .error-message {
+    font-size: 12px;
+    padding: 8px;
+    max-width: 90%;
+  }
+  .carregando {
+    width: 40px;
+    height: 40px;
+    border-width: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo img {
+    width: 5rem;
+  }
+  .logo span {
+    font-size: 1rem;
+  }
+  .loginPrincipal, .cadastroPrincipal {
+    height: auto; /* Allow height to adjust */
+    padding: 1rem;
+  }
+  .loginPanel h1, .cadastroPrincipal h1 {
+    font-size: 1.5rem;
+  }
+  .loginPanel p, .cadastroPrincipal p {
+    font-size: 0.8rem;
+  }
+  .tituloPrincipal {
+    font-size: 1.5rem;
+  }
+  .input-group {
+    width: 100%;
+  }
+  .form-input, .input-group i {
+    font-size: 0.85rem;
+  }
+}

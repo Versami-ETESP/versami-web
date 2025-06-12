@@ -29,6 +29,7 @@ body {
 h1 {
   color: #e74c3c;
   margin-bottom: 20px;
+  font-size: 2em; /* Default font size */
 }
 
 .error-message {
@@ -59,5 +60,57 @@ h1 {
 }
 
 .logo img {
-  height: 40px;
+  height: 40px; /* Default height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .error-container {
+    padding: 30px;
+  }
+  .error-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+  }
+  h1 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+  }
+  .error-message {
+    font-size: 16px;
+    margin-bottom: 25px;
+  }
+  .btn-retry {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+  .logo img {
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .error-container {
+    padding: 20px;
+    width: 95%; /* Make it fill more of the screen on small devices */
+  }
+  .error-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  .error-message {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .btn-retry {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  .logo img {
+    height: 30px;
+  }
 }

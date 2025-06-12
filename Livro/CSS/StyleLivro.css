@@ -193,7 +193,47 @@ body {
 }
 
 .header-menu {
-  background-color: red;
+  background-color: transparent; /* Changed from red */
+  width: 100%; /* Ensure it spans the full width of its parent */
+  position: relative; /* Needed for positioning the menu button */
+}
+
+/* Menu button for small screens */
+.menu-btn {
+  display: none; /* Hidden by default for larger screens */
+  position: fixed; /* Fixed position */
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  color: var(--dark); /* Adjust color to be visible on content */
+  cursor: pointer;
+  z-index: 1002; /* Higher than sidebar */
+  padding: 10px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.menu-btn:hover {
+  background-color: var(--light-gray);
+}
+
+/* Overlay for when sidebar is open */
+.overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 1000; /* Between content and sidebar */
+}
+
+/* When sidebar is active, show the overlay */
+.overlay.active {
+  display: block;
 }
 
 .content {
@@ -201,12 +241,14 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center;
+  margin-left: 250px; /* Space for sidebar */
+  transition: margin-left 0.3s ease-in-out;
 }
 
 .principal-content {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--content-background-light);
+  background-color: var(--white-background); /* Changed from content-background-light */
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -214,6 +256,11 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   height: 100vh;
+  padding-top: 20px; /* Add padding to top to avoid content being hidden by menu button */
+}
+
+.principal-content::-webkit-scrollbar {
+  display: none;
 }
 
 .user {
@@ -280,7 +327,10 @@ input[type="submit"]:hover {
   background: white;
   padding: 20px;
   width: 750px;
+  max-width: 90%; /* Responsive adjustment */
   height: auto;
+  max-height: 90vh; /* Limit height */
+  overflow-y: auto; /* Enable scrolling for popup content */
   border-radius: 10px;
   position: relative;
   text-align: center;
@@ -307,14 +357,15 @@ input[type="submit"]:hover {
 
 .btn-close-content {
   display: flex;
-  justify-content: left;
-  align-items: left;
+  justify-content: flex-start; /* Align to start */
 }
 
 .btn-top-content {
   display: flex;
   flex-direction: row;
-  gap: 35%;
+  justify-content: space-between; /* Space out elements */
+  width: 100%; /* Take full width */
+  align-items: center;
 }
 .popup .btn-close {
   border: none;
@@ -617,393 +668,957 @@ form textarea {
 
 /* FIM DO POPUP DA REVIEW */
 
-/* ===== CABEÇALHO DO LIVRO ===== */
-.book-detail-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
+/* ===== CONTEUDO DO FEED ===== */
 
-.book-header {
+.posts {
+  width: 100%;
+  height: auto;
   display: flex;
-  gap: 30px;
-  margin-bottom: 40px;
-  align-items: flex-start;
-}
-
-.book-cover-container {
-  width: 250px;
-  height: 350px;
-  flex-shrink: 0;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  box-shadow: var(--box-shadow);
-}
-
-.book-cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.no-cover {
-  width: 100%;
-  height: 100%;
-  background-color: var(--light-gray);
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--dark-gray);
-  font-size: 4em;
+  gap: 16px;
 }
 
-.book-info {
-  flex: 1;
-}
-
-.book-info h1 {
-  font-size: 2.2em;
-  margin-bottom: 10px;
-  color: var(--dark);
-}
-
-.book-info .author {
-  font-size: 1.2em;
-  color: var(--dark-gray);
-  margin-bottom: 15px;
-}
-
-.book-info .genre {
-  font-size: 1em;
-  color: var(--dark-gray);
-  margin-bottom: 20px;
-  padding: 5px 10px;
-  background-color: var(--light-gray);
-  border-radius: var(--border-radius-sm);
-  display: inline-block;
-}
-
-/* ===== BOTÕES DE AÇÃO ===== */
-.book-actions {
-  display: flex;
-  gap: 15px;
-  margin-top: 25px;
-}
-
-.favorite-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: var(--border-radius-sm);
-  border: none;
-  background-color: var(--light-gray);
-  color: var(--dark);
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.favorite-btn i {
-  font-size: 1.2em;
-}
-
-.favorite-btn:hover {
-  background-color: #e0e0e0;
-}
-
-.favorite-btn.favorited {
-  background-color: #ffebee;
-  color: var(--error);
-}
-
-.favorite-btn.favorited i {
-  color: var(--error);
-}
-
-/* ===== SEÇÕES DE CONTEÚDO ===== */
-.book-description,
-.author-section {
-  margin-bottom: 40px;
-}
-
-.book-description h2,
-.author-section h2 {
-  font-size: 1.5em;
-  margin-bottom: 15px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--light-gray);
-}
-
-.book-description p,
-.author-section p {
-  line-height: 1.6;
-  color: var(--dark);
-  font-size: 1.05em;
-}
-
-/* ===== TABS ===== */
 .tabs-container {
-  margin-top: 40px;
+  width: 100%;
+  z-index: 100; /* Adjusted z-index */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Space from top */
+}
+
+.tabs-container img {
+  width: 80px; /* Adjusted size */
+  height: auto;
+  margin: 10px 0 20px; /* Adjusted margin */
 }
 
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--medium-gray);
-  margin-bottom: 20px;
+  width: 90%; /* Adjusted width */
+  max-width: 600px; /* Max width for tabs */
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 20px; /* Space below tabs */
 }
 
 .tab {
-  padding: 12px 25px;
+  padding: 10px 20px;
   cursor: pointer;
   border: none;
   background: none;
-  font-size: 1em;
-  color: var(--dark-gray);
-  font-weight: 500;
-  transition: var(--transition);
-  position: relative;
+  font-size: 16px;
+  color: #666;
+  transition: color 0.3s ease;
+  flex: 1; /* Make tabs take equal width */
+  text-align: center;
 }
-
 .tab.active {
-  color: var(--blue-primary);
-  font-weight: 600;
+  font-weight: bold;
+  color: #61c1d1;
+  border-bottom: 3px solid #61c1d1;
 }
 
-.tab.active::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 0;
+.content-container {
   width: 100%;
-  height: 3px;
-  background-color: var(--blue-primary);
-}
-
-.tab:hover {
-  color: var(--blue-primary);
-}
-
-.content-tab {
-  display: none;
-}
-
-.content-tab.active {
-  display: block;
-}
-
-/* ===== LISTA DE REVIEWS ===== */
-.reviews-list {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  justify-content: center;
+  align-items: center;
 }
 
-.review-card {
-  background-color: var(--white-background);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 20px;
-  transition: var(--transition);
+.contentPosts {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0; /* Removed margin-top */
+}
+.contentPosts.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
 }
 
-.review-card:hover {
+.containerContent {
+  width: 60%; /* Adjusted width for posts */
+  max-width: 800px; /* Max width for posts */
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.post {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  background-color: var(--white-background); /* Added background */
+  box-shadow: var(--box-shadow); /* Added shadow */
+  transition: transform 0.2s ease;
+}
+
+.post:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
+.content-original-post {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border-bottom: 1px solid var(--border);
+  box-shadow: rgba(100, 100, 111, 0.041) 0px 7px 29px 0px; /* Changed to match common pattern */
+  background-color: inherit; /* Inherit background from .post */
 }
 
-.user-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+.usuario {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center; /* Align items vertically */
+  gap: 15px; /* Space between elements */
+}
+
+.user-info-container {
+  display: flex;
+  width: auto; /* Allow content to define width */
+  gap: 15px;
+  align-items: center;
+  flex-grow: 1; /* Allow to grow */
+}
+
+.user-info-container img {
+  width: 65px;
+  border-radius: 10px;
+  height: 65px; /* Fixed height for consistency */
   object-fit: cover;
 }
 
-.user-details h3 {
-  font-size: 1.1em;
-  margin-bottom: 3px;
+.user-details {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.user-details h2 {
+  font-size: 22px;
+  color: #252525;
+  margin: 0; /* Remove default margin */
 }
 
 .user-details p {
-  font-size: 0.9em;
-  color: var(--dark-gray);
+  font-size: 18px;
+  color: #7c7b7b;
+  margin: 0; /* Remove default margin */
 }
 
-.review-content p {
-  line-height: 1.6;
-  margin-bottom: 15px;
-  color: var(--dark);
-}
-
-.review-meta {
+.user-info-follow {
+  width: auto; /* Allow content to define width */
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* Push to the right */
+  gap: 10px; /* Reduced gap */
   align-items: center;
-}
-
-.review-meta .date {
-  font-size: 0.85em;
-  color: var(--dark-gray);
-}
-
-.review-actions {
-  display: flex;
-  gap: 15px;
-}
-
-.like-btn,
-.comment-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: none;
-  border: none;
-  color: var(--dark-gray);
-  cursor: pointer;
-  font-size: 0.9em;
-  transition: var(--transition);
-}
-
-.like-btn:hover,
-.comment-btn:hover {
-  color: var(--blue-primary);
-}
-
-.like-btn.liked {
-  color: var(--error);
-}
-
-.comment-btn {
-  text-decoration: none;
-}
-
-/* ===== LISTA DE FAVORITOS ===== */
-.favorites-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.user-card {
-  background-color: var(--white-background);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  transition: var(--transition);
-}
-
-.user-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.user-card .user-avatar {
-  width: 50px;
-  height: 50px;
-}
-
-.user-card .user-info {
-  flex: 1;
-  margin: 0;
-}
-
-.user-card .user-info h3 {
-  font-size: 1em;
-}
-
-.user-card .user-info p {
-  font-size: 0.85em;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .follow-btn {
-  padding: 6px 12px;
   background-color: var(--blue-primary);
-  color: white;
+  padding: 10px 15px; /* Adjusted padding */
+  width: auto; /* Auto width */
   border: none;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.85em;
   cursor: pointer;
-  transition: var(--transition);
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 16px;
+  transition: 0.3s ease all;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .follow-btn:hover {
-  background-color: #4fa8c7;
+  transition: 0.3s ease all;
+  background-color: #4ca2b1;
 }
 
-/* ===== SEM CONTEÚDO ===== */
-.no-content {
+.follow-btn:active {
+  transition: 0.3s ease all;
+  background-color: #2e8594;
+}
+
+.following {
+  background-color: var(--gray-inactive);
+  padding: 10px 15px; /* Adjusted padding */
+  width: auto;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  color: var(--black-inactive);
+  font-weight: 600;
+  font-size: 16px;
+  transition: 0.3s ease all;
+}
+
+.following:hover {
+  transition: 0.3s ease all;
+  background-color: #80808096;
+}
+
+.post-content {
+  width: 100%;
+  padding: 15px 10px; /* Adjusted padding */
+  line-height: 1.6; /* Adjusted line-height */
+  font-size: 17px; /* Adjusted font-size */
+  color: var(--dark); /* Ensure text color is dark */
+}
+
+.like-section {
+  width: auto; /* Auto width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.comment {
+  position: relative;
+  padding: 10px 12px;
+  background-color: var(--coment-background-light);
+  border-radius: 8px;
+  border: 1px solid var(--coment-border-background-light);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.comment-section-count {
+  width: auto; /* Auto width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.comment-section {
+  display: flex; /* Changed to flex */
+  flex-direction: column; /* Stack form and comments */
+  width: 100%; /* Take full width */
+  padding: 0 10px 10px; /* Padding for the section */
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-top: 10px; /* Space from post content */
+}
+
+.comment-input {
+  flex-grow: 1; /* Take remaining space */
+  border: 1px solid var(--border);
+  outline: none;
+  user-select: none;
+  background-color: transparent;
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.comment-button {
+  background-color: #00bfff;
+  border: none;
+  padding: 10px 15px; /* Adjusted padding */
+  border-radius: 5px;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: var(--white);
+  cursor: pointer;
+  transition: 0.3s ease all;
+  white-space: nowrap; /* Prevent wrapping */
+  margin-left: 10px; /* Space from input */
+}
+
+.comment-button:hover {
+  transition: 0.3s ease all;
+  background-color: #029ccf;
+}
+
+.comments-list {
+  position: relative;
+  background-color: #e2e1e117;
+  padding: 15px 15px 0 30px; /* Adjusted padding */
+  margin: 0 10px 0 10px; /* Adjusted margins */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 8px; /* Added border-radius */
+}
+
+.comments-list::before {
+  content: "";
+  position: absolute;
+  left: 15px; /* Adjusted position */
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--gray-inactive);
+  z-index: 0;
+  border-radius: 5px;
+}
+
+.comment::before {
+  content: "";
+  position: absolute;
+  left: -15px; /* Adjusted position */
+  top: 30px; /* Adjusted top for comment line */
+  width: 15px; /* Adjusted width */
+  height: 3px;
+  background-color: var(--gray-inactive);
+  z-index: 0;
+}
+
+.comment::after {
+  content: "";
+  position: absolute;
+  left: 9px; /* Adjusted position */
+  top: 25px; /* Adjusted top for circle */
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--blue-primary);
+  border: 2px solid white;
+  z-index: 1;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap; /* Allow wrapping */
+}
+
+.comment-user-info {
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-divisor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.comment-divisor i {
+  font-size: 7px;
+  color: var(--gray-inactive);
+}
+
+.comment-user-name {
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 2px;
+  color: #14171a;
+}
+
+.comment-time {
+  font-size: 13px;
+  color: var(--blue-inactive);
+}
+
+.comment-text {
+  font-size: 18px;
+  line-height: 1.4;
+  margin-left: 10px;
+  margin-bottom: 8px;
+  color: #14171a;
+}
+
+.comment-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.like-comment-btn {
+  background: none;
+  border: none;
+  font-size: 17px;
+  cursor: pointer;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.like-comment-btn:not(.likedComment) {
+  color: var(--blue-inactive);
+}
+
+.like-comment-btn:not(.likedComment):hover,
+.like-comment-btn:not(.likedComment):hover .like-comment-count {
+  color: var(--like);
+}
+
+.like-comment-btn.likedComment,
+.like-comment-btn.likedComment .like-comment-count {
+  color: var(--like);
+}
+
+.like-comment-btn.likedComment:hover,
+.like-comment-btn.likedComment:hover .like-comment-count {
+  color: var(--like);
+}
+
+.like-comment-btn i {
+  margin-right: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.like-comment-btn .far {
+  font-weight: 400;
+}
+.like-comment-btn .fas {
+  font-weight: 900;
+}
+
+.comment img {
+  width: 45px;
+  border-radius: 10px;
+  height: auto;
+  object-fit: cover; /* Added object-fit */
+}
+
+.user-avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 10px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.cont-section {
+  width: 100%;
+  height: auto; /* Auto height */
+  padding: 10px;
+  display: flex;
+  justify-content: space-around; /* Adjusted spacing */
+  align-items: center;
+  margin: 15px 0;
+}
+
+.like-btn {
+  background-color: transparent;
+  border: none;
+  display: flex; /* For icon and text alignment */
+  align-items: center;
+  gap: 5px;
+}
+
+.like-btn i {
+  font-size: 20px;
+  color: var(--blue-inactive);
+  cursor: pointer;
+}
+
+.like-btn i:hover {
+  transition: 0.3s ease all;
+  color: var(--like);
+}
+
+.liked i {
+  color: var(--like);
+}
+
+.liked span {
+  color: var(--like);
+}
+
+.like-count {
+  font-size: 17px;
+  color: var(--blue-inactive);
+}
+
+.like-count:hover {
+  transition: 0.3s ease all;
+  color: var(--like);
+}
+
+.comment-count {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--blue-inactive);
+  font-size: 17px;
+}
+
+.comment-count:hover {
+  transition: 0.3s ease all;
+  color: #1da1f2;
+}
+
+.comment-count i {
+  font-size: 20px;
+}
+
+a.user-link {
+  color: #1da1f2;
+  text-decoration: none;
+}
+
+a.user-link:hover {
+  text-decoration: underline;
+}
+
+.attached-book {
+  display: flex;
+  border: 1px var(--border) solid;
+  border-radius: 10px;
+  padding: 10px; /* Added padding */
+  background-color: var(--light-gray); /* Added background */
+  gap: 15px; /* Space between cover and info */
+  align-items: center;
+}
+
+.bookCoverAttached {
+  width: 100px; /* Fixed width */
+  height: 150px; /* Fixed height */
+  object-fit: cover;
+  border-radius: 8px; /* Rounded corners */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.book-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0; /* Removed padding as it's on parent */
+  font-size: 16px;
+  font-weight: bold;
+  text-align: left;
+  gap: 5px; /* Reduced gap */
+}
+
+.nomeLivroPost {
+  font-size: 20px;
+  font-family: "Montserrat", sans-serif;
+  color: var(--dark); /* Changed to dark color */
+  margin: 0;
+}
+
+.nomeAutorPost {
+  color: var(--dark-gray);
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px; /* Adjusted font size */
+  letter-spacing: 0.5px; /* Adjusted letter spacing */
+  margin: 0;
+}
+
+.book-description {
+  font-size: 15px; /* Adjusted font size */
+  color: var(--dark-gray);
+  font-weight: 400;
+  margin-top: 5px;
+  line-height: 1.4;
+  display: -webkit-box; /* For multi-line ellipsis */
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.no-posts {
   text-align: center;
   padding: 50px 20px;
   color: var(--dark-gray);
-}
-
-.no-content i {
-  font-size: 3em;
-  margin-bottom: 15px;
-  color: var(--medium-gray);
-}
-
-.no-content p {
   font-size: 1.1em;
+  background-color: var(--white-background);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 100%;
+}
+.no-posts p {
+    margin: 0;
 }
 
-/* ===== RESPONSIVIDADE ===== */
+
+/* ===== FIM DO CONTEUDO DO FEED ===== */
+/* Responsive adjustments for FeedStyle.css */
+@media (max-width: 1200px) {
+  .content {
+    margin-left: 0; /* No margin for sidebar on smaller screens, it will overlay */
+  }
+}
+
 @media (max-width: 992px) {
-  .book-header {
-    flex-direction: column;
-    align-items: center;
+  #sidebar {
+    transform: translateX(-100%); /* Hide sidebar by default */
+  }
+
+  #sidebar.active {
+    transform: translateX(0); /* Show sidebar when active */
+  }
+
+  .menu-btn {
+    display: block; /* Show menu button */
+  }
+
+  .content {
+    margin-left: 0; /* No left margin when sidebar is hidden/overlay */
+  }
+
+  .principal-content {
+    padding: 15px; /* Adjust padding */
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-left: 0; /* Remove specific margin */
     text-align: center;
   }
 
-  .book-cover-container {
-    width: 200px;
-    height: 300px;
+  .tabs-container img {
+    width: 60px; /* Smaller logo */
   }
 
-  .book-actions {
-    justify-content: center;
+  .tabs {
+    width: 95%; /* Adjust width for tabs */
+  }
+
+  .containerContent {
+    width: 80%; /* Occupy more width on tablets */
+    padding: 15px;
+  }
+
+  .post {
+    padding: 15px;
+  }
+
+  .user-info-container img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .user-details h2 {
+    font-size: 20px;
+  }
+
+  .user-details p {
+    font-size: 16px;
+  }
+
+  .follow-btn.following {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .post-content {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .attached-book {
+    flex-direction: column; /* Stack book info */
+    text-align: center;
+    padding: 15px;
+  }
+
+  .bookCoverAttached {
+    width: 120px;
+    height: 180px;
+    margin-bottom: 10px;
+  }
+
+  .book-info {
+    text-align: center;
+  }
+
+  .nomeLivroPost {
+    font-size: 18px;
+  }
+
+  .nomeAutorPost {
+    font-size: 13px;
+  }
+
+  .book-description {
+    font-size: 14px;
+  }
+
+  .comment-form {
+    flex-direction: column; /* Stack input and button */
+    gap: 10px;
+  }
+
+  .comment-input {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .comment-button {
+    width: 100%;
+    margin-left: 0;
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+
+  .comments-list {
+    padding: 15px 15px 0 15px;
+    margin: 0 5px 0 5px;
+  }
+
+  .comment::before {
+    left: 0; /* Remove horizontal line */
+    width: 0;
+  }
+  .comment::after {
+    left: 8px; /* Adjust circle position */
+  }
+  .comments-list::before {
+    left: 5px; /* Adjust vertical line position */
+  }
+  .comment img {
+    width: 35px;
+    height: 35px;
+  }
+  .comment-user-name {
+    font-size: 16px;
+  }
+  .comment-time {
+    font-size: 12px;
+  }
+  .comment-text {
+    font-size: 15px;
+    margin-left: 0;
+  }
+  .like-comment-btn {
+    font-size: 15px;
+  }
+  .like-comment-btn i {
+    font-size: 13px;
+  }
+  .no-posts {
+    padding: 30px 15px;
+    font-size: 1em;
   }
 }
 
 @media (max-width: 768px) {
-  .principal-content {
-    margin-left: 0;
-    padding-top: 70px;
+  h2 {
+    font-size: 1.6rem;
   }
-
-  .book-info h1 {
-    font-size: 1.8em;
+  .tabs {
+    flex-wrap: wrap; /* Allow tabs to wrap */
   }
-
-  .favorites-grid {
-    grid-template-columns: 1fr;
+  .tab {
+    flex: none; /* No equal width for wrapping */
+    margin: 5px; /* Add margin between wrapped tabs */
+  }
+  .containerContent {
+    width: 95%; /* Even more width on small tablets */
+    gap: 15px;
+  }
+  .post {
+    padding: 10px;
+  }
+  .user-info-container {
+    flex-direction: column; /* Stack user info on top of photo */
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .user-info-container img {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 5px;
+  }
+  .user-details h2 {
+    font-size: 18px;
+  }
+  .user-details p {
+    font-size: 14px;
+  }
+  .user-info-follow {
+    position: absolute; /* Position follow button absolutely */
+    top: 15px;
+    right: 10px;
+    width: auto;
+  }
+  .follow-btn, .follow-btn.following {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  .post-content {
+    font-size: 15px;
+    padding: 10px;
+  }
+  .attached-book {
+    padding: 10px;
+    gap: 10px;
+  }
+  .bookCoverAttached {
+    width: 80px;
+    height: 120px;
+  }
+  .book-info {
+    gap: 3px;
+  }
+  .nomeLivroPost {
+    font-size: 16px;
+  }
+  .nomeAutorPost {
+    font-size: 12px;
+  }
+  .book-description {
+    font-size: 13px;
+  }
+  .like-section, .comment-section-count {
+    gap: 3px;
+  }
+  .like-btn i, .comment-count i {
+    font-size: 18px;
+  }
+  .like-count, .comment-count span {
+    font-size: 15px;
+  }
+  .comment-input {
+    font-size: 14px;
+    padding: 6px;
+  }
+  .comment-button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  .comment img {
+    width: 30px;
+    height: 30px;
+  }
+  .comment-user-name {
+    font-size: 15px;
+  }
+  .comment-time {
+    font-size: 11px;
+  }
+  .comment-text {
+    font-size: 14px;
+  }
+  .like-comment-btn {
+    font-size: 13px;
+  }
+  .like-comment-btn i {
+    font-size: 12px;
+  }
+  .no-posts {
+    padding: 25px 10px;
+    font-size: 0.9em;
   }
 }
 
-@media (max-width: 576px) {
-  .book-cover-container {
-    width: 150px;
-    height: 225px;
+@media (max-width: 480px) {
+  .menu-btn {
+    display: block;
+    font-size: 25px;
+    top: 15px;
+    left: 15px;
   }
-
-  .review-actions {
-    flex-direction: column;
-    gap: 8px;
+  h2 {
+    font-size: 1.4rem;
   }
-
-  .review-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+  .tabs-container img {
+    width: 50px;
+  }
+  .tab {
+    font-size: 13px;
+    padding: 5px 10px;
+    margin: 3px;
+  }
+  .containerContent {
+    width: 100%;
+    padding: 5px;
+  }
+  .post {
+    padding: 8px;
+  }
+  .user-info-container img {
+    width: 40px;
+    height: 40px;
+  }
+  .user-details h2 {
+    font-size: 16px;
+  }
+  .user-details p {
+    font-size: 13px;
+  }
+  .follow-btn, .follow-btn.following {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  .post-content {
+    font-size: 14px;
+    padding: 8px;
+  }
+  .attached-book {
+    padding: 8px;
+  }
+  .bookCoverAttached {
+    width: 70px;
+    height: 100px;
+  }
+  .nomeLivroPost {
+    font-size: 15px;
+  }
+  .nomeAutorPost {
+    font-size: 11px;
+  }
+  .book-description {
+    font-size: 12px;
+  }
+  .like-btn i, .comment-count i {
+    font-size: 16px;
+  }
+  .like-count, .comment-count span {
+    font-size: 13px;
+  }
+  .comment-input {
+    font-size: 13px;
+    padding: 5px;
+  }
+  .comment-button {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+  .comment img {
+    width: 25px;
+    height: 25px;
+  }
+  .comment-user-name {
+    font-size: 14px;
+  }
+  .comment-time {
+    font-size: 10px;
+  }
+  .comment-text {
+    font-size: 13px;
+  }
+  .like-comment-btn {
+    font-size: 12px;
+  }
+  .like-comment-btn i {
+    font-size: 10px;
+  }
+  .no-posts {
+    padding: 20px 10px;
+    font-size: 0.8em;
   }
 }

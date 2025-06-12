@@ -40,12 +40,16 @@ if ($stmt === false) {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notificações - Versami</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="CSS/StyleNotificacoes.css"> </head>
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
+    <link rel="stylesheet" href="CSS/StyleNotificacoes.css">
+</head>
+
 <body>
     <div class="content">
         <div class="header-menu">
@@ -65,13 +69,13 @@ if ($stmt === false) {
                         <li onclick="location.href='Notificacao.php'" class="active">
                             <div class="notification-icon-container">
                                 <i class="fa-solid fa-bell"></i>
-                            <?php
+                                <?php
                                 $total_notificacoes = contarNotificacoesNaoLidas($conn, $_SESSION["usuario_id"]);
-                            if ($total_notificacoes > 0): ?>
-                                <span class="notification-badge"><?= $total_notificacoes ?></span>
-                            <?php endif; ?>
+                                if ($total_notificacoes > 0): ?>
+                                    <span class="notification-badge"><?= $total_notificacoes ?></span>
+                                <?php endif; ?>
                             </div>
-                                Notificações
+                            Notificações
                         </li>
                         <li onclick="location.href='../Profile/Profile.php'">
                             <i class="fa-solid fa-user"></i> Perfil
@@ -97,10 +101,10 @@ if ($stmt === false) {
                             $redirect_url = '#'; // Fallback padrão
                             $actor_name_from_message = ''; // Nome do ator será extraído da mensagem
                             $actor_photo_url = 'Assets/padrao.png'; // Imagem padrão do ator
-
+                    
                             $actor_id = null; // ID do usuário que fez a ação
                             $related_post_id = null; // ID do post relacionado (para redirecionamento)
-
+                    
                             // Tentar inferir o ID do ator e do item relacionado com base no tipo de notificação
                             if ($notificacao['tipoNotificacao'] == NOTIFICACAO_CURTIDA_POST) {
                                 // Exemplo de mensagem: "Fulano curtiu sua publicação"
@@ -192,8 +196,7 @@ if ($stmt === false) {
                                 }
                             }
                             ?>
-                            <div class="notificacao"
-                                onclick="window.location.href='<?= htmlspecialchars($redirect_url) ?>'">
+                            <div class="notificacao" onclick="window.location.href='<?= htmlspecialchars($redirect_url) ?>'">
                                 <div class="notificacao-icon">
                                     <?php if ($notificacao['tipoNotificacao'] == NOTIFICACAO_CURTIDA_POST || $notificacao['tipoNotificacao'] == NOTIFICACAO_CURTIDA_COMENTARIO): ?>
                                         <i class="fas fa-heart" style="color: #ff4d4d;"></i>
@@ -208,7 +211,8 @@ if ($stmt === false) {
                                 </div>
                                 <div class="notificacao-content">
                                     <p><strong><?= htmlspecialchars($actor_name_from_message) ?></strong>
-                                    <?= htmlspecialchars(substr($notificacao['mensagem'], strlen($actor_name_from_message) + 1)) ?></p>
+                                        <?= htmlspecialchars(substr($notificacao['mensagem'], strlen($actor_name_from_message) + 1)) ?>
+                                    </p>
                                     <span class="notificacao-time">
                                         <?= $notificacao['dataNotificacao']->format('d/m/Y H:i') ?>
                                     </span>
@@ -269,7 +273,12 @@ if ($stmt === false) {
             </div>
         </div>
     </div>
-    <div id="toastNotification" class="toast-notification"></div> <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div id="toastNotification" class="toast-notification"></div>
+    <button class="menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
 </body>
 

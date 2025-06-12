@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="description"
         content="Versami, sua rede social para conectar leitores de todos os gêneros literários. Aqui, você pode avaliar, descobrir e compartilhar livros, criando uma comunidade engajada de apaixonados por leitura." />
     <meta name="author" content="Julia Maria, Matheus Canesso, Thamiris Fernandes, Ygor Silva" />
-    <link rel="shortcut icon" href="../../Assets/favicon.png" type="favicon" />
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <link rel="icon" href="../Assets/iconVersami.png" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>

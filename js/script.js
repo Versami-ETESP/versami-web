@@ -1,5 +1,27 @@
-// Add this event listener to the existing script.js file
 document.addEventListener("DOMContentLoaded", function () {
+  // Sidebar toggle logic
+  const sidebar = document.getElementById("sidebar");
+  const menuBtn = document.getElementById("menuBtn"); // This targets the new button
+  const overlay = document.getElementById("overlay"); // This targets the new overlay
+  const content = document.querySelector(".content"); // Select the main content area
+
+  // Check if all elements exist before adding listeners
+  if (menuBtn && sidebar && overlay && content) {
+    menuBtn.addEventListener("click", function () {
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      // Optional: Adjust main content margin, if needed, when sidebar opens
+      // content.style.marginLeft = sidebar.classList.contains("active") ? "250px" : "0";
+    });
+
+    overlay.addEventListener("click", function () {
+      sidebar.classList.remove("active");
+      overlay.classList.remove("active");
+      // content.style.marginLeft = "0";
+    });
+  }
+
+
   const postForm = document.getElementById("postForm");
   if (postForm) {
     postForm.addEventListener("submit", function (event) {
@@ -320,8 +342,8 @@ function submitPost() {
         // 3. Recarrega a página CONDICIONALMENTE (apenas se for feed.php)
         // Usa includes para ser flexível com o caminho base (ex: /versami-web/Feed/Feed.php)
         if (
-          window.location.pathname.includes("/Feed/Feed.php") ||
-          window.location.pathname.includes("/feed.php")
+          window.location.pathname.includes("../Feed/Feed.php") ||
+          window.location.pathname.includes("../Feed/Feed.php")
         ) {
           // Recarrega após um pequeno atraso para que o toast seja visível
           setTimeout(() => {
@@ -370,7 +392,7 @@ document.querySelectorAll(".back-arrow").forEach((arrow) => {
 });
 
 window.addEventListener("DOMContentLoaded", function () {
-  if (window.location.pathname.includes("feed.php")) {
+  if (window.location.pathname.includes("../Feed/Feed.php")) {
     const scrollPosition = sessionStorage.getItem("feedScrollPosition");
     if (scrollPosition) {
       window.scrollTo(0, parseInt(scrollPosition));
@@ -888,7 +910,7 @@ function showProfileTab(tabName) {
 function toggleFavorite(button, bookId) { // Renomeado de toggleBookFavorite para toggleFavorite
     const isFavorited = button.classList.contains('favorited');
     const icon = button.querySelector('i');
-    
+
     // Atualiza visualmente imediatamente
     button.classList.toggle('favorited');
     icon.classList.toggle('far');

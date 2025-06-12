@@ -252,7 +252,6 @@ form button:hover {
   align-items: center;
   padding: 4rem 2rem;
   padding-bottom: 0;
-  padding-bottom: 0;
   background: linear-gradient(
     180deg,
     #ffffff 0%,
@@ -308,6 +307,8 @@ form button:hover {
   justify-content: center;
   align-items: center;
   gap: 100px;
+  padding: 4rem 2rem; /* Added padding to this section */
+  background-color: #ffffff; /* Ensure white background */
 }
 
 .feature-card {
@@ -360,7 +361,7 @@ form button:hover {
   color: #555555;
 }
 
-/* Search Section */
+/* Search Section (used for general content block, not actual search box) */
 .search-section {
   background: linear-gradient(
     45deg,
@@ -441,6 +442,20 @@ form button:hover {
   ); /* Reverse gradient on hover */
   transform: scale(1.05);
 }
+.exploration-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem; /* Space between buttons */
+    flex-wrap: wrap; /* Allow wrapping */
+}
+.button-explore {
+    background-color: transparent; /* Changed for exploration button */
+    border: 2px solid white; /* White border */
+}
+.button-explore:hover {
+    background-color: rgba(255,255,255,0.2); /* Slight white background on hover */
+}
+
 
 /* Categories Section */
 .categories-section {
@@ -730,7 +745,8 @@ form button:hover {
   animation: float 3s ease-in-out infinite; /* Floating animation */
 }
 
-/* General Buttons */
+/* General Buttons (assuming buttonP is a class for general buttons) */
+/* If this class exists and is used, it should be adjusted. */
 .buttonP {
   width: 10rem;
   height: 3.125rem;
@@ -787,42 +803,113 @@ form button:hover {
   }
 }
 
-/* Responsive Adjustments */
-@media (max-width: 1100px) {
+/* Responsive Adjustments for Index/Style.css */
+@media (max-width: 1200px) {
   .user-icon {
     display: none;
   }
-  .logo {
-    margin-right: 3%;
+  nav {
+    flex-direction: column; /* Stack nav items */
+    gap: 1rem;
   }
+  .nav-links {
+    max-width: 100%;
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+  .nav-links li {
+    margin: 0 1rem;
+  }
+  .logo {
+    margin-right: 0; /* Remove margin */
+    margin-bottom: 1rem; /* Add some space below logo */
+  }
+
   .hero-section {
     flex-direction: column;
     text-align: center;
+    gap: 5rem; /* Reduced gap for stacking */
+    padding: 3rem 1rem;
   }
   .hero-content {
-    max-width: 100%;
+    max-width: 90%; /* Wider content area */
+  }
+  .hero-content h2 {
+    font-size: 3rem;
+  }
+  .hero-content p {
+    font-size: 1.1rem;
   }
   .hero-image {
-    max-width: 60%;
+    max-width: 50%; /* Adjust image size */
+  }
+
+  .features-section {
+    flex-direction: column;
+    gap: 2rem; /* Reduced gap */
+    padding: 3rem 1rem;
+  }
+  .feature-card {
+    min-width: unset; /* Remove min-width to allow shrinking */
+    width: 90%; /* Take more width */
+    max-width: 380px; /* Limit max width */
+  }
+
+  .search-section {
+    padding: 4rem 1rem;
+  }
+  .search-content h2 {
+    font-size: 2.5rem;
+  }
+  .search-content p {
+    font-size: 1rem;
   }
   .search-box {
-    flex-direction: column;
-    max-width: 400px;
+    flex-direction: column; /* Stack search input and button */
     border-radius: 1rem;
+    max-width: 400px;
   }
   .input-search {
     border-radius: 1rem 1rem 0 0;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
   }
   .button-search {
     border-radius: 0 0 1rem 1rem;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
   }
+
+  .categories-section, .blog-preview-section, .app-section {
+    padding: 4rem 1rem;
+  }
+  .categories-header h2, .blog-header h2, .app-content-left h2 {
+    font-size: 2.5rem;
+  }
+  .categories-header p, .blog-header p, .app-content-left p {
+    font-size: 1rem;
+  }
+  .categories-cards, .blog-cards-container {
+    gap: 1.5rem; /* Reduced gap */
+  }
+  .category-card, .blog-card {
+    width: 90%;
+    max-width: 350px;
+    height: auto; /* Allow height to adjust */
+  }
+  .category-card img, .blog-card img {
+    height: 180px; /* Adjusted image height */
+  }
+
   .app-section {
     flex-direction: column-reverse; /* Put text below image */
   }
-  .app-content-left,
-  .app-content-right {
-    max-width: 80%;
+  .app-content-left, .app-content-right {
+    max-width: 90%;
     text-align: center;
+  }
+  .app-content-left img {
+    width: 150px; /* Smaller app store icon */
   }
 }
 
@@ -837,77 +924,264 @@ form button:hover {
     font-size: 1.2rem;
   }
   .nav-links {
-    display: none; /* Hide nav links on smaller screens if not using a hamburger menu */
+    display: none; /* Hide nav links on smaller screens */
   }
+
   .hero-content h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   .hero-content p {
-    font-size: 1rem;
-  }
-  .features-section,
-  .categories-section,
-  .blog-preview-section,
-  .app-section {
-    padding: 4rem 1rem;
-  }
-  .feature-card,
-  .category-card,
-  .blog-card {
-    min-width: unset;
-    width: 100%; /* Stack cards vertically */
-    max-width: 350px; /* Limit width for stacking */
-  }
-  .search-content h2,
-  .categories-header h2,
-  .blog-header h2,
-  .app-content-left h2 {
-    font-size: 2.2rem;
-  }
-  .search-content p,
-  .categories-header p,
-  .blog-header p,
-  .app-content-left p {
     font-size: 0.9rem;
   }
-  .footer-content {
+  .hero-image {
+    max-width: 70%;
+  }
+
+  .features-section, .categories-section, .blog-preview-section, .app-section {
+    padding: 3rem 1rem;
+  }
+  .feature-card {
+    padding: 2rem 1rem;
+  }
+  .feature-card h3 {
+    font-size: 1.4rem;
+  }
+  .feature-card p {
+    font-size: 0.9rem;
+  }
+
+  .search-content h2, .categories-header h2, .blog-header h2, .app-content-left h2 {
+    font-size: 2rem;
+  }
+  .search-content p, .categories-header p, .blog-header p, .app-content-left p {
+    font-size: 0.9rem;
+  }
+  .button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .button-explore {
+      width: 90%; /* Make button wider */
+  }
+
+  .category-card, .blog-card {
+    max-width: 300px;
+  }
+  .category-card img, .blog-card img {
+    height: 150px;
+  }
+  .blog-card-content {
+    padding: 1.2rem;
+  }
+  .blog-card-content h3 {
+    font-size: 1.3rem;
+  }
+  .blog-card-content p {
+    font-size: 0.85rem;
+  }
+
+  .app-content-left img {
+    width: 120px;
+  }
+
+  footer .footer-content {
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
   }
-  .newsletter,
-  .middle,
-  .about {
+  .newsletter, .middle, .about {
     text-align: center;
   }
   .newsletter form {
-    justify-content: center;
+    flex-direction: column; /* Stack input and button */
+    gap: 0.5rem;
+  }
+  .newsletter input {
+    margin-right: 0;
+    width: 90%;
+  }
+  .newsletter button {
+    width: 90%;
   }
   .social-links {
     justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .social-links a i {
+    margin: 0 0.8rem;
   }
   .about p {
     max-width: unset;
   }
 }
 
-@media (max-width: 480px) {
-  .hero-content h2 {
-    font-size: 2rem;
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 2rem 0.5rem;
+    gap: 3rem;
   }
-  .buttonP {
-    width: 80%;
+  .hero-content h2 {
+    font-size: 1.8rem;
+  }
+  .hero-content p {
+    font-size: 0.8rem;
+  }
+  .hero-image {
+    max-width: 80%;
+  }
+
+  .features-section, .categories-section, .blog-preview-section, .app-section {
+    padding: 2.5rem 0.5rem;
   }
   .feature-card {
-    padding: 1.5rem 1rem;
+    padding: 1.5rem 0.8rem;
+  }
+  .feature-card .icon-circle {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+  }
+  .feature-card .icon-circle i {
+    font-size: 2rem;
   }
   .feature-card h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
-  .search-content h2,
-  .categories-header h2,
-  .blog-header h2,
-  .app-content-left h2 {
+  .feature-card p {
+    font-size: 0.8rem;
+  }
+
+  .search-content h2, .categories-header h2, .blog-header h2, .app-content-left h2 {
     font-size: 1.8rem;
+  }
+  .search-content p, .categories-header p, .blog-header p, .app-content-left p {
+    font-size: 0.8rem;
+  }
+  .button {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .categories-cards, .blog-cards-container {
+    gap: 1rem;
+  }
+  .category-card, .blog-card {
+    max-width: 280px; /* Further limit width for stacking */
+  }
+  .blog-card-content {
+    padding: 1rem;
+  }
+  .blog-card-content h3 {
+    font-size: 1.1rem;
+  }
+  .blog-card-content p {
+    font-size: 0.75rem;
+  }
+  .blog-read-more {
+    font-size: 0.8rem;
+  }
+
+  .app-content-left img {
+    width: 100px;
+  }
+
+  footer {
+    padding: 2rem 0.8rem;
+  }
+  .newsletter input, .newsletter button {
+    width: 100%;
+  }
+  .newsletter h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0.8rem;
+  }
+  .logo img {
+    width: 5rem;
+  }
+  .logo span {
+    font-size: 1rem;
+  }
+
+  .hero-content h2 {
+    font-size: 1.5rem;
+  }
+  .hero-content p {
+    font-size: 0.75rem;
+  }
+  .hero-image {
+    max-width: 90%;
+  }
+
+  .features-section, .categories-section, .blog-preview-section, .app-section {
+    padding: 2rem 0.5rem;
+  }
+  .feature-card {
+    padding: 1rem 0.5rem;
+  }
+  .feature-card h3 {
+    font-size: 1rem;
+  }
+  .feature-card p {
+    font-size: 0.75rem;
+  }
+
+  .search-content h2, .categories-header h2, .blog-header h2, .app-content-left h2 {
+    font-size: 1.5rem;
+  }
+  .search-content p, .categories-header p, .blog-header p, .app-content-left p {
+    font-size: 0.75rem;
+  }
+  .button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .category-card, .blog-card {
+    max-width: 250px; /* Even smaller max-width */
+  }
+  .category-card img, .blog-card img {
+    height: 120px;
+  }
+  .card-overlay {
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+  .blog-card-content h3 {
+    font-size: 1rem;
+  }
+  .blog-card-content p {
+    font-size: 0.7rem;
+  }
+
+  .app-content-left img {
+    width: 80px;
+  }
+
+  footer {
+    padding: 1.5rem 0.5rem;
+  }
+  .newsletter h1 {
+    font-size: 2rem;
+  }
+  .newsletter h2 {
+    font-size: 1.2rem;
+  }
+  .middle img {
+    width: 10rem;
+  }
+  .social-links a i {
+    font-size: 1.2rem;
+    margin: 0 0.5rem;
+  }
+  .about h4 {
+    font-size: 1.2rem;
+  }
+  .about p {
+    font-size: 0.75rem;
   }
 }

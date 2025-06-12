@@ -85,6 +85,7 @@ if (!empty($termo_busca)) {
     <title>Explorar - Versami</title>
     <link rel="stylesheet" href="CSS/ExplorarStyle.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </head>
@@ -301,6 +302,10 @@ if (!empty($termo_busca)) {
     </div>
 
     <div id="toastNotification" class="toast-notification"></div>
+    <button class="menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>

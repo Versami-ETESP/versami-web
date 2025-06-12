@@ -888,3 +888,523 @@ form textarea {
 .toast-notification.error {
   background-color: #f44336; /* Cor de fundo vermelha */
 }
+
+.menu-btn {
+  display: none; /* Hides the button by default on larger screens */
+}
+
+
+/* ===== RESPONSIVO ===== */
+/* General responsiveness adjustments */
+@media (max-width: 1200px) {
+  body {
+    margin-left: 0; /* No margin for sidebar on smaller screens, it will overlay */
+  }
+  .content {
+    padding-top: 70px; /* More space for fixed menu button */
+  }
+}
+
+@media (max-width: 992px) {
+  #sidebar {
+    transform: translateX(-100%); /* Hide sidebar by default */
+  }
+
+  #sidebar.active {
+    transform: translateX(0); /* Show sidebar when active */
+  }
+
+  .menu-btn {
+    display: block; /* Show menu button */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1002;
+    background-color: var(--light-gray);
+    border-radius: 50%;
+  }
+
+  body {
+    margin-left: 0; /* No left margin when sidebar is hidden/overlay */
+  }
+
+  .principal-content {
+    padding: 15px; /* Adjust padding */
+  }
+
+  .user h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .buscarContent {
+    padding: 0 15px; /* Adjust padding for mobile */
+  }
+
+  .search-form {
+    width: 95%; /* Make search form wider on tablets */
+    max-width: none; /* Remove max-width constraint */
+  }
+
+  .tabs-container {
+    width: 95%; /* Adjust width for tabs */
+    max-width: 700px; /* Limit max-width for tabs */
+  }
+
+  .tabs {
+    width: 100%; /* Tabs take full width of their container */
+    max-width: none; /* Remove max-width limit */
+  }
+
+  .containerContent {
+    width: 100%; /* Take full width of parent */
+    max-width: none; /* Remove max-width for fluidity */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust grid for smaller cards */
+  }
+
+  .userCard {
+    padding: 15px;
+  }
+
+  .userAvatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .userName {
+    font-size: 1.1em;
+  }
+
+  .userUsername {
+    font-size: 0.85em;
+  }
+
+  .followBtn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .book-card {
+    padding: 15px;
+  }
+
+  .book-cover-container {
+    height: 150px;
+  }
+
+  .book-title {
+    font-size: 1em;
+  }
+
+  .book-author {
+    font-size: 0.8em;
+  }
+
+  .book-stats {
+    font-size: 0.75em;
+  }
+
+  .view-btn, .favorite-btn {
+    font-size: 0.8em;
+    padding: 6px 10px;
+  }
+
+  .popup {
+    padding: 15px;
+  }
+  .popup .btn-top-content {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .popup .btn-close-content {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .popup h2 {
+    font-size: 1.2rem;
+    width: 100%;
+    text-align: center;
+  }
+  form textarea {
+    font-size: 15px;
+  }
+  .btn-submit {
+    width: 120px;
+    font-size: 14px;
+    padding: 8px;
+  }
+  #selectedBookContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+  #selectedBookCover {
+    margin-bottom: 10px;
+  }
+  #removeBookBtn {
+    margin-top: 10px;
+  }
+  #bookSelectionPopup .popup {
+    width: 95%;
+  }
+  #bookSearch {
+    font-size: 14px;
+    padding: 8px;
+  }
+  .book-item {
+    height: 250px;
+  }
+  .book-cover {
+    height: 120px;
+  }
+  .book-details .book-name {
+    font-size: 0.9em;
+  }
+  .book-details .author {
+    font-size: 0.75em;
+  }
+}
+
+@media (max-width: 768px) {
+  .user h2 {
+    font-size: 1.6rem;
+  }
+  .search-form {
+    width: 100%; /* Occupy full width */
+  }
+  .inputBuscar {
+    padding: 12px; /* Standardize padding */
+    font-size: 16px;
+  }
+  .tabs {
+    flex-wrap: wrap; /* Allow tabs to wrap on smaller screens */
+    width: 100%; /* Tabs container takes full width */
+    justify-content: center;
+  }
+  .tab {
+    flex: none; /* Do not force equal width, let content dictate */
+    margin: 5px; /* Add margin between wrapped tabs */
+    font-size: 15px;
+    padding: 8px 15px;
+  }
+  .tabs-container {
+    padding: 0 5px; /* Reduce padding further for tabs container */
+  }
+  .containerContent {
+    width: 100%; /* Full width of its parent */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjust grid for smaller user/book cards */
+    gap: 20px;
+    padding: 10px;
+  }
+  .userCard {
+    padding: 12px; /* Reduce padding */
+    gap: 10px; /* Reduce gap */
+  }
+  .userAvatar {
+    width: 50px;
+    height: 50px;
+  }
+  .userName {
+    font-size: 1em;
+  }
+  .userUsername {
+    font-size: 0.8em;
+  }
+  .userDetails span {
+    font-size: 0.75em;
+  }
+  .followBtn {
+    width: 100%; /* Make button full width within card */
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  .followBtn-placeholder {
+    width: 100%; /* Match button width */
+  }
+  .book-card {
+    padding: 10px;
+  }
+  .book-cover-container {
+    height: 120px;
+  }
+  .book-info {
+    padding: 8px;
+    gap: 5px;
+  }
+  .book-title {
+    font-size: 0.9em;
+  }
+  .book-author {
+    font-size: 0.7em;
+  }
+  .book-stats {
+    font-size: 0.65em;
+  }
+  .view-btn, .favorite-btn {
+    font-size: 0.75em;
+    padding: 5px 10px;
+  }
+  .popup {
+    padding: 15px;
+  }
+  .popup .btn-top-content {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .popup .btn-close-content {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .popup h2 {
+    font-size: 1.2rem;
+    width: 100%;
+    text-align: center;
+  }
+  form textarea {
+    font-size: 15px;
+  }
+  .btn-submit {
+    width: 120px;
+    font-size: 14px;
+    padding: 8px;
+  }
+  #selectedBookContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+  #selectedBookCover {
+    margin-bottom: 10px;
+  }
+  #removeBookBtn {
+    margin-top: 10px;
+  }
+  #bookSelectionPopup .popup {
+    width: 95%;
+  }
+  #bookSearch {
+    font-size: 14px;
+    padding: 8px;
+  }
+  .book-item {
+    height: 250px;
+  }
+  .book-cover {
+    height: 120px;
+  }
+  .book-details .book-name {
+    font-size: 0.9em;
+  }
+  .book-details .author {
+    font-size: 0.75em;
+  }
+}
+
+@media (max-width: 576px) {
+  .principal-content {
+    padding: 10px;
+  }
+  .user h2 {
+    font-size: 1.4rem;
+  }
+  .tabs-container {
+    width: 100%; /* Max width on very small screens */
+  }
+  .tabs {
+    flex-direction: column; /* Stack tabs vertically */
+    align-items: center;
+    gap: 8px;
+  }
+  .tab {
+    width: 90%; /* Make tabs wider when stacked */
+    max-width: 200px;
+    margin: 0 auto; /* Center individual tabs */
+  }
+  .buscarContent {
+    padding: 0 10px;
+  }
+  .search-form {
+    width: 100%; /* Full width on smallest screens */
+  }
+  .inputBuscar {
+    padding: 10px;
+    font-size: 14px;
+  }
+  .containerContent {
+    grid-template-columns: 1fr; /* Single column for results */
+    gap: 15px;
+    padding: 5px;
+  }
+  .userCard, .book-card {
+    padding: 10px;
+    gap: 8px;
+  }
+  .userAvatar {
+    width: 40px;
+    height: 40px;
+  }
+  .userName {
+    font-size: 0.9em;
+  }
+  .userUsername {
+    font-size: 0.75em;
+  }
+  .userDetails span {
+    font-size: 0.7em;
+  }
+  .followBtn {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+  .book-cover-container {
+    height: 100px;
+  }
+  .book-info {
+    padding: 5px;
+    gap: 3px;
+  }
+  .book-title {
+    font-size: 0.8em;
+  }
+  .book-author {
+    font-size: 0.65em;
+  }
+  .book-stats {
+    font-size: 0.6em;
+  }
+  .view-btn, .favorite-btn {
+    font-size: 0.7em;
+    padding: 4px 8px;
+  }
+  .popup {
+    padding: 10px;
+  }
+  .popup .btn-top-content {
+    gap: 5px;
+  }
+  .popup h2 {
+    font-size: 1rem;
+  }
+  form textarea {
+    font-size: 14px;
+  }
+  .btn-submit {
+    width: 100px;
+    font-size: 13px;
+    padding: 7px;
+  }
+  #bookSearch {
+    font-size: 13px;
+    padding: 7px;
+  }
+  .book-item {
+    height: 230px;
+  }
+  .book-cover {
+    height: 100px;
+  }
+  .book-details .book-name {
+    font-size: 0.8em;
+  }
+  .book-details .author {
+    font-size: 0.6em;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-btn {
+    display: block;
+    font-size: 25px;
+    top: 15px;
+    left: 15px;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  .tabs-container {
+    padding: 0 5px;
+  }
+  .tabs-container img {
+    width: 40px;
+  }
+  .tab {
+    font-size: 12px;
+    padding: 4px 8px;
+    margin: 2px;
+  }
+  .containerContent {
+    padding: 5px;
+  }
+  .userCard, .book-card {
+    padding: 8px;
+    gap: 6px;
+  }
+  .userAvatar {
+    width: 35px;
+    height: 35px;
+  }
+  .userName {
+    font-size: 0.8em;
+  }
+  .userUsername {
+    font-size: 0.65em;
+  }
+  .userDetails span {
+    font-size: 0.6em;
+  }
+  .followBtn {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+  .book-cover-container {
+    height: 80px;
+  }
+  .book-title {
+    font-size: 0.75em;
+  }
+  .book-author {
+    font-size: 0.6em;
+  }
+  .book-stats {
+    font-size: 0.55em;
+  }
+  .view-btn, .favorite-btn {
+    font-size: 0.65em;
+    padding: 3px 6px;
+  }
+  .popup {
+    padding: 8px;
+  }
+  .popup .btn-top-content {
+    flex-direction: row; /* Keep in row if possible */
+    justify-content: space-between;
+    align-items: center;
+  }
+  .popup h2 {
+    font-size: 0.9rem;
+  }
+  form textarea {
+    font-size: 13px;
+  }
+  .btn-submit {
+    width: 80px;
+    font-size: 12px;
+    padding: 6px;
+  }
+  #bookSearch {
+    font-size: 12px;
+    padding: 6px;
+  }
+  .book-item {
+    height: 200px;
+  }
+  .book-cover {
+    height: 80px;
+  }
+  .book-details .book-name {
+    font-size: 0.7em;
+  }
+  .book-details .author {
+    font-size: 0.55em;
+  }
+}

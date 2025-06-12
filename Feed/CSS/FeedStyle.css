@@ -1134,4 +1134,410 @@ a.user-link:hover {
   line-height: 1.4;
 }
 
+.menu-btn {
+  display: none; /* Hides the button by default on larger screens */
+}
+
 /* ===== FIM DO CONTEUDO DO FEED ===== */
+/* Responsive adjustments for FeedStyle.css */
+@media (max-width: 1200px) {
+  body {
+    margin-left: 0; /* No margin for sidebar on smaller screens, it will overlay */
+  }
+}
+
+@media (max-width: 992px) {
+  #sidebar {
+    transform: translateX(-100%); /* Hide sidebar by default */
+  }
+
+  #sidebar.active {
+    transform: translateX(0); /* Show sidebar when active */
+  }
+
+  .menu-btn {
+    display: block; /* Show menu button */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1002;
+    background-color: none;
+    border: none;
+    border-radius: 50%;
+  }
+
+  body {
+    margin-left: 0; /* No left margin when sidebar is hidden/overlay */
+  }
+
+  .principal-content {
+    padding: 15px; /* Adjust padding */
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-left: 0; /* Remove specific margin */
+    text-align: center;
+  }
+
+  .tabs-container {
+    width: 95%; /* Adjust width for tabs */
+    max-width: 700px; /* Limit max-width for tabs */
+  }
+  .tabs-container img {
+    width: 60px; /* Smaller logo */
+  }
+
+  .tabs {
+    width: 100%; /* Tabs take full width of their container */
+    max-width: none; /* Remove max-width limit */
+  }
+
+  .containerContent {
+    width: 95%; /* Occupy more width on tablets */
+    max-width: 700px; /* Limit max width for readability */
+    padding: 15px;
+  }
+
+  .post {
+    padding: 15px;
+  }
+
+  .user-info-container img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .user-details h2 {
+    font-size: 20px;
+  }
+
+  .user-details p {
+    font-size: 16px;
+  }
+
+  .follow-btn.following {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .post-content {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .attached-book {
+    flex-direction: column; /* Stack book info */
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+  }
+
+  .bookCoverAttached {
+    width: 120px;
+    height: 180px;
+    margin-bottom: 10px;
+  }
+
+  .book-info {
+    text-align: center;
+  }
+
+  .nomeLivroPost {
+    font-size: 18px;
+  }
+
+  .nomeAutorPost {
+    font-size: 13px;
+  }
+
+  .book-description {
+    font-size: 14px;
+  }
+
+  .comment-form {
+    flex-direction: column; /* Stack input and button */
+    gap: 10px;
+  }
+
+  .comment-input {
+    width: 100%;
+    margin-bottom: 0; /* Remove margin-bottom as button moves below */
+  }
+
+  .comment-button {
+    width: 100%;
+    margin-left: 0; /* Remove margin-left as it's now full width */
+    padding: 8px 12px;
+    font-size: 15px;
+  }
+
+  .comments-list {
+    padding: 15px 15px 0 15px;
+    margin: 0 5px 0 5px;
+  }
+
+  .comment::before {
+    left: 0; /* Remove horizontal line */
+    width: 0;
+  }
+  .comment::after {
+    left: 8px; /* Adjust circle position */
+  }
+  .comments-list::before {
+    left: 5px; /* Adjust vertical line position */
+  }
+  .comment img {
+    width: 35px;
+    height: 35px;
+  }
+  .comment-user-name {
+    font-size: 16px;
+  }
+  .comment-time {
+    font-size: 12px;
+  }
+  .comment-text {
+    font-size: 15px;
+    margin-left: 0;
+  }
+  .like-comment-btn {
+    font-size: 15px;
+  }
+  .like-comment-btn i {
+    font-size: 13px;
+  }
+  .no-posts {
+    padding: 30px 15px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.6rem;
+  }
+  .tabs {
+    flex-wrap: wrap; /* Allow tabs to wrap */
+  }
+  .tab {
+    flex: none; /* No equal width for wrapping */
+    margin: 5px; /* Add margin between wrapped tabs */
+  }
+  .containerContent {
+    width: 100%; /* Even more width on small tablets */
+    gap: 15px;
+    padding: 10px; /* Reduce padding */
+  }
+  .post {
+    padding: 10px;
+  }
+  .user-info-container {
+    flex-direction: row; /* Keep user info in a row on smaller tablets */
+    align-items: center;
+    gap: 10px;
+  }
+  .user-info-container img {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 0;
+  }
+  .user-details h2 {
+    font-size: 18px;
+  }
+  .user-details p {
+    font-size: 14px;
+  }
+  .user-info-follow {
+    position: relative; /* Remove absolute positioning */
+    top: auto;
+    right: auto;
+    width: auto;
+    margin-left: auto; /* Push to right */
+  }
+  .follow-btn,
+  .follow-btn.following {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  .post-content {
+    font-size: 15px;
+    padding: 10px;
+  }
+  .attached-book {
+    padding: 10px;
+    gap: 10px;
+  }
+  .bookCoverAttached {
+    width: 80px;
+    height: 120px;
+  }
+  .book-info {
+    gap: 3px;
+  }
+  .nomeLivroPost {
+    font-size: 16px;
+  }
+  .nomeAutorPost {
+    font-size: 12px;
+  }
+  .book-description {
+    font-size: 13px;
+  }
+  .like-section,
+  .comment-section-count {
+    gap: 3px;
+  }
+  .like-btn i,
+  .comment-count i {
+    font-size: 18px;
+  }
+  .like-count,
+  .comment-count span {
+    font-size: 15px;
+  }
+  .comment-input {
+    font-size: 14px;
+    padding: 6px;
+  }
+  .comment-button {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  .comment img {
+    width: 30px;
+    height: 30px;
+  }
+  .comment-user-name {
+    font-size: 15px;
+  }
+  .comment-time {
+    font-size: 11px;
+  }
+  .comment-text {
+    font-size: 14px;
+  }
+  .like-comment-btn {
+    font-size: 13px;
+  }
+  .like-comment-btn i {
+    font-size: 12px;
+  }
+  .no-posts {
+    padding: 25px 10px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-btn {
+    display: block;
+    font-size: 25px;
+    top: 15px;
+    left: 15px;
+  }
+  h2 {
+    font-size: 1.4rem;
+  }
+  .tabs-container {
+    width: 100%; /* Take full width on smallest screens */
+  }
+  .tabs-container img {
+    width: 50px;
+  }
+  .tabs {
+    font-size: 13px;
+    padding: 5px 10px;
+    margin: 3px;
+    flex-wrap: wrap; /* Ensure wrapping on very small screens */
+    justify-content: center;
+  }
+  .tab {
+    flex-basis: auto; /* Allow tabs to size based on content */
+    margin: 3px;
+  }
+  .containerContent {
+    width: 100%; /* Full width on smallest screens */
+    padding: 5px;
+  }
+  .post {
+    padding: 8px;
+  }
+  .user-info-container img {
+    width: 40px;
+    height: 40px;
+  }
+  .user-details h2 {
+    font-size: 16px;
+  }
+  .user-details p {
+    font-size: 13px;
+  }
+  .follow-btn,
+  .follow-btn.following {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  .post-content {
+    font-size: 14px;
+    padding: 8px;
+  }
+  .attached-book {
+    padding: 8px;
+  }
+  .bookCoverAttached {
+    width: 70px;
+    height: 100px;
+  }
+  .book-info {
+    font-size: 0.9em; /* Adjust font size */
+  }
+  .nomeLivroPost {
+    font-size: 15px;
+  }
+  .nomeAutorPost {
+    font-size: 11px;
+  }
+  .book-description {
+    font-size: 12px;
+  }
+  .like-btn i,
+  .comment-count i {
+    font-size: 16px;
+  }
+  .like-count,
+  .comment-count span {
+    font-size: 13px;
+  }
+  .comment-input {
+    font-size: 13px;
+    padding: 5px;
+  }
+  .comment-button {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+  .comment img {
+    width: 25px;
+    height: 25px;
+  }
+  .comment-user-name {
+    font-size: 14px;
+  }
+  .comment-time {
+    font-size: 10px;
+  }
+  .comment-text {
+    font-size: 13px;
+  }
+  .like-comment-btn {
+    font-size: 12px;
+  }
+  .like-comment-btn i {
+    font-size: 10px;
+  }
+  .no-posts {
+    padding: 20px 10px;
+    font-size: 0.8em;
+  }
+}

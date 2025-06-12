@@ -39,170 +39,30 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #EEEEEE	;
+  background-color: #EEEEEE;
+  padding: 20px; /* Added padding for small screens */
+  min-height: 100vh; /* Ensure it takes full viewport height */
 }
 
-.sidebar {
-  width: 250px;
-  height: 100vh;
-  background: #ffffff;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  border-right: 0.5px solid #bebebe;
-  position: fixed;
-  left: 0;
-  top: 0;
-  transition: transform 0.3s ease-in-out;
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.sidebar img {
-  width: 100px;
-  display: block;
-  margin: 0 auto 20px;
-  cursor: pointer;
-}
-.sidebar ul {
-  list-style: none;
-  display: flex;
-  justify-content: column;
-  align-items: left;
-  flex-direction: column;
-  gap: 15px;
-  list-style: none;
-  outline: none;
-}
-.sidebar ul li {
-  padding: 15px 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  font-weight: 400;
-  color: #000000;
-  list-style-type: none;
-  list-style: none;
-  outline: none;
-  font-family: "Montserrat", sans-serif;
-}
-.sidebar ul li i {
-  margin-right: 10px;
-  font-size: 20px;
-}
-.sidebar ul li:hover {
-  background: #f1f5f9;
-  border-radius: 8px;
-}
-.sidebar ul li.active {
-  color: #64c1ff;
-  font-weight: bold;
-}
-.button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  background: #64c1ff;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  border-radius: 30px;
-  margin-top: 20px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-}
-.button i {
-  margin-left: 8px;
-  font-size: 20px;
-}
-.button:hover {
-  background: #42a5f5;
-}
-.button-content {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.buttonOff {
-  display: inline-block;
-  background: #dadadb;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: 0.3s;
-  cursor: pointer;
-}
-
-.buttonOff:hover {
-  transition: 0.3s;
-  background: red;
-}
-
-.buttonOff i {
-  color: #ffffff;
-}
-/* Responsividade */
-.menu-btn {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  background: none;
-  border: none;
-  font-size: 30px;
-  cursor: pointer;
-  z-index: 1002;
-}
-.overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-}
-@media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-100%);
-  }
-  .sidebar.active {
-    transform: translateX(0);
-  }
-  .menu-btn {
-    display: block;
-  }
-  .menu-btn.hidden {
-    display: none;
-  }
-  .overlay.active {
-    display: block;
-  }
-}
-
-.header-menu{
-  background-color: red;
+/* Sidebar and related styles (from common base, usually not present in setup pages) */
+/* Assuming setup pages don't have a sidebar, if they do, these would be relevant */
+.sidebar, .menu-btn, .overlay {
+    display: none !important; /* Hide sidebar elements on setup pages */
 }
 
 .content {
   width: 65%;
+  max-width: 800px; /* Added max-width */
   height: auto;
-  margin: 5%;
-  display: flex;
-  justify-content: center;
+  margin: 5% auto; /* Centered with auto margin */
   background-color: #FFFFFF;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 50px;
+  border-radius: var(--border-radius); /* Added border-radius */
+  box-shadow: var(--box-shadow); /* Added shadow */
 }
 
 .principal-content {
@@ -241,6 +101,7 @@ label {
   font-weight: 600;
   color: var(--preto-ativo);
   font-size: 18px;
+  text-align: center; /* Center label text */
 }
 input[type="file"] {
   width: 100%;
@@ -256,19 +117,33 @@ textarea {
   border-radius: 4px;
   box-sizing: border-box;
   min-height: 100px;
-  resize: none;
-  user-select: none;
+  resize: vertical; /* Changed to vertical for better control */
+  user-select: text; /* Changed to text to allow selection */
   outline: none;
 }
 .preview {
   margin: 15px 0;
+  text-align: center; /* Center preview image */
 }
 .preview img {
   max-width: 150px;
   max-height: 150px;
-  display: block;
+  display: inline-block; /* Changed to inline-block to center */
   margin-bottom: 10px;
+  border-radius: 50%; /* Make profile pic circular */
+  object-fit: cover; /* Ensure image covers area */
+  border: 3px solid var(--blue-primary); /* Add border */
 }
+/* Style for cover photo preview */
+#previewCapa {
+  border-radius: var(--border-radius-sm); /* Make cover photo rectangular */
+  max-width: 100%; /* Ensure it fits in wider spaces */
+  max-height: 200px; /* Limit height */
+  height: auto;
+  border: 1px solid var(--medium-gray);
+}
+
+
 input[type="submit"] {
   background-color: #1da1f2;
   color: white;
@@ -277,7 +152,15 @@ input[type="submit"] {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  width: 100%; /* Make submit button full width */
+  max-width: 300px; /* Limit max width for submit button */
+  transition: all 0.3s ease;
 }
+input[type="submit"]:hover {
+    background-color: #0d8cd3;
+    box-shadow: var(--box-shadow);
+}
+
 .progress-info {
   margin-bottom: 20px;
   color: #666;
@@ -285,6 +168,7 @@ input[type="submit"] {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center; /* Center text */
 }
 
 .progress-info p{
@@ -301,4 +185,174 @@ form{
 }
 i{
   color: var(--blue-primary);
+}
+
+.file-input-label {
+    display: inline-block;
+    background-color: var(--light-gray);
+    color: var(--dark);
+    padding: 10px 15px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    border: 1px solid var(--medium-gray);
+    text-align: center;
+    transition: var(--transition);
+    margin-top: 5px;
+    width: 80%; /* Adjusted width */
+    max-width: 300px; /* Limit max width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.file-input-label:hover {
+    background-color: var(--medium-gray);
+    border-color: var(--blue-primary);
+}
+
+.file-input-label i {
+    color: var(--blue-primary);
+}
+
+small {
+    font-size: 0.8em;
+    color: var(--dark-gray);
+    margin-top: -5px;
+    text-align: center;
+    max-width: 90%; /* Limit width to prevent overflow */
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .content {
+        width: 80%; /* Wider on tablets */
+        padding: 40px 30px;
+    }
+    label {
+        font-size: 16px;
+    }
+    .preview img {
+        max-width: 120px;
+        max-height: 120px;
+    }
+    #previewCapa {
+        max-height: 150px;
+    }
+    input[type="submit"], .file-input-label {
+        max-width: 250px; /* Slightly smaller buttons */
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    .content {
+        width: 95%; /* Almost full width on smaller tablets */
+        padding: 30px 20px;
+        margin: 20px auto; /* Adjust vertical margin */
+    }
+    .progress-info h2 {
+        font-size: 1.5rem;
+    }
+    .progress-info p {
+        font-size: 0.9em;
+    }
+    label {
+        font-size: 15px;
+    }
+    textarea {
+        min-height: 80px;
+        font-size: 15px;
+    }
+    .preview img {
+        max-width: 100px;
+        max-height: 100px;
+    }
+    #previewCapa {
+        max-height: 120px;
+    }
+    input[type="submit"], .file-input-label {
+        padding: 8px 12px;
+        font-size: 15px;
+        max-width: 200px;
+    }
+    small {
+        font-size: 0.75em;
+    }
+}
+
+@media (max-width: 576px) {
+    .content {
+        padding: 20px 15px;
+        margin: 15px auto;
+    }
+    .progress-info h2 {
+        font-size: 1.3rem;
+    }
+    .progress-info p {
+        font-size: 0.8em;
+    }
+    label {
+        font-size: 14px;
+        gap: 3px;
+    }
+    textarea {
+        min-height: 70px;
+        font-size: 14px;
+    }
+    .preview img {
+        max-width: 80px;
+        max-height: 80px;
+    }
+    #previewCapa {
+        max-height: 100px;
+    }
+    input[type="submit"], .file-input-label {
+        padding: 7px 10px;
+        font-size: 14px;
+        max-width: 180px;
+    }
+    small {
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    .content {
+        padding: 15px 10px;
+        margin: 10px auto;
+    }
+    .progress-info h2 {
+        font-size: 1.1rem;
+    }
+    .progress-info p {
+        font-size: 0.75em;
+    }
+    label {
+        font-size: 13px;
+    }
+    textarea {
+        min-height: 60px;
+        font-size: 13px;
+    }
+    .preview img {
+        max-width: 70px;
+        max-height: 70px;
+    }
+    #previewCapa {
+        max-height: 80px;
+    }
+    input[type="submit"], .file-input-label {
+        padding: 6px 8px;
+        font-size: 13px;
+        max-width: 160px;
+    }
+    small {
+        font-size: 0.65em;
+    }
 }

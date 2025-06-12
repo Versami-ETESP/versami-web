@@ -8,6 +8,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Erro no Cadastro | Versami</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <link rel="stylesheet" href="CSS/StyleError.css">
     <style>
         

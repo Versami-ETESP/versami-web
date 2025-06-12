@@ -69,6 +69,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicação - Versami</title>
     <link rel="stylesheet" href="CSS/PostDetails.css">
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
 </head>
 
@@ -116,7 +117,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
         <div class="principal-content">
             <div class="user">
                 <div class="review-header">
-                    <a href="feed.php" class="back-arrow">
+                    <a href="../Feed/Feed.php" class="back-arrow">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <h2>Review</h2>
@@ -302,6 +303,11 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
 
     <div id="toastNotification" class="toast-notification"></div>
 
+    <button class="menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>
@@ -427,7 +433,7 @@ $comentarios = sqlsrv_query($conn, $sql_comentarios, $params_comentarios);
                 data = { idPublicacao: postId };
                 successMessage = 'Publicação e dados relacionados excluídos com sucesso!';
                 errorMessage = 'Erro ao excluir a publicação.';
-                redirectUrl = 'feed.php'; // Redireciona para o feed após exclusão
+                redirectUrl = '../Feed/Feed.php'; // Redireciona para o feed após exclusão
             } else {
                 console.error("Tipo de ação desconhecido: " + actionType);
                 showToast("Erro interno: tipo de ação inválido.", 'error');

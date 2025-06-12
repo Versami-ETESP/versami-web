@@ -108,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurar Perfil - Versami</title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <link rel="stylesheet" href="CSS/SetupProfileStyle.css">
 </head>
 

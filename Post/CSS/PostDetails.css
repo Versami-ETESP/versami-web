@@ -1291,3 +1291,459 @@ a.user-link:hover {
 .view-book-btn:hover {
   background-color: #4fa8c7;
 }
+
+.menu-btn {
+  display: none; /* Hides the button by default on larger screens */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .content {
+    margin-left: 0; /* No margin for sidebar on smaller screens, it will overlay */
+  }
+}
+
+@media (max-width: 992px) {
+
+  .menu-btn {
+    display: block; /* Show menu button */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1002;
+    background-color: none;
+    border: none;
+    border-radius: 50%;
+  }
+
+  #sidebar {
+    transform: translateX(-100%); /* Hide sidebar by default */
+  }
+
+  #sidebar.active {
+    transform: translateX(0); /* Show sidebar when active */
+  }
+
+  .menu-btn {
+    display: block; /* Show menu button */
+  }
+
+  .content {
+    margin-left: 0; /* No left margin when sidebar is hidden/overlay */
+  }
+
+  .review-header {
+    margin-left: 20px; /* Adjust margin */
+  }
+
+  .post-details-container {
+    width: 90%; /* Wider on tablets */
+    margin: 20px auto; /* Center */
+  }
+
+  .post-action-buttons {
+    position: static; /* Allow normal flow */
+    margin-top: 15px; /* Add space */
+    justify-content: flex-start; /* Align left */
+  }
+
+  .user-avatar {
+    width: 55px;
+    height: 55px;
+  }
+
+  .user-info h2 {
+    font-size: 16px;
+  }
+
+  .user-info p {
+    font-size: 13px;
+  }
+
+  .user-info-follow {
+    width: auto;
+    flex-grow: 1; /* Allow to grow */
+    justify-content: flex-end; /* Push to end */
+  }
+
+  .follow-btn, .following {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .post-content p {
+    font-size: 15px;
+  }
+
+  .attached-bookF {
+    flex-direction: column; /* Stack book info */
+    align-items: center;
+    text-align: center;
+  }
+
+  .book-cover, .no-book-cover {
+    margin-bottom: 10px;
+  }
+
+  .book-info {
+    text-align: center;
+  }
+
+  .book-actions {
+    justify-content: center;
+  }
+
+  .like-btn .like-count, .post-time {
+    font-size: 13px;
+  }
+
+  .comments-section h3 {
+    font-size: 1.2em;
+  }
+
+  .comment-input {
+    font-size: 13px;
+  }
+
+  .comment-button {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  .comment {
+    padding: 10px;
+  }
+
+  .comment-avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .comment-header strong, .comment-header span, .comment-time {
+    font-size: 12px;
+  }
+
+  .comment-content p {
+    font-size: 13px;
+  }
+
+  .like-comment-btn {
+    font-size: 13px;
+  }
+  .modal-content {
+    padding: 20px;
+    font-size: 16px;
+  }
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+  .modal-content p {
+    font-size: 1em;
+  }
+  .modal-btn {
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 768px) {
+  .review-header {
+    margin-left: 10px;
+  }
+  .review-header h2 {
+    font-size: 1.6rem;
+  }
+  .post-details-container {
+    width: 95%;
+    padding: 15px;
+  }
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+  }
+  .user-info h2 {
+    font-size: 15px;
+  }
+  .user-info p {
+    font-size: 12px;
+  }
+  .post-action-buttons {
+    flex-direction: column; /* Stack buttons */
+    align-items: flex-end; /* Align right */
+    gap: 5px;
+  }
+  .post-menu-item {
+    font-size: 0.8em;
+    padding: 6px 10px;
+  }
+  .post-menu-item i {
+    font-size: 1em;
+  }
+  .post-content p {
+    font-size: 14px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+  }
+  .attached-bookF {
+    padding: 10px;
+    gap: 10px;
+  }
+  .book-cover, .no-book-cover {
+    width: 70px;
+    height: 100px;
+  }
+  .book-info h3 {
+    font-size: 1em;
+  }
+  .book-author {
+    font-size: 0.8em;
+  }
+  .book-description {
+    font-size: 0.75em;
+  }
+  .favorite-btn, .view-book-btn {
+    font-size: 0.75em;
+    padding: 5px 10px;
+  }
+  .comments-section h3 {
+    font-size: 1.1em;
+  }
+  .comment-form {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .comment-input {
+    padding: 8px;
+  }
+  .comment-button {
+    padding: 8px 12px;
+  }
+  .comment-avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  .comment-header strong, .comment-header span, .comment-time {
+    font-size: 11px;
+  }
+  .comment-content p {
+    font-size: 12px;
+  }
+  .like-comment-btn {
+    font-size: 12px;
+  }
+  .like-comment-btn i {
+    font-size: 11px;
+  }
+  .modal-content {
+    padding: 15px;
+  }
+  .modal-content h2 {
+    font-size: 1.3rem;
+  }
+  .modal-content p {
+    font-size: 0.9em;
+  }
+  .modal-btn {
+    padding: 6px 12px;
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 576px) {
+  .principal-content {
+    padding: 10px;
+  }
+  .review-header {
+    margin-left: 5px;
+  }
+  .post-details-container {
+    width: 100%;
+    margin: 10px auto;
+    padding: 10px;
+  }
+  .user-avatar {
+    width: 45px;
+    height: 45px;
+  }
+  .user-info h2 {
+    font-size: 14px;
+  }
+  .user-info p {
+    font-size: 11px;
+  }
+  .post-action-buttons {
+    flex-direction: row; /* Back to row for very small screens if space allows */
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: flex-start; /* Align left */
+    top: auto; /* Remove absolute positioning */
+    right: auto;
+    margin-top: 10px; /* Space from above */
+    position: relative; /* Make it relative again */
+  }
+  .post-menu-item {
+    font-size: 0.7em;
+    padding: 4px 8px;
+    flex-grow: 1; /* Allow items to grow */
+    justify-content: center;
+  }
+  .post-content p {
+    font-size: 13px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  .attached-bookF {
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+  }
+  .book-cover, .no-book-cover {
+    width: 60px;
+    height: 90px;
+  }
+  .book-info {
+    font-size: 0.9em;
+  }
+  .book-info h3 {
+    font-size: 0.9em;
+  }
+  .book-author {
+    font-size: 0.7em;
+  }
+  .book-description {
+    font-size: 0.65em;
+  }
+  .favorite-btn, .view-book-btn {
+    font-size: 0.7em;
+    padding: 4px 8px;
+  }
+  .comments-section h3 {
+    font-size: 1em;
+  }
+  .comment-input {
+    padding: 6px;
+    font-size: 12px;
+  }
+  .comment-button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .comment-avatar {
+    width: 25px;
+    height: 25px;
+  }
+  .comment-header strong, .comment-header span, .comment-time {
+    font-size: 10px;
+  }
+  .comment-content p {
+    font-size: 11px;
+  }
+  .like-comment-btn {
+    font-size: 11px;
+  }
+  .like-comment-btn i {
+    font-size: 10px;
+  }
+  .modal-content {
+    padding: 10px;
+  }
+  .modal-content h2 {
+    font-size: 1.1rem;
+  }
+  .modal-content p {
+    font-size: 0.8em;
+  }
+  .modal-actions {
+    gap: 10px;
+  }
+  .modal-btn {
+    padding: 5px 10px;
+    font-size: 0.75em;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-btn {
+    display: block;
+    font-size: 25px;
+    top: 15px;
+    left: 15px;
+  }
+  .review-header h2 {
+    font-size: 1.4rem;
+  }
+  .post-details-container {
+    padding: 8px;
+  }
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+  }
+  .user-info h2 {
+    font-size: 13px;
+  }
+  .user-info p {
+    font-size: 10px;
+  }
+  .post-menu-item {
+    font-size: 0.65em;
+    padding: 3px 6px;
+  }
+  .post-content p {
+    font-size: 12px;
+  }
+  .attached-bookF {
+    padding: 6px;
+  }
+  .book-info {
+    font-size: 0.8em;
+  }
+  .book-info h3 {
+    font-size: 0.8em;
+  }
+  .book-author {
+    font-size: 0.65em;
+  }
+  .book-description {
+    font-size: 0.6em;
+  }
+  .favorite-btn, .view-book-btn {
+    font-size: 0.65em;
+    padding: 3px 6px;
+  }
+  .comments-section h3 {
+    font-size: 0.9em;
+  }
+  .comment-input {
+    font-size: 11px;
+  }
+  .comment-button {
+    font-size: 11px;
+  }
+  .comment-avatar {
+    width: 20px;
+    height: 20px;
+  }
+  .comment-header strong, .comment-header span, .comment-time {
+    font-size: 9px;
+  }
+  .comment-content p {
+    font-size: 10px;
+  }
+  .like-comment-btn {
+    font-size: 10px;
+  }
+  .like-comment-btn i {
+    font-size: 9px;
+  }
+  .modal-content h2 {
+    font-size: 1rem;
+  }
+  .modal-content p {
+    font-size: 0.7em;
+  }
+  .modal-btn {
+    font-size: 0.7em;
+  }
+}

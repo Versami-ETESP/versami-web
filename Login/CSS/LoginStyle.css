@@ -588,7 +588,7 @@ div.carregando {
   justify-content: space-between;
   align-items: center;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--versami-cor6);
+  border-bottom: 1px solid #eee; /* Changed to general border color */
   margin-bottom: 10px;
 }
 
@@ -613,7 +613,7 @@ div.carregando {
 }
 
 #forgotPasswordPopupOverlay .btn-top-content .btn-close:hover {
-  background-color: var(--versami-cor6);
+  background-color: var(--light-gray); /* Changed to general light gray */
   color: var(--versami-cor3);
 }
 
@@ -656,7 +656,7 @@ div.carregando {
 }
 
 #forgotPasswordPopupOverlay .form-group input[readonly] {
-  background-color: var(--versami-cor6);
+  background-color: var(--light-gray); /* Changed to general light gray */
   cursor: not-allowed;
   border-color: var(--versami-cor4);
 }
@@ -677,113 +677,223 @@ div.carregando {
 }
 
 /* --- MEDIA QUERIES (mantidas) --- */
-@media (max-width: 750px) {
+@media (max-width: 1200px) {
+  .loginPrincipal, .cadastroPrincipal {
+    width: 45vw; /* Increase width for medium screens */
+  }
+  .tituloPrincipal {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .nav-links {
+    max-width: 100%;
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+  .nav-links li {
+    margin: 0 1rem;
+  }
+  .logo img {
+    width: 6rem;
+  }
+  .logo span {
+    font-size: 1.2rem;
+  }
+  .user-icon {
+    display: none; /* Hide user icon in nav on smaller screens */
+  }
   main {
-    display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column-reverse; /* Stack elements for smaller screens */
+    padding: 2rem 0;
   }
-  .msg {
-    width: 95%;
-    height: 30vh;
+  .loginPrincipal, .cadastroPrincipal {
+    width: 80vw; /* Take more width on tablets */
+    min-height: auto;
+    padding: 2rem;
+    margin: 1rem auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
-  div.principal {
-    width: 95%;
-    min-height: 45vh;
-    margin-right: 0;
-    margin-top: -15%;
+  .msgindex {
+    margin-left: 0; /* Remove left margin when stacked */
   }
-  /* Responsividade para o popup em telas menores */
-  .popup {
-    width: 95% !important; /* Ocupa quase toda a largura */
-    padding: 15px;
-    min-height: auto; /* Altura flexível */
+  .login-panel h2, .cadastroPrincipal h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  .login-panel p, .cadastroPrincipal p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .input-group {
+    width: 90%; /* Increase input group width */
+  }
+  .button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .tituloPrincipal {
+    font-size: 2rem;
+    margin-top: 1rem;
+  }
+  footer .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .newsletter, .middle, .about {
+    text-align: center;
+  }
+  .newsletter form {
+    justify-content: center;
+  }
+  .social-links {
+    justify-content: center;
+  }
+  .social-links a i {
+    margin: 0 1rem;
+  }
+  .about p {
+    max-width: 90%; /* Adjust max-width for about text */
+  }
+  /* Popup adjustments for smaller screens */
+  #forgotPasswordPopupOverlay .popup {
+    width: 90%; /* Adjust width */
+    padding: 20px;
   }
   #forgotPasswordPopupOverlay .btn-top-content {
-    flex-direction: column; /* Empilha título e botão X */
-    gap: 5px;
+    flex-direction: column; /* Stack header elements */
+    align-items: center;
+    gap: 10px;
   }
   #forgotPasswordPopupOverlay .btn-top-content .btn-close {
-    order: 0; /* Volta à ordem normal se empilhado */
-    margin-bottom: 5px;
+    position: relative; /* Remove absolute positioning */
+    top: auto;
+    left: auto;
+    order: 0;
   }
   #forgotPasswordPopupOverlay .form-group {
-    width: 95%; /* Ajuste para campos em telas muito pequenas */
+    width: 100%; /* Full width for form groups */
+  }
+  #forgotPasswordPopupOverlay .btnPersonalizar {
+    width: 100%;
   }
 }
 
-/* --- OUTROS ESTILOS (mantidos) --- */
-.forgot-password-link {
-  display: block;
-  text-align: right;
-  margin-top: 10px;
-  margin-bottom: 15px;
-  font-size: 0.9em;
-  color: var(--versami-cor1);
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.forgot-password-link:hover {
-  text-decoration: underline;
-  color: var(--versami-cor7);
-}
-
-.toast-notification {
-  visibility: hidden;
-  min-width: 250px;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 8px;
-  padding: 16px;
-  position: fixed;
-  z-index: 10001;
-  left: 50%;
-  bottom: 30px;
-  transform: translateX(-50%);
-  font-size: 17px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  transition: visibility 0s, opacity 0.5s ease-in-out;
-}
-
-.toast-notification.show {
-  visibility: visible;
-  opacity: 1;
-}
-
-.toast-notification.success {
-  background-color: #4caf50;
-}
-
-.toast-notification.error {
-  background-color: #f44336;
-}
-
-.error-message {
-  color: #d32f2f;
-  text-align: center;
-  margin: 0 auto 20px auto;
-  font-size: 14px;
-  padding: 12px;
-  background-color: #ffebee;
-  border-radius: 6px;
-  border: 1px solid #ef9a9a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  max-width: 80%;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
+@media (max-width: 768px) {
+  header {
+    padding: 1rem;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .nav-links {
+    display: none; /* Hide nav links on smaller screens; consider a hamburger menu if main site has one */
+  }
+  .logo {
+    width: auto;
+    margin: 0 auto; /* Center logo */
+  }
+  .loginPrincipal, .cadastroPrincipal {
+    width: 95vw; /* Almost full width on mobile */
+    padding: 1.5rem;
+  }
+  .login-panel h2, .cadastroPrincipal h1 {
+    font-size: 1.8rem;
+  }
+  .login-panel p, .cadastroPrincipal p {
+    font-size: 0.9rem;
+  }
+  .tituloPrincipal {
+    font-size: 1.8rem;
+  }
+  .input-group {
+    width: 95%;
+    padding: 0.6rem 0.8rem;
+  }
+  .form-input, .input-group i {
+    font-size: 0.9rem;
+  }
+  .button {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+  .error-message {
+    font-size: 12px;
+    padding: 8px;
+    max-width: 90%;
+  }
+  .carregando {
+    width: 40px;
+    height: 40px;
+    border-width: 8px;
+  }
+  /* Popup further adjustments */
+  #forgotPasswordPopupOverlay .popup {
+    padding: 15px;
+    gap: 10px;
+  }
+  #forgotPasswordPopupOverlay .btn-top-content h2 {
+    font-size: 1.3em;
+  }
+  #forgotPasswordPopupOverlay .form-group label {
+    font-size: 0.9em;
+  }
+  #forgotPasswordPopupOverlay .form-group input {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+  #forgotPasswordPopupOverlay .btnPersonalizar {
+    padding: 8px 15px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo img {
+    width: 5rem;
+  }
+  .logo span {
+    font-size: 1rem;
+  }
+  .loginPrincipal, .cadastroPrincipal {
+    height: auto; /* Allow height to adjust */
+    padding: 1rem;
+  }
+  .login-panel h2, .cadastroPrincipal h1 {
+    font-size: 1.5rem;
+  }
+  .login-panel p, .cadastroPrincipal p {
+    font-size: 0.8rem;
+  }
+  .tituloPrincipal {
+    font-size: 1.5rem;
+  }
+  .input-group {
+    width: 100%;
+  }
+  .form-input, .input-group i {
+    font-size: 0.85rem;
+  }
+  /* Final popup adjustments */
+  #forgotPasswordPopupOverlay .popup {
+    padding: 10px;
+    gap: 8px;
+  }
+  #forgotPasswordPopupOverlay .btn-top-content h2 {
+    font-size: 1.1em;
+  }
+  #forgotPasswordPopupOverlay .form-group label {
+    font-size: 0.8em;
+  }
+  #forgotPasswordPopupOverlay .form-group input {
+    font-size: 0.8em;
+    padding: 6px;
+  }
+  #forgotPasswordPopupOverlay .btnPersonalizar {
+    padding: 6px 12px;
+    font-size: 0.8em;
   }
 }

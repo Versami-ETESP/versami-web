@@ -98,6 +98,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de <?= htmlspecialchars($usuario['nome']) ?></title>
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <link rel="stylesheet" href="CSS/ProfileViewStyle.css">
     <link rel="stylesheet" href="../Profile/CSS/StyleProfile.css">
 </head>
@@ -158,7 +159,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                         </div>
                         <div class="profile-text-bio">
                             <p class="profile-bio">
-                                <?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
+                                <?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?>
+                            </p>
                         </div>
                     </div>
 
@@ -389,6 +391,12 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     </div>
 
     <div id="toastNotification" class="toast-notification"></div>
+
+    <button class="menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>

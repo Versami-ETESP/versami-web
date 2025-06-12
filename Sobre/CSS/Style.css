@@ -7,8 +7,103 @@
    Inherit general styles from ../Index/CSS/Style.css
 */
 
+body {
+  /* Ensure body is set up for flexbox layout on large screens */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #ffffff; /* Explicitly set background */
+  overflow-x: hidden;
+}
+
+header {
+  padding: 1.5rem 2rem;
+  position: relative;
+}
+
+nav {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+  border-radius: 1rem;
+  border: 0.1rem solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0.5rem 2rem 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.glass-gradient-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #61c1d1,
+    transparent
+  );
+  z-index: 1;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo img {
+  width: 7.5rem;
+  margin-right: 0.625rem;
+}
+
+.logo span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c2c2c;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+  max-width: 50rem;
+  list-style: none;
+}
+
+.nav-links li {
+  margin-right: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #2c2c2c;
+  font-size: 1.125rem;
+  padding-bottom: 0.313rem;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  border-bottom: 0.188rem solid #61c1d1;
+  color: #61c1d1;
+}
+
 main {
-  /* Override or extend main styles if necessary */
+  flex-grow: 1; /* Allow main to take available space */
   background-color: #ffffff; /* Ensure white background for main content */
 }
 
@@ -127,13 +222,267 @@ main {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* App Section (Duplicated from Index/Style.css, but relevant here too) */
+.app-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 2rem;
+  background: linear-gradient(
+    135deg,
+    #3d5a80 0%,
+    #61c1d1 100%
+  ); /* Reverse gradient from search */
+  color: white;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.app-content-left {
+  max-width: 45%;
+  text-align: left;
+}
+
+.app-content-left h2 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.app-content-left h2 span {
+  color: #a3d9e8; /* Lighter shade for contrast */
+  border-bottom: 4px solid #a3d9e8;
+}
+
+.app-content-left p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.app-content-left img {
+  width: 180px; /* Adjust size of app store icon */
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.app-content-left img:hover {
+  transform: scale(1.05);
+}
+
+.app-content-right {
+  max-width: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-content-right img {
+  max-width: 100%;
+  height: auto;
+  animation: float 3s ease-in-out infinite; /* Floating animation */
+}
+
+/* General button styles (assuming button is a common class) */
+.button {
+  display: inline-flex;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  background-color: #61c1d1;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+  background-color: #3a737d;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.button i {
+  transition: transform 0.3s ease;
+}
+
+.button:hover i {
+  transform: translateX(5px);
+}
+
+/* Footer styles (copied from Index/Style.css, as it's common) */
+footer {
+  background-color: #333;
+  padding: 2.5rem 1.25rem;
+  color: white;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 75rem;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.newsletter h4 {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.newsletter h1 {
+  font-size: 3.063rem;
+  border-bottom: 0.188rem solid #61c1d1;
+  margin-bottom: 0.938rem;
+}
+
+.newsletter span {
+  color: #61c1d1;
+}
+
+.newsletter form {
+  display: flex;
+  margin-top: 0.625rem;
+}
+
+.newsletter form button {
+  font-family: "Montserrat", sans-serif;
+  background-color: #61c1d1;
+  background-image: linear-gradient(180deg, #61c1d1 0%, #3a737d 100%);
+  color: white;
+  border: none;
+  border-radius: 0.313rem;
+  padding: 0.625rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.newsletter form input {
+  padding: 0.625rem;
+  border: none;
+  border-radius: 0.313rem;
+  margin-right: 0.625rem;
+  outline: none;
+}
+
+.newsletter form button:hover {
+  background-image: linear-gradient(
+    90deg,
+    #61c1d1 0%,
+    #3a737d 100%
+  );
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.middle {
+  display: inline;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.875rem;
+}
+
+.social-links a i {
+  font-size: 1.563rem;
+  margin-right: 1.875rem;
+  color: #cccccc;
+  transition: all 0.3s ease;
+}
+
+.social-links a i:hover {
+  color: #61c1d1;
+}
+
+.social-links a i:last-child {
+  margin-right: 0;
+}
+
+.social-image {
+  margin-bottom: 3.125rem;
+}
+
+.social-image img {
+  width: 12.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.about h4 {
+  font-size: 1.5rem;
+  margin-bottom: 0.938rem;
+}
+
+.pRedes {
+  text-align: center;
+  margin-bottom: 1.875rem;
+}
+
+.about p {
+  color: #cccccc;
+  max-width: 18.75rem;
+}
+
+/* Animations */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 /* Responsive Adjustments for Sobre page */
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
+  nav {
+    flex-direction: column; /* Stack nav items */
+    gap: 1rem;
+  }
+  .nav-links {
+    max-width: 100%;
+    justify-content: center;
+    padding: 0.5rem 0;
+  }
+  .nav-links li {
+    margin: 0 1rem;
+  }
+  .logo {
+    margin-right: 0; /* Remove margin */
+    margin-bottom: 1rem; /* Add some space below logo */
+  }
+
   .about-hero-section,
   .our-idea-section {
     flex-direction: column;
     text-align: center;
-    gap: 1.5rem;
+    gap: 3rem; /* Adjusted gap */
+    padding: 3rem 1.5rem;
+    min-height: auto; /* Allow height to adjust */
   }
 
   .about-hero-content,
@@ -146,37 +495,239 @@ main {
 
   .about-hero-content h2,
   .our-idea-content h2 {
-    font-size: 2.5rem;
+    font-size: 3rem; /* Adjusted font size */
   }
 
   .about-hero-content p,
   .our-idea-content p {
-    font-size: 1rem;
+    font-size: 1.1rem; /* Adjusted font size */
   }
 
-  .button {
-    width: 80%; /* Adjust button width for smaller screens */
+  .about-hero-section::after {
+    bottom: -50px; /* Adjust overlap */
+    height: 50px;
+  }
+
+  .our-idea-image img {
+    border-radius: 2rem; /* Slightly smaller border-radius */
+  }
+
+  .app-section {
+    flex-direction: column-reverse; /* Put text below image */
+    padding: 4rem 1.5rem;
+    gap: 2rem;
+  }
+  .app-content-left, .app-content-right {
+    max-width: 90%;
+    text-align: center;
+  }
+  .app-content-left h2 {
+    font-size: 2.5rem;
+  }
+  .app-content-left p {
+    font-size: 1rem;
+  }
+  .app-content-left img {
+    width: 150px; /* Smaller app store icon */
+  }
+
+  footer .footer-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+  .newsletter, .middle, .about {
+    text-align: center;
+  }
+  .newsletter form {
+    justify-content: center;
+  }
+  .social-links {
+    justify-content: center;
+  }
+  .social-links a i {
+    margin: 0 1rem;
+  }
+  .about p {
+    max-width: unset;
   }
 }
 
 @media (max-width: 768px) {
+  header {
+    padding: 1rem;
+  }
+  .logo img {
+    width: 6rem;
+  }
+  .logo span {
+    font-size: 1.2rem;
+  }
+  .nav-links {
+    display: none; /* Hide nav links */
+  }
+
+  .about-hero-section,
+  .our-idea-section,
+  .app-section {
+    padding: 2.5rem 1rem;
+    gap: 2rem;
+  }
+
   .about-hero-content h2,
   .our-idea-content h2 {
+    font-size: 2.2rem;
+  }
+  .about-hero-content p,
+  .our-idea-content p {
+    font-size: 0.9rem;
+  }
+
+  .about-hero-image {
+    max-width: 70%;
+  }
+  .our-idea-image {
+    max-width: 50%;
+  }
+
+  .app-content-left h2 {
     font-size: 2rem;
   }
-  .about-hero-section,
-  .our-idea-section {
-    padding: 3rem 1rem;
+  .app-content-left p {
+    font-size: 0.9rem;
+  }
+  .app-content-left img {
+    width: 120px;
+  }
+
+  footer {
+    padding: 2rem 1rem;
+  }
+  .newsletter form {
+    flex-direction: column; /* Stack input and button */
+    gap: 0.5rem;
+  }
+  .newsletter input {
+    margin-right: 0;
+    width: 90%;
+  }
+  .newsletter button {
+    width: 90%;
+  }
+  .social-links {
+    margin-bottom: 1rem;
+  }
+  .social-links a i {
+    margin: 0 0.8rem;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
+  .about-hero-section,
+  .our-idea-section,
+  .app-section {
+    padding: 2rem 0.8rem;
+    gap: 1.5rem;
+  }
   .about-hero-content h2,
   .our-idea-content h2 {
     font-size: 1.8rem;
   }
   .about-hero-content p,
   .our-idea-content p {
+    font-size: 0.8rem;
+  }
+  .about-hero-image {
+    max-width: 80%;
+  }
+  .our-idea-image {
+    max-width: 60%;
+  }
+  .app-content-left h2 {
+    font-size: 1.8rem;
+  }
+  .app-content-left p {
+    font-size: 0.8rem;
+  }
+  .app-content-left img {
+    width: 100px;
+  }
+
+  footer {
+    padding: 1.5rem 0.8rem;
+  }
+  .newsletter h1 {
+    font-size: 2.5rem;
+  }
+  .newsletter h4 {
+    font-size: 1.3rem;
+  }
+  .newsletter p {
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 0.8rem;
+  }
+  .logo img {
+    width: 5rem;
+  }
+  .logo span {
+    font-size: 1rem;
+  }
+
+  .about-hero-section,
+  .our-idea-section,
+  .app-section {
+    padding: 1.5rem 0.5rem;
+    gap: 1rem;
+  }
+  .about-hero-content h2,
+  .our-idea-content h2 {
+    font-size: 1.5rem;
+  }
+  .about-hero-content p,
+  .our-idea-content p {
+    font-size: 0.75rem;
+  }
+  .about-hero-image {
+    max-width: 90%;
+  }
+  .our-idea-image {
+    max-width: 70%;
+  }
+  .app-content-left h2 {
+    font-size: 1.5rem;
+  }
+  .app-content-left p {
+    font-size: 0.75rem;
+  }
+  .app-content-left img {
+    width: 80px;
+  }
+
+  footer {
+    padding: 1rem 0.5rem;
+  }
+  .newsletter h1 {
+    font-size: 2rem;
+  }
+  .newsletter h4 {
+    font-size: 1.1rem;
+  }
+  .newsletter p {
+    font-size: 0.8rem;
+  }
+  .social-links a i {
+    font-size: 1.2rem;
+    margin: 0 0.5rem;
+  }
+  .about h4 {
+    font-size: 1.1rem;
+  }
+  .about p {
+    font-size: 0.7rem;
   }
 }

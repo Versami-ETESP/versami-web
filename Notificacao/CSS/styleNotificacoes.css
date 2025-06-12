@@ -43,6 +43,7 @@ body {
   overflow: hidden;
   height: 100%;
   transition: background-color 0.3s, color 0.3s;
+  margin-left: 250px; /* Space for sidebar on large screens */
 }
 
 #sidebar {
@@ -193,7 +194,46 @@ body {
 }
 
 .header-menu {
-  background-color: red;
+  background-color: transparent; /* Changed from red */
+  position: relative; /* Needed for positioning the menu button */
+}
+
+/* Menu button for small screens */
+.menu-btn {
+  display: none; /* Hidden by default for larger screens */
+  position: fixed; /* Fixed position */
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  color: var(--dark); /* Adjust color to be visible on content */
+  cursor: pointer;
+  z-index: 1002; /* Higher than sidebar */
+  padding: 10px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.menu-btn:hover {
+  background-color: var(--light-gray);
+}
+
+/* Overlay for when sidebar is open */
+.overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 1000; /* Between content and sidebar */
+}
+
+/* When sidebar is active, show the overlay */
+.overlay.active {
+  display: block;
 }
 
 .content {
@@ -201,12 +241,14 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center;
+  transition: margin-left 0.3s ease-in-out;
+  padding-top: 20px; /* Add padding to top to avoid content being hidden by menu button */
 }
 
 #principal-content {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--content-background-light);
+  background-color: var(--white-background); /* Changed from content-background-light */
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -214,6 +256,11 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   height: 100vh;
+  align-items: center; /* Center the content vertically */
+}
+
+#principal-content::-webkit-scrollbar {
+  display: none;
 }
 
 .user {
@@ -280,7 +327,10 @@ input[type="submit"]:hover {
   background: white;
   padding: 20px;
   width: 750px;
+  max-width: 90%; /* Responsive adjustment */
   height: auto;
+  max-height: 90vh; /* Limit height */
+  overflow-y: auto; /* Enable scrolling for popup content */
   border-radius: 10px;
   position: relative;
   text-align: center;
@@ -307,14 +357,15 @@ input[type="submit"]:hover {
 
 .btn-close-content {
   display: flex;
-  justify-content: left;
-  align-items: left;
+  justify-content: flex-start; /* Align to start */
 }
 
 .btn-top-content {
   display: flex;
   flex-direction: row;
-  gap: 35%;
+  justify-content: space-between; /* Space out elements */
+  width: 100%; /* Take full width */
+  align-items: center;
 }
 .popup .btn-close {
   border: none;
@@ -619,10 +670,12 @@ form textarea {
 
 .notificacoes-list {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto; /* Center on desktop */
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 95%; /* Adjust width for responsiveness, allowing some padding */
+  padding: 10px; /* Add padding */
 }
 
 .notificacao {
@@ -632,6 +685,7 @@ form textarea {
   border-bottom: 1px solid #f0f0f0;
   transition: background-color 0.2s;
   cursor: pointer;
+  gap: 10px; /* Space between elements */
 }
 
 .notificacao:hover {
@@ -643,14 +697,16 @@ form textarea {
 }
 
 .notificacao-icon {
-  margin-right: 12px;
+  margin-right: 0; /* Remove margin, use gap */
   font-size: 20px;
   width: 24px;
   text-align: center;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .notificacao-user-photo {
-  margin-right: 12px;
+  margin-right: 0; /* Remove margin, use gap */
+  flex-shrink: 0;
 }
 
 .notificacao-user-photo img {
@@ -661,12 +717,18 @@ form textarea {
 }
 
 .notificacao-content {
-  flex-grow: 1;
+  flex-grow: 1; /* Allow content to take available space */
+  color: var(--dark); /* Ensure text is dark */
+  min-width: 0; /* Allow flex item to shrink below content size if necessary */
 }
 
 .notificacao-content p {
   margin: 0;
   color: #333;
+  font-size: 0.95em; /* Adjusted font size */
+  line-height: 1.4; /* Adjusted line height */
+  word-wrap: break-word; /* Ensure long words break */
+  overflow-wrap: break-word; /* Modern equivalent */
 }
 
 .notificacao-time {
@@ -678,13 +740,15 @@ form textarea {
 
 .notificacao-arrow {
   color: #ccc;
-  margin-left: 10px;
+  margin-left: 0; /* Remove margin, use gap */
+  flex-shrink: 0;
 }
 
 .sem-notificacoes {
   text-align: center;
   padding: 20px;
   color: #666;
+  font-size: 1.1em;
 }
 
 .toast-notification {
@@ -720,4 +784,258 @@ form textarea {
 /* Estilo para toast de erro */
 .toast-notification.error {
   background-color: #f44336; /* Cor de fundo vermelha */
+}
+
+/* Responsive adjustments for styleNotificacoes.css */
+@media (max-width: 1200px) {
+  body {
+    margin-left: 0; /* No margin for sidebar on smaller screens, it will overlay */
+  }
+}
+
+@media (max-width: 992px) {
+  #sidebar {
+    transform: translateX(-100%); /* Hide sidebar by default */
+  }
+
+  #sidebar.active {
+    transform: translateX(0); /* Show sidebar when active */
+  }
+
+  .menu-btn {
+    display: block; /* Show menu button */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1002;
+    background-color: var(--light-gray);
+    border-radius: 50%;
+  }
+
+  body {
+    margin-left: 0; /* No left margin when sidebar is hidden/overlay */
+  }
+
+  .principal-content {
+    padding: 15px; /* Adjust padding */
+    align-items: center; /* Center the content */
+  }
+
+  .user h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
+  .notificacoes-list {
+    width: 95%; /* Make it wider on tablets */
+    padding: 15px;
+    margin: 0 auto; /* Center with auto margin */
+  }
+
+  .notificacao {
+    padding: 10px 12px;
+  }
+
+  .notificacao-user-photo img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .notificacao-content p {
+    font-size: 0.9em;
+  }
+
+  .notificacao-time {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user h2 {
+    font-size: 1.6rem;
+  }
+
+  .notificacoes-list {
+    width: 100%; /* Full width on smaller tablets */
+    padding: 10px;
+  }
+
+  .notificacao {
+    flex-wrap: nowrap; /* Prevent wrapping unless absolutely necessary */
+    justify-content: flex-start; /* Align items to the start */
+    text-align: left; /* Ensure text alignment is left */
+    align-items: center; /* Keep vertical alignment */
+  }
+  .notificacao-icon {
+    flex-shrink: 0;
+    margin-right: 8px; /* Add margin back for consistent spacing */
+  }
+  .notificacao-user-photo {
+    flex-shrink: 0;
+    margin-right: 8px; /* Add margin back for consistent spacing */
+  }
+  .notificacao-content {
+    flex-grow: 1; /* Allow content to grow */
+    min-width: 0; /* Allow content to shrink below its intrinsic size if space is very tight */
+  }
+  .notificacao-content p {
+    font-size: 0.85em;
+    word-wrap: break-word; /* Ensure long words break */
+    overflow-wrap: break-word;
+  }
+  .notificacao-time {
+    display: inline-block; /* Make it inline-block */
+    margin-left: 5px; /* Add a small margin from message */
+    white-space: nowrap; /* Prevent time from wrapping */
+    font-size: 0.7em;
+  }
+  .notificacao-arrow {
+    display: block; /* Ensure arrow is visible */
+    font-size: 1.2em; /* Increase arrow size */
+    margin-left: auto; /* Push arrow to the far right */
+  }
+
+  .popup {
+    padding: 15px;
+  }
+  .popup .btn-top-content {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .popup .btn-close-content {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .popup h2 {
+    font-size: 1.2rem;
+    width: 100%;
+    text-align: center;
+  }
+  form textarea {
+    font-size: 15px;
+  }
+  .btn-submit {
+    width: 120px;
+    font-size: 14px;
+    padding: 8px;
+  }
+  #selectedBookContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+  #selectedBookCover {
+    margin-bottom: 10px;
+  }
+  #removeBookBtn {
+    margin-top: 10px;
+  }
+  #bookSelectionPopup .popup {
+    width: 95%;
+  }
+  #bookSearch {
+    font-size: 14px;
+    padding: 8px;
+  }
+  .book-item {
+    height: 250px;
+  }
+  .book-cover {
+    height: 120px;
+  }
+  .book-details .book-name {
+    font-size: 0.9em;
+  }
+  .book-details .author {
+    font-size: 0.75em;
+  }
+}
+
+@media (max-width: 576px) {
+  .principal-content {
+    padding: 10px;
+  }
+  .user h2 {
+    font-size: 1.4rem;
+  }
+  .notificacoes-list {
+    padding: 8px;
+    width: 100%; /* Ensure full width on smallest devices */
+  }
+  .notificacao {
+    padding: 8px 10px;
+    gap: 8px;
+    /* On very small screens, allow flex-wrap and stack items if needed */
+    flex-wrap: wrap; /* Allow wrapping of content within notification */
+    justify-content: flex-start; /* Align content to the start */
+    align-items: flex-start; /* Align items to the start vertically */
+  }
+  .notificacao-icon {
+    order: 1; /* Reorder if needed, e.g., move icon to start */
+    margin-bottom: 5px; /* Add some space if it wraps */
+    font-size: 18px;
+    width: auto; /* Auto width */
+  }
+  .notificacao-user-photo {
+    order: 2;
+    margin-bottom: 5px;
+  }
+  .notificacao-user-photo img {
+    width: 30px;
+    height: 30px;
+  }
+  .notificacao-content {
+    order: 3; /* Content comes after icon and photo */
+    flex-basis: 100%; /* Take full width when wrapped */
+    text-align: left; /* Keep text left-aligned */
+  }
+  .notificacao-content p {
+    font-size: 0.8em;
+  }
+  .notificacao-time {
+    order: 4; /* Time comes after content */
+    margin-left: 0; /* Remove margin-left if wrapped */
+    width: 100%; /* Take full width */
+    text-align: left; /* Keep time left-aligned */
+    font-size: 0.65em;
+  }
+  .notificacao-arrow {
+    display: none; /* Hide arrow on smallest screens if space is premium */
+  }
+  .sem-notificacoes {
+    font-size: 0.9em;
+    padding: 15px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-menu {
+    width: 0; /* Ensures the header area itself doesn't take up width on very small screens, allowing content to expand */
+  }
+  .menu-btn {
+    display: block;
+    font-size: 25px;
+    top: 15px;
+    left: 15px;
+  }
+  .user h2 {
+    font-size: 1.2rem;
+  }
+  .notificacoes-list {
+    width: 100%;
+  }
+  .notificacao-content p {
+    font-size: 0.75em;
+  }
+  .notificacao-user-photo img {
+    width: 25px;
+    height: 25px;
+  }
+  .notificacao-icon {
+    font-size: 16px;
+    width: auto; /* Auto width */
+  }
+  .notificacao-time {
+    font-size: 0.6em;
+  }
 }

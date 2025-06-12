@@ -71,6 +71,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
     <title>Perfil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <link rel="stylesheet" href="CSS/ProfilleStyle.css">
 </head>
 
@@ -131,7 +132,8 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                         </div>
                         <div class="profile-text-bio">
                             <p class="profile-bio">
-                                <?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?></p>
+                                <?= htmlspecialchars($usuario['bio_usuario'] ?? 'Nenhuma biografia definida.') ?>
+                            </p>
                         </div>
                     </div>
                     <button class="edit-profile-btn">
@@ -406,6 +408,10 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             </form>
         </div>
     </div>
+    <button class="menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>    
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
@@ -671,7 +677,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
             if (editProfilePopupOverlay) {
                 editProfilePopupOverlay.addEventListener('click', function (event) {
                     if (event.target === editProfilePopupOverlay) {
-                        closeEditProfileModal();    
+                        closeEditProfileModal();
                     }
                 });
             }

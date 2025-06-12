@@ -69,14 +69,17 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($livro['nomeLivro']) ?> - Versami</title>
     <link rel="stylesheet" href="CSS/StyleLivro.css">
     <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
     <div class="content">
         <div class="header-menu">
@@ -133,8 +136,8 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                 <div class="book-header">
                     <div class="book-cover-container">
                         <?php if (!empty($livro['imgCapa'])): ?>
-                            <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>" 
-                                 alt="Capa do livro" class="book-cover">
+                            <img src="data:image/jpeg;base64,<?= base64_encode($livro['imgCapa']) ?>" alt="Capa do livro"
+                                class="book-cover">
                         <?php else: ?>
                             <div class="no-cover">
                                 <i class="fa-solid fa-book"></i>
@@ -145,9 +148,9 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                         <h1><?= htmlspecialchars($livro['nomeLivro']) ?></h1>
                         <p class="author">por <?= htmlspecialchars($livro['nomeAutor']) ?></p>
                         <p class="genre"><?= htmlspecialchars($livro['nomeGenero']) ?></p>
-                        
+
                         <div class="book-actions">
-                            <button class="favorite-btn <?= $livro['favoritado'] ? 'favorited' : '' ?>" 
+                            <button class="favorite-btn <?= $livro['favoritado'] ? 'favorited' : '' ?>"
                                 onclick="toggleFavorite(<?= $livro['idLivro'] ?>)">
                                 <i class="<?= $livro['favoritado'] ? 'fas' : 'far' ?> fa-heart"></i>
                                 <span id="favorite-count"><?= $livro['total_favoritos'] ?></span> favoritos
@@ -160,7 +163,7 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                 <div class="book-description">
                     <h2>Descrição</h2>
                     <p><?= htmlspecialchars(mb_convert_encoding($livro['descLivro'], 'UTF-8', 'ISO-8859-1')) ?></p>
-                    
+
                 </div>
 
                 <!-- Sobre o autor -->
@@ -183,8 +186,8 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                                     <?php while ($review = sqlsrv_fetch_array($result_reviews, SQLSRV_FETCH_ASSOC)): ?>
                                         <div class="review-card">
                                             <div class="user-info">
-                                                <img src="<?= displayImage($review['fotoUsuario']) ?>" 
-                                                     alt="Foto do usuário" class="user-avatar">
+                                                <img src="<?= displayImage($review['fotoUsuario']) ?>" alt="Foto do usuário"
+                                                    class="user-avatar">
                                                 <div class="user-details">
                                                     <h3><?= htmlspecialchars($review['nome']) ?></h3>
                                                     <p>@<?= htmlspecialchars($review['arroba_usuario']) ?></p>
@@ -197,12 +200,14 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                                                         <?= $review['dataPublic']->format('d/m/Y H:i') ?>
                                                     </span>
                                                     <div class="review-actions">
-                                                        <button class="like-btn <?= $review['usuario_curtiu'] ? 'liked' : '' ?>" 
+                                                        <button class="like-btn <?= $review['usuario_curtiu'] ? 'liked' : '' ?>"
                                                             onclick="curtirReview(<?= $review['idPublicacao'] ?>, this)">
-                                                            <i class="<?= $review['usuario_curtiu'] ? 'fas' : 'far' ?> fa-heart"></i>
+                                                            <i
+                                                                class="<?= $review['usuario_curtiu'] ? 'fas' : 'far' ?> fa-heart"></i>
                                                             <span class="like-count"><?= $review['likes'] ?></span>
                                                         </button>
-                                                        <a href="../Post/PostDetails.php?id=<?= $review['idPublicacao'] ?>" class="comment-btn">
+                                                        <a href="../Post/PostDetails.php?id=<?= $review['idPublicacao'] ?>"
+                                                            class="comment-btn">
                                                             <i class="far fa-comment"></i>
                                                             <span><?= $review['total_comentarios'] ?></span>
                                                         </a>
@@ -226,14 +231,14 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                                 <div class="favorites-grid">
                                     <?php while ($usuario = sqlsrv_fetch_array($result_favoritos, SQLSRV_FETCH_ASSOC)): ?>
                                         <div class="user-card">
-                                            <img src="<?= displayImage($usuario['fotoUsuario']) ?>" 
-                                                 alt="Foto do usuário" class="user-avatar">
+                                            <img src="<?= displayImage($usuario['fotoUsuario']) ?>" alt="Foto do usuário"
+                                                class="user-avatar">
                                             <div class="user-info">
                                                 <h3><?= htmlspecialchars($usuario['nome']) ?></h3>
                                                 <p>@<?= htmlspecialchars($usuario['arroba_usuario']) ?></p>
                                             </div>
                                             <?php if ($usuario['idUsuario'] != $_SESSION["usuario_id"]): ?>
-                                                <button class="follow-btn" 
+                                                <button class="follow-btn"
                                                     onclick="seguirUsuario(<?= $usuario['idUsuario'] ?>, this)">
                                                     Seguir
                                                 </button>
@@ -276,113 +281,119 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
         </div>
     </div>
 
+    <button class="menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="overlay" id="overlay"></div>
+
     <script>
-    // Função para favoritar/desfavoritar livro
-    function toggleFavorite(livroId) {
-        const btn = document.querySelector('.favorite-btn');
-        const isFavorited = btn.classList.contains('favorited');
-        const countElement = document.getElementById('favorite-count');
-        let currentCount = parseInt(countElement.textContent);
-        
-        // Atualiza visualmente
-        btn.classList.toggle('favorited');
-        btn.querySelector('i').classList.toggle('far');
-        btn.querySelector('i').classList.toggle('fas');
-        
-        if (isFavorited) {
-            countElement.textContent = currentCount - 1;
-        } else {
-            countElement.textContent = currentCount + 1;
-            // Efeito de animação
-            btn.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                btn.style.transform = 'scale(1)';
-            }, 300);
-        }
-        
-        // Chamada AJAX
-        $.ajax({
-            url: '../Functions/toggle_favorite.php',
-            method: 'POST',
-            data: {
-                book_id: livroId,
-                action: isFavorited ? 'remove' : 'add'
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-                // Reverte em caso de erro
-                btn.classList.toggle('favorited');
-                btn.querySelector('i').classList.toggle('far');
-                btn.querySelector('i').classList.toggle('fas');
-                countElement.textContent = currentCount;
-            }
-        });
-    }
-    
-    // Função para curtir reviews
-    function curtirReview(reviewId, element) {
-        const isLiked = element.classList.contains('liked');
-        const icon = element.querySelector('i');
-        const countElement = element.querySelector('.like-count');
-        let currentCount = parseInt(countElement.textContent);
-        
-        // Atualiza visualmente
-        element.classList.toggle('liked');
-        icon.classList.toggle('far');
-        icon.classList.toggle('fas');
-        countElement.textContent = isLiked ? currentCount - 1 : currentCount + 1;
-        
-        // Chamada AJAX
-        $.ajax({
-            url: '../Functions/curtir.php',
-            method: 'POST',
-            data: {
-                review_id: reviewId,
-                action: isLiked ? 'unlike' : 'like'
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-                // Reverte em caso de erro
-                element.classList.toggle('liked');
-                icon.classList.toggle('far');
-                icon.classList.toggle('fas');
-                countElement.textContent = currentCount;
-            }
-        });
-    }
-    
-    // Função para alternar entre tabs
-    function changeTab(index) {
-        const tabs = document.querySelectorAll('.tab');
-        const contentTabs = document.querySelectorAll('.content-tab');
-        
-        tabs.forEach((tab, i) => {
-            if (i === index) {
-                tab.classList.add('active');
-                contentTabs[i].classList.add('active');
+        // Função para favoritar/desfavoritar livro
+        function toggleFavorite(livroId) {
+            const btn = document.querySelector('.favorite-btn');
+            const isFavorited = btn.classList.contains('favorited');
+            const countElement = document.getElementById('favorite-count');
+            let currentCount = parseInt(countElement.textContent);
+
+            // Atualiza visualmente
+            btn.classList.toggle('favorited');
+            btn.querySelector('i').classList.toggle('far');
+            btn.querySelector('i').classList.toggle('fas');
+
+            if (isFavorited) {
+                countElement.textContent = currentCount - 1;
             } else {
-                tab.classList.remove('active');
-                contentTabs[i].classList.remove('active');
+                countElement.textContent = currentCount + 1;
+                // Efeito de animação
+                btn.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    btn.style.transform = 'scale(1)';
+                }, 300);
+            }
+
+            // Chamada AJAX
+            $.ajax({
+                url: '../Functions/toggle_favorite.php',
+                method: 'POST',
+                data: {
+                    book_id: livroId,
+                    action: isFavorited ? 'remove' : 'add'
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    // Reverte em caso de erro
+                    btn.classList.toggle('favorited');
+                    btn.querySelector('i').classList.toggle('far');
+                    btn.querySelector('i').classList.toggle('fas');
+                    countElement.textContent = currentCount;
+                }
+            });
+        }
+
+        // Função para curtir reviews
+        function curtirReview(reviewId, element) {
+            const isLiked = element.classList.contains('liked');
+            const icon = element.querySelector('i');
+            const countElement = element.querySelector('.like-count');
+            let currentCount = parseInt(countElement.textContent);
+
+            // Atualiza visualmente
+            element.classList.toggle('liked');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            countElement.textContent = isLiked ? currentCount - 1 : currentCount + 1;
+
+            // Chamada AJAX
+            $.ajax({
+                url: '../Functions/curtir.php',
+                method: 'POST',
+                data: {
+                    review_id: reviewId,
+                    action: isLiked ? 'unlike' : 'like'
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    // Reverte em caso de erro
+                    element.classList.toggle('liked');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('fas');
+                    countElement.textContent = currentCount;
+                }
+            });
+        }
+
+        // Função para alternar entre tabs
+        function changeTab(index) {
+            const tabs = document.querySelectorAll('.tab');
+            const contentTabs = document.querySelectorAll('.content-tab');
+
+            tabs.forEach((tab, i) => {
+                if (i === index) {
+                    tab.classList.add('active');
+                    contentTabs[i].classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                    contentTabs[i].classList.remove('active');
+                }
+            });
+        }
+
+        // Função para abrir popup de review
+        function abrirModalPopUp() {
+            document.getElementById('reviewPopupOverlay').style.display = 'flex';
+        }
+
+        // Fechar popup quando clicar no X
+        document.querySelector('.btn-close').addEventListener('click', function () {
+            document.getElementById('reviewPopupOverlay').style.display = 'none';
+        });
+
+        // Fechar popup quando clicar fora
+        window.addEventListener('click', function (event) {
+            if (event.target === document.getElementById('reviewPopupOverlay')) {
+                document.getElementById('reviewPopupOverlay').style.display = 'none';
             }
         });
-    }
-    
-    // Função para abrir popup de review
-    function abrirModalPopUp() {
-        document.getElementById('reviewPopupOverlay').style.display = 'flex';
-    }
-    
-    // Fechar popup quando clicar no X
-    document.querySelector('.btn-close').addEventListener('click', function() {
-        document.getElementById('reviewPopupOverlay').style.display = 'none';
-    });
-    
-    // Fechar popup quando clicar fora
-    window.addEventListener('click', function(event) {
-        if (event.target === document.getElementById('reviewPopupOverlay')) {
-            document.getElementById('reviewPopupOverlay').style.display = 'none';
-        }
-    });
     </script>
 </body>
+
 </html>

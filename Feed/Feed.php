@@ -99,11 +99,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Para você - Versami</title>
         <script src="https://kit.fontawesome.com/17dd42404d.js" crossorigin="anonymous"></script>
+        <link rel="shortcut icon" href="../Assets/favicon.png" type="favicon" />
         <link rel="stylesheet" href="CSS/FeedStyle.css">
     </head>
 
     <body>
-        <h2>Para você</h2>
         <div class="content">
             <div class="header-menu">
                 <div id="sidebar">
@@ -534,6 +534,11 @@
                 </div>
             </div>
         </div>
+
+        <button class="menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="overlay" id="overlay"></div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="../js/script.js"></script>
