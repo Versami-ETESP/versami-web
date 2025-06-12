@@ -1,3 +1,4 @@
+// Add this event listener to the existing script.js file
 document.addEventListener("DOMContentLoaded", function () {
   // Sidebar toggle logic
   const sidebar = document.getElementById("sidebar");
@@ -78,7 +79,47 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // NEW: Blog Post Modal related event listeners
+  const blogPostModalOverlay = document.getElementById("blogPostModalOverlay");
+  const blogModalCloseBtn = document.getElementById("blogModalCloseBtn");
+
+  if (blogPostModalOverlay) {
+      // Close when clicking the 'X' button
+      if (blogModalCloseBtn) {
+          blogModalCloseBtn.addEventListener('click', closeBlogPostModal);
+      }
+      // Close when clicking outside the modal content
+      blogPostModalOverlay.addEventListener('click', function(event) {
+          if (event.target === blogPostModalOverlay) {
+              closeBlogPostModal();
+          }
+      });
+  }
 });
+
+// NEW: Function to open the blog post modal
+function openBlogPostModal() {
+    const blogPostModalOverlay = document.getElementById("blogPostModalOverlay");
+    if (blogPostModalOverlay) {
+        blogPostModalOverlay.classList.add('active'); // Add 'active' class to show
+        // Disable body scrolling when modal is open
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// NEW: Function to close the blog post modal
+function closeBlogPostModal() {
+    const blogPostModalOverlay = document.getElementById("blogPostModalOverlay");
+    const blogModalBody = document.getElementById("blogModalBody");
+    if (blogPostModalOverlay) {
+        blogPostModalOverlay.classList.remove('active'); // Remove 'active' class to hide
+        blogModalBody.innerHTML = ''; // Clear content when closing
+        // Enable body scrolling when modal is closed
+        document.body.style.overflow = '';
+    }
+}
+
 
 // Função para seguir/deixar de seguir
 function seguirUsuario(usuarioId, botao) {
@@ -208,7 +249,7 @@ function curtirComentario(comentarioId, elemento) {
   }
 
   // Envia a requisição AJAX
-  fetch("curtir_comentario.php", {
+  fetch("../Functions/curtir_comentario.php", { // Corrected path
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -275,27 +316,32 @@ $(document).on("click", ".delete-post", function () {
   }
 });
 
-// Função para abrir e fechar popup
-
+// Função para abrir e fechar popup (general review/post creation popup)
 const btnOpen = document.querySelector(".button");
 const popupOverlay = document.querySelector(".popup-overlay");
 const btnClose = document.querySelector(".btn-close");
 
 function abrirModalPopUp() {
-  btnOpen.addEventListener("click", () => {
-    popupOverlay.style.display = "flex";
-  });
-
-  btnClose.addEventListener("click", () => {
-    popupOverlay.style.display = "none";
-  });
-
-  popupOverlay.addEventListener("click", (event) => {
-    if (event.target === popupOverlay) {
-      popupOverlay.style.display = "none";
-    }
-  });
+  // Ensure elements exist
+  if (btnOpen && popupOverlay && btnClose) {
+      popupOverlay.style.display = "flex";
+  }
 }
+
+if (btnClose) {
+    btnClose.addEventListener("click", () => {
+        if (popupOverlay) popupOverlay.style.display = "none";
+    });
+}
+
+if (popupOverlay) {
+    popupOverlay.addEventListener("click", (event) => {
+        if (event.target === popupOverlay) {
+            popupOverlay.style.display = "none";
+        }
+    });
+}
+
 
 // Função para tabelas (Feed, Seguindo, Reviews e Livros Favoritos)
 
@@ -310,7 +356,6 @@ function changeTab(index) {
   contents[index].classList.add("active");
 }
 
-// Função para enviar posts (AGORA VIA AJAX)
 // Função para enviar posts (AGORA VIA AJAX)
 function submitPost() {
   const formData = new FormData(document.getElementById("postForm"));
@@ -342,8 +387,8 @@ function submitPost() {
         // 3. Recarrega a página CONDICIONALMENTE (apenas se for feed.php)
         // Usa includes para ser flexível com o caminho base (ex: /versami-web/Feed/Feed.php)
         if (
-          window.location.pathname.includes("../Feed/Feed.php") ||
-          window.location.pathname.includes("../Feed/Feed.php")
+          window.location.pathname.includes("/Feed/Feed.php") ||
+          window.location.pathname.includes("/feed.php")
         ) {
           // Recarrega após um pequeno atraso para que o toast seja visível
           setTimeout(() => {
@@ -392,7 +437,7 @@ document.querySelectorAll(".back-arrow").forEach((arrow) => {
 });
 
 window.addEventListener("DOMContentLoaded", function () {
-  if (window.location.pathname.includes("../Feed/Feed.php")) {
+  if (window.location.pathname.includes("feed.php")) {
     const scrollPosition = sessionStorage.getItem("feedScrollPosition");
     if (scrollPosition) {
       window.scrollTo(0, parseInt(scrollPosition));
@@ -407,27 +452,41 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Função do Blog carregar a primeira noticia
+// Função do Blog carregar a noticia (now loads into a modal on mobile)
+function loadBlogPost(postId) { // Renamed from loadNews to loadBlogPost for consistency with usage in BlogUsuarios.php
+    const blogModalBody = document.getElementById("blogModalBody");
+    const blogPostModalOverlay = document.getElementById("blogPostModalOverlay");
 
-function loadNews(postId) {
-  $.ajax({
-    url: "get_blog_post.php",
-    type: "GET",
-    data: { id: postId },
-    success: function (response) {
-      $("#newsFull").html(response);
-      $(".news-card").removeClass("active");
-      $(`.news-card[onclick="loadNews(${postId})"]`).addClass("active");
-    },
-    error: function () {
-      $("#newsFull").html(
-        '<div class="error-message">Erro ao carregar a notícia</div>'
-      );
-    },
-  });
+    if (!blogModalBody || !blogPostModalOverlay) {
+        console.error("Blog modal elements not found!");
+        // Fallback or more robust error handling
+        showToast("Erro ao carregar a notícia: Componentes do modal não encontrados.", "error");
+        return;
+    }
+
+    // Show a loading indicator in the modal body immediately
+    blogModalBody.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><h2>Carregando Notícia...</h2><p>Por favor, aguarde.</p></div>';
+    openBlogPostModal(); // Open the modal immediately with loading indicator
+
+    $.ajax({
+        url: 'get_blog_post_content.php', // Corrected path
+        method: 'GET',
+        data: { id: postId },
+        success: function(response) {
+            blogModalBody.innerHTML = response; // Load content into modal body
+            // Highlight the selected post in the list (on the main page behind the modal)
+            $('.post-preview').removeClass('active-post');
+            $(`.post-preview[data-post-id="${postId}"]`).addClass('active-post');
+        },
+        error: function(xhr, status, error) {
+            console.error("Erro ao carregar post:", status, error, xhr.responseText);
+            blogModalBody.innerHTML = '<div class="empty-state"><i class="fa-solid fa-exclamation-triangle"></i><h2>Erro ao carregar notícia</h2><p>Não foi possível carregar o conteúdo da notícia. Tente novamente.</p></div>';
+        }
+    });
 }
 
-// Função para expandir a imagem
+
+// Função para expandir a imagem (from general image overlay)
 function expandImage() {
   document.getElementById("overlay").style.visibility = "visible";
   document.getElementById("overlay").style.opacity = "1";
@@ -933,17 +992,17 @@ function toggleFavorite(button, bookId) { // Renomeado de toggleBookFavorite par
     fetch('../Functions/toggle_favorite.php', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            "Content-Type": "application/x-www-form-urlencoded",
         },
         body: `book_id=${bookId}&action=${isFavorited ? 'remove' : 'add'}`,
     })
-    .then(response => {
+    .then((response) => {
         if (!response.ok) {
             throw new Error(`Network response was not ok: ${response.statusText}`);
         }
         return response.json();
     })
-    .then(data => {
+    .then((data) => {
         if (!data.success) {
             console.error('Erro ao favoritar/desfavoritar livro:', data.error || 'Erro desconhecido');
             // Reverte as alterações visuais se a operação no servidor falhou
@@ -959,7 +1018,7 @@ function toggleFavorite(button, bookId) { // Renomeado de toggleBookFavorite par
             }
         }
     })
-    .catch(error => {
+    .catch((error) => {
         console.error('Falha na requisição AJAX:', error);
         // Reverte as alterações visuais em caso de erro de rede
         button.classList.toggle('favorited');
@@ -973,4 +1032,4 @@ function toggleFavorite(button, bookId) { // Renomeado de toggleBookFavorite par
              icon.style.color = '';
         }
     });
-}
+} 
