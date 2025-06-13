@@ -50,8 +50,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Criptografa a senha (SHA-256)
     $senhaHash = hash("sha256", $senha);
 
+    // CONVERSÃO PARA UPPERCASE ANTES DE HASHEAR
+    $respostaSecreta_uppercase = mb_strtoupper($respostaSecreta, 'UTF-8'); // Use mb_strtoupper para UTF-8
     // Criptografa a resposta secreta (SHA-256 para segurança)
-    $respostaSecretaHash = hash("sha256", $respostaSecreta);
+    $respostaSecretaHash = hash("sha256", $respostaSecreta_uppercase); // Use a versão em maiúsculas
 
     // Verifica se o e-mail ou arroba já está cadastrado
     $checkUser = "SELECT COUNT(*) AS total FROM tblUsuario WHERE email = ? OR arroba_usuario = ?";
@@ -97,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         array($fotoPadraoStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('max')),
         array($capaPadraoStream, SQLSRV_PARAM_IN, SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY), SQLSRV_SQLTYPE_VARBINARY('max')),
         $idPergunta,
-        $respostaSecretaHash
+        $respostaSecretaHash // Use o hash da resposta em maiúsculas
     );
 
     $stmt = sqlsrv_query($conn, $sql, $params);

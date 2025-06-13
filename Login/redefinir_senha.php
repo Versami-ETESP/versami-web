@@ -36,8 +36,10 @@ try {
         exit;
     }
 
+    // CONVERSÃO PARA UPPERCASE ANTES DE HASHEAR
+    $resposta_secreta_uppercase = mb_strtoupper($resposta_secreta, 'UTF-8'); // Use mb_strtoupper para UTF-8
     // Criptografar a resposta fornecida para comparação
-    $respostaSecretaHashFornecida = hash("sha256", $resposta_secreta);
+    $respostaSecretaHashFornecida = hash("sha256", $resposta_secreta_uppercase); // Use a versão em maiúsculas
 
     // 2. Comparar a resposta fornecida com a armazenada
     if ($respostaSecretaHashFornecida !== $usuario['resposta']) {

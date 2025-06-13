@@ -34,14 +34,15 @@
 }
 body {
   display: flex;
-  overflow: hidden;
-  height: 100%;
+  /* Removido overflow: hidden; */ /* AQUI ESTAVA O PROBLEMA DO SCROLL */
+  /* Removido height: 100%; */      /* AQUI ESTAVA O PROBLEMA DO SCROLL */
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #EEEEEE;
   padding: 20px; /* Added padding for small screens */
-  min-height: 100vh; /* Ensure it takes full viewport height */
+  min-height: 100vh; /* Garante altura mínima da viewport */
+  overflow-y: auto; /* Permite rolagem vertical quando necessário */
 }
 
 /* Sidebar and related styles (from common base, usually not present in setup pages) */
@@ -54,6 +55,8 @@ body {
   width: 65%;
   max-width: 800px; /* Added max-width */
   height: auto;
+  overflow-y: auto; /* Adicionar isso para garantir scroll interno se o conteúdo for muito grande para o modal */
+  max-height: 95vh;
   margin: 5% auto; /* Centered with auto margin */
   background-color: #FFFFFF;
   display: flex;
