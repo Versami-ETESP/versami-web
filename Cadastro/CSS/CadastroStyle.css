@@ -641,9 +641,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin: 1rem auto;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
-  .msgindex {
-    margin-left: 0; /* Remove left margin when stacked */
-  }
   .loginPanel h1, .cadastroPrincipal h1 {
     font-size: 2rem;
     margin-bottom: 1.5rem;

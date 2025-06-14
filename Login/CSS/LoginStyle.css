@@ -302,6 +302,16 @@ main {
   margin-bottom: 1.5rem;
 }
 
+.cadastro-panel {
+  flex: 1; /* Takes equal space as callout */
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 .form {
   width: 100%;
   height: 70%;
@@ -372,7 +382,7 @@ main {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.loginButton{
+.loginButton {
   background-color: #6189d1;
 }
 
@@ -435,7 +445,7 @@ main {
 }
 
 .msgindex {
-  margin-left: -20px;
+  margin-left: -20px; /* Será removido nas media queries */
   z-index: 5;
 }
 
@@ -666,6 +676,21 @@ div.carregando {
   margin-top: 15px;
 }
 
+/* Estilização para .forgot-password-link */
+.forgot-password-link {
+  color: #3498db; /* Cor azul para o link */
+  text-decoration: none; /* Remove o sublinhado padrão */
+  font-size: 0.9rem; /* Tamanho da fonte */
+  margin-top: 0.5rem; /* Margem superior para separar dos inputs */
+  margin-bottom: 1rem; /* Margem inferior para separar do botão */
+  transition: color 0.3s ease, text-decoration 0.3s ease; /* Transição suave */
+}
+
+.forgot-password-link:hover {
+  color: #2980b9; /* Cor mais escura ao passar o mouse */
+  text-decoration: underline; /* Adiciona sublinhado ao passar o mouse */
+}
+
 /* --- ANIMAÇÕES (mantidas) --- */
 @keyframes carregando {
   0% {
@@ -678,7 +703,8 @@ div.carregando {
 
 /* --- MEDIA QUERIES (mantidas) --- */
 @media (max-width: 1200px) {
-  .loginPrincipal, .cadastroPrincipal {
+  .loginPrincipal,
+  .cadastroPrincipal {
     width: 45vw; /* Increase width for medium screens */
   }
   .tituloPrincipal {
@@ -713,21 +739,21 @@ div.carregando {
     flex-direction: column-reverse; /* Stack elements for smaller screens */
     padding: 2rem 0;
   }
-  .loginPrincipal, .cadastroPrincipal {
+  .loginPrincipal,
+  .cadastroPrincipal {
     width: 80vw; /* Take more width on tablets */
     min-height: auto;
     padding: 2rem;
     margin: 1rem auto;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .msgindex {
-    margin-left: 0; /* Remove left margin when stacked */
-  }
-  .login-panel h2, .cadastroPrincipal h1 {
+  .login-panel h2,
+  .cadastroPrincipal h1 {
     font-size: 2rem;
     margin-bottom: 1.5rem;
   }
-  .login-panel p, .cadastroPrincipal p {
+  .login-panel p,
+  .cadastroPrincipal p {
     font-size: 1rem;
     margin-bottom: 1.5rem;
   }
@@ -747,7 +773,9 @@ div.carregando {
     align-items: center;
     gap: 2rem;
   }
-  .newsletter, .middle, .about {
+  .newsletter,
+  .middle,
+  .about {
     text-align: center;
   }
   .newsletter form {
@@ -797,14 +825,18 @@ div.carregando {
     width: auto;
     margin: 0 auto; /* Center logo */
   }
-  .loginPrincipal, .cadastroPrincipal {
+  .loginPrincipal,
+  .cadastroPrincipal {
     width: 95vw; /* Almost full width on mobile */
     padding: 1.5rem;
+    min-height: unset; /* Remove min-height to allow content to dictate height */
   }
-  .login-panel h2, .cadastroPrincipal h1 {
+  .login-panel h2,
+  .cadastroPrincipal h1 {
     font-size: 1.8rem;
   }
-  .login-panel p, .cadastroPrincipal p {
+  .login-panel p,
+  .cadastroPrincipal p {
     font-size: 0.9rem;
   }
   .tituloPrincipal {
@@ -814,7 +846,8 @@ div.carregando {
     width: 95%;
     padding: 0.6rem 0.8rem;
   }
-  .form-input, .input-group i {
+  .form-input,
+  .input-group i {
     font-size: 0.9rem;
   }
   .button {
@@ -859,14 +892,18 @@ div.carregando {
   .logo span {
     font-size: 1rem;
   }
-  .loginPrincipal, .cadastroPrincipal {
+  .loginPrincipal,
+  .cadastroPrincipal {
     height: auto; /* Allow height to adjust */
     padding: 1rem;
+    min-height: unset; /* Ensure min-height is not set here */
   }
-  .login-panel h2, .cadastroPrincipal h1 {
+  .login-panel h2,
+  .cadastroPrincipal h1 {
     font-size: 1.5rem;
   }
-  .login-panel p, .cadastroPrincipal p {
+  .login-panel p,
+  .cadastroPrincipal p {
     font-size: 0.8rem;
   }
   .tituloPrincipal {
@@ -875,7 +912,8 @@ div.carregando {
   .input-group {
     width: 100%;
   }
-  .form-input, .input-group i {
+  .form-input,
+  .input-group i {
     font-size: 0.85rem;
   }
   /* Final popup adjustments */

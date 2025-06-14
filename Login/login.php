@@ -116,12 +116,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
         <div class="cadastroPrincipal msgindex">
-            <h1>Sua <span>primeira</span> vez <br/>aqui?</h1>
-            <p>
-                Crie agora sua conta e <br />encontre diversos livros!
-            </p>
-            <a class="button loginButton" href="../Cadastro/cadastro.php">Criar Conta <i
-                    class="fa-solid fa-chevron-right"></i></a>
+            <div class="cadastro-panel">
+                <h1>Sua <span>primeira</span> vez <br/>aqui?</h1>
+                <p>
+                    Crie agora sua conta e <br />encontre diversos livros!
+                </p>
+                <a class="button loginButton" href="../Cadastro/cadastro.php">Criar Conta <i
+                        class="fa-solid fa-chevron-right"></i></a>
+            </div>
         </div>
         <div class="carregando" id="carregando"></div>
     </main>

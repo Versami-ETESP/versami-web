@@ -1,0 +1,10 @@
+[14-Jun-2025 04:25:22 Europe/Berlin] DEBUG: Conexão com o BD estabelecida com sucesso.
+[14-Jun-2025 04:25:22 Europe/Berlin] DEBUG: Executando SQL: SELECT u.idUsuario, u.idPergunta, ps.pergunta 
+            FROM tblUsuario u
+            JOIN tblPerguntaSecreta ps ON u.idPergunta = ps.idPergunta
+            WHERE u.arroba_usuario = ? com parâmetros: Array
+(
+    [0] => jucosta
+)
+
+[14-Jun-2025 04:25:22 Europe/Berlin] DEBUG: Pergunta encontrada para 'jucosta': Em que cidade você nasceu?
