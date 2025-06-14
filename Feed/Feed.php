@@ -196,7 +196,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="post-content" onclick="window.location.href='../Post/PostDetails.php?id=<?= $post['idPublicacao'] ?>'">
-                                                                <?= transformURLsIntoLinks($post['conteudo']) ?>
+                                                                <?= transformURLsIntoLinks(convertToUtf8($post['conteudo'])) ?>
                                                             </div>
                                                             <?php if (!empty($post['idLivro'])): ?>
                                                                 <div class="attached-book">
@@ -291,7 +291,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="comment-text">
-                                                                            <?= transformURLsIntoLinks($comentario['comentario']) ?>
+                                                                            <?= transformURLsIntoLinks(convertToUtf8($comentario['comentario'])) ?>
                                                                         </div>
                                                                         <div class="comment-actions">
                                                                             <button type="button"
@@ -358,7 +358,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="post-content" onclick="window.location.href='../Post/PostDetails.php?id=<?= $post['idPublicacao'] ?>'">
-                                                                <?= transformURLsIntoLinks($post['conteudo']) ?>
+                                                                <?= transformURLsIntoLinks(convertToUtf8($post['conteudo'])) ?>
                                                             </div>
                                                             <?php if (!empty($post['idLivro'])): ?>
                                                                 <div class="attached-book">
@@ -452,7 +452,7 @@
                                                                             </div>
                                                                         </div>
                                                                         <div class="comment-text">
-                                                                            <?= htmlspecialchars($comentario['comentario']) ?>
+                                                                            <?= transformURLsIntoLinks(convertToUtf8($comentario['comentario'])) ?>
                                                                         </div>
                                                                         <div class="comment-actions">
                                                                             <button type="button"

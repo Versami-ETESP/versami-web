@@ -87,7 +87,7 @@ if (isset($_GET['id'])) {
                 </div>
                 <div class="button-content">
                     <div class="buttonOff">
-                        <a href="logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
+                        <a href="../logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
                     </div>
                 </div>
             </div>

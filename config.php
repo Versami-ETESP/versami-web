@@ -1,7 +1,7 @@
 <?php
 $serverName = "DESKTOP-REJT7MF\SQLEXPRESS";
 $connectionOptions = array(
-    "Database" => "versamiredesocialtcc",
+    "Database" => "versami",
     "Uid" => "sa",
     "PWD" => "12121515",
     "CharacterSet" => "UTF-8"

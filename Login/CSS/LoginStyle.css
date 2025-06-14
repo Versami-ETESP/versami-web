@@ -708,7 +708,8 @@ div.carregando {
   .user-icon {
     display: none; /* Hide user icon in nav on smaller screens */
   }
-  main {
+  .loginMain {
+    display: flex;
     flex-direction: column-reverse; /* Stack elements for smaller screens */
     padding: 2rem 0;
   }

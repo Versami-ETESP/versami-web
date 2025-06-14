@@ -239,7 +239,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                                             <div class="book-author"><?= htmlspecialchars($post['nomeAutor']) ?></div>
                                             <?php if (!empty($post['descLivro'])): ?>
                                                 <div class="book-description">
-                                                    <p><?= htmlspecialchars(mb_convert_encoding($post['descLivro'], 'UTF-8', 'ISO-8859-1')) ?>
+                                                    <p><?= htmlspecialchars(convertToUtf8($post['descLivro'])) ?>
                                                     </p>
                                                 </div>
                                             <?php endif; ?>
@@ -306,7 +306,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
                                         <p class="book-author"><?= htmlspecialchars($livro['autor']) ?></p>
                                         <?php if (!empty($livro['descLivro'])): ?>
                                             <div class="book-description">
-                                                <p><?= htmlspecialchars(mb_convert_encoding($livro['descLivro'], 'UTF-8', 'ISO-8859-1')) ?>
+                                                <p><?= htmlspecialchars(convertToUtf8($livro['descLivro'])) ?>
                                                 </p>
                                             </div>
                                         <?php endif; ?>
@@ -396,7 +396,7 @@ $result_favoritos = sqlsrv_query($conn, $sql_favoritos, $params_favoritos);
         <i class="fas fa-bars"></i>
     </button>
     <div class="overlay" id="overlay"></div>
-    
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../js/script.js"></script>
     <script>

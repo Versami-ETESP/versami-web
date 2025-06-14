@@ -124,7 +124,7 @@ $result_reviews = sqlsrv_query($conn, $sql_reviews, $params_reviews);
                         <button class="logout-btn" onclick="trocarTema()"><i class="fa-solid fa-palette"></i></button>
                     </div>
                     <div class="buttonOff">
-                        <a href="logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
+                        <a href="../logout.php" class="logout-btn"><i class="fa-solid fa-power-off"></i></a>
                     </div>
                 </div>
             </div>
