@@ -32,10 +32,10 @@ Depois de baixado, **extraia o arquivo ZIP** para a pasta `C:\xampp\htdocs`
 
 ### 2. Configurar a conexão com o banco de dados
 
-* Navegue até a pasta extraída
+* Acesse a pasta extraída
 * Abra o arquivo `config.php` no seu editor de código
-* Na linha 2 Altere o valor de `$serverName` para o nome do seu servidor do SQL Server
-* Nas linhas 5 e 6 Altere `UiD` e `PWD`para as suas credenciais do SQL server
+* Na linha 2, altere o valor de `$serverName` para o nome do seu servidor do SQL Server
+* Nas linhas 5 e 6, atualize as credenciais (Uid e PWD) para as do seu SQL Server
 
 ![image](https://github.com/user-attachments/assets/5a17ccbb-37ca-4e04-a62e-1685304780ec)
 
@@ -53,7 +53,7 @@ $connectionOptions = array(
 
 ### :white_check_mark: Pronto!
 
-Com tudo configurado, você pode executar a aplicação com os seguintes passos:
+Com a conexão configurada, siga os passos abaixo para executar a aplicação:
 
 * Vá até a pasta: `C:\xampp`
 * Abra o arquivo xampp-control (dê dois cliques)
